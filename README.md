@@ -42,13 +42,36 @@ Web Interface/Login: TODO
 
 ### Wisconsin Sources
 
+Precinct Data:
 - [https://legis.wisconsin.gov/ltsb/gis/data/](https://legis.wisconsin.gov/ltsb/gis/data/)
+
+Demographic Data:
+- 
+
+Voter Data:
+- 
 
 ### Utah Sources
 
+Precinct Data:
 - [https://gis.utah.gov/data/political/voter-precincts/](https://gis.utah.gov/data/political/voter-precincts/)
+
+Demographic Data:
+- 
+
+Voter Data:
+- 
+
 
 ### New York Sources
 
+Precinct Data: 
 - [https://data.cityofnewyork.us/City-Government/Election-Districts/h2n3-98hq](https://data.cityofnewyork.us/City-Government/Election-Districts/h2n3-98hq)
 - [https://www.elections.ny.gov/FoilRequests.html](https://www.elections.ny.gov/FoilRequests.html)
+
+Demographic Data:
+- 
+
+Voter Data:
+- 
+
