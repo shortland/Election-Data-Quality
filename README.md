@@ -2,10 +2,10 @@
 
 ## Project Members
 
-David Lin
-Ilan Kleiman
-Reed Gantz
-Samuel Hoffmann
+- David Lin
+- Ilan Kleiman
+- Reed Gantz
+- Samuel Hoffmann
 
 ## Project Description
 
@@ -13,9 +13,9 @@ Something something something.
 
 ### States
 
-Wisconsin
-Utah
-New York
+- Wisconsin
+- Utah
+- New York
 
 ### Frontend
 
@@ -31,10 +31,12 @@ Using our own dedicated database. Ilan will set it up (I have a database server 
 
 #### Database Login
 
+```text
 Username: TODO
 Password: TODO
 IP Address: TODO
 Web Interface/Login: TODO
+```
 
 ## Data Sources
 
