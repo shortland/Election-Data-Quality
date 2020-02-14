@@ -46,10 +46,10 @@ Precinct Data:
 - [https://legis.wisconsin.gov/ltsb/gis/data/](https://legis.wisconsin.gov/ltsb/gis/data/)
 
 Demographic Data:
-- 
+- nothing yet
 
 Voter Data:
-- 
+- nothing yet
 
 ### Utah Sources
 
@@ -57,10 +57,10 @@ Precinct Data:
 - [https://gis.utah.gov/data/political/voter-precincts/](https://gis.utah.gov/data/political/voter-precincts/)
 
 Demographic Data:
-- 
+- nothing yet
 
 Voter Data:
-- 
+- nothing yet
 
 
 ### New York Sources
@@ -70,8 +70,8 @@ Precinct Data:
 - [https://www.elections.ny.gov/FoilRequests.html](https://www.elections.ny.gov/FoilRequests.html)
 
 Demographic Data:
-- 
+- nothing yet
 
 Voter Data:
-- 
+- nothing yet
 
