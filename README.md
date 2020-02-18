@@ -70,9 +70,9 @@ Demographic Data:
 - 2010 Census: https://gis.utah.gov/data/demographic/census/#2010Census
 
 Voter Data:
-- 2016 Presidential: 
-- 2016 Congressional: 
-- 2018 Congressional: 
+- 2016 Presidential: Waiting for email reply
+- 2016 Congressional: Waiting for email reply
+- 2018 Congressional: Waiting for email reply
 
 Other Data:
 - State Parks: https://gis.utah.gov/data/boundaries/wilderness/
