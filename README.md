@@ -48,7 +48,7 @@ Geographic Data:
 - Counties: https://data-ltsb.opendata.arcgis.com/datasets/440ac07e5a174e29b28663d15d5f7d95
 
 Demographic Data:
-- nothing yet
+- 2010 Census: https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#
 
 Voter Data:
 - 2016 Presidential: https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards
@@ -66,7 +66,7 @@ Geographic Data:
 - Counties: 
 
 Demographic Data:
-- nothing yet
+- 2010 Census: https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#
 
 Voter Data:
 - 2016 Presidential: 
@@ -85,7 +85,7 @@ Geographic Data:
 - Counties: 
 
 Demographic Data:
-- nothing yet
+- 2010 Census: https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#
 
 Voter Data:
 - 2016 Presidential: 
