@@ -62,8 +62,8 @@ Other Data:
 
 Geographic Data:
 - Precinct Boundries: https://gis.utah.gov/data/political/voter-precincts/
-- Congressional Boundries: 
-- Counties: 
+- Congressional Boundries: https://gis.utah.gov/data/political/2012-2021-house-senate-congressional-districts/
+- Counties: https://gis.utah.gov/data/boundaries/citycountystate/
 
 Demographic Data:
 - 2010 Census: https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#
@@ -74,7 +74,7 @@ Voter Data:
 - 2018 Congressional: 
 
 Other Data:
-- State Parks:
+- State Parks: https://gis.utah.gov/data/boundaries/wilderness/
 
 
 ### New York Sources
