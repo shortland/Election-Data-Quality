@@ -67,6 +67,7 @@ Geographic Data:
 
 Demographic Data:
 - 2010 Census: https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#
+- 2010 Census: https://gis.utah.gov/data/demographic/census/#2010Census
 
 Voter Data:
 - 2016 Presidential: 
