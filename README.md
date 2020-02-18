@@ -42,36 +42,58 @@ Web Interface/Login: TODO
 
 ### Wisconsin Sources
 
-Precinct Data:
-- [https://legis.wisconsin.gov/ltsb/gis/data/](https://legis.wisconsin.gov/ltsb/gis/data/)
+Geographic Data:
+- Precinct Boundries (wards): https://data-ltsb.opendata.arcgis.com/datasets/d0d0b8de487f431281e2be3d488b0825
+- Congressional Boundries: https://data-ltsb.opendata.arcgis.com/datasets/wisconsin-congressional-districts-2011/data
+- Counties: https://data-ltsb.opendata.arcgis.com/datasets/440ac07e5a174e29b28663d15d5f7d95
 
 Demographic Data:
 - nothing yet
 
 Voter Data:
-- nothing yet
+- 2016 Presidential: https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards
+- 2016 Congressional: https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards
+- 2018 Congressional: https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards
+
+Other Data:
+- State Parks:
 
 ### Utah Sources
 
-Precinct Data:
-- [https://gis.utah.gov/data/political/voter-precincts/](https://gis.utah.gov/data/political/voter-precincts/)
+Geographic Data:
+- Precinct Boundries: https://gis.utah.gov/data/political/voter-precincts/
+- Congressional Boundries: 
+- Counties: 
 
 Demographic Data:
 - nothing yet
 
 Voter Data:
-- nothing yet
+- 2016 Presidential: 
+- 2016 Congressional: 
+- 2018 Congressional: 
+
+Other Data:
+- State Parks:
 
 
 ### New York Sources
 
-Precinct Data: 
-- [https://data.cityofnewyork.us/City-Government/Election-Districts/h2n3-98hq](https://data.cityofnewyork.us/City-Government/Election-Districts/h2n3-98hq)
-- [https://www.elections.ny.gov/FoilRequests.html](https://www.elections.ny.gov/FoilRequests.html)
+Geographic Data:
+- Precinct Boundries: 
+- Congressional Boundries: 
+- Counties: 
 
 Demographic Data:
 - nothing yet
 
 Voter Data:
-- nothing yet
+- 2016 Presidential: 
+- 2016 Congressional: 
+- 2018 Congressional: 
+
+Other Data:
+- State Parks:
+
+
 
