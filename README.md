@@ -85,9 +85,11 @@ Demographic Data
 
 Voter Data
 
-- 2016 Presidential: Waiting for email reply
-- 2016 Congressional: Waiting for email reply
-- 2018 Congressional: Waiting for email reply
+- [2016 Presidential](https://myaccount.dropsend.com/file/1d42ada04fb995c8)
+
+- [2016 Congressional](https://myaccount.dropsend.com/file/1d42ada04fb995c8)
+
+- [2018 Congressional](https://myaccount.dropsend.com/file/1d42ada04fb995c8)
 
 Other Data:
 
@@ -101,7 +103,7 @@ Geographic Data:
 
 - Congressional Boundries
 
-- Counties
+- [Counties](http://gis.ny.gov/gisdata/inventories/details.cfm?DSID=927)
 
 Demographic Data:
 
@@ -109,12 +111,12 @@ Demographic Data:
 
 Voter Data:
 
-- 2016 Presidential
+- [2016 Presidential](https://www.elections.ny.gov/2016ElectionResults.html) (in xls format) (only by county)
 
-- 2016 Congressional
+- [2016 Congressional](https://www.elections.ny.gov/2016ElectionResults.html) (in xls format) (only by county)
 
-- 2018 Congressional
+- [2018 Congressional](https://www.elections.ny.gov/2018ElectionResults.html) (in xls format) (only by county)
 
 Other Data:
 
-- State Parks
+- [State Parks](https://gis.ny.gov/gisdata/inventories/details.cfm?DSID=430)
