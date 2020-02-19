@@ -99,7 +99,7 @@ Other Data:
 
 Geographic Data:
 
-- Precinct Boundries
+- [Precinct Boundries](https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/16320&studyListingIndex=2_3cfc56a7c5a06219bd1114590f1c)
 
 - Congressional Boundries
 
@@ -116,6 +116,134 @@ Voter Data:
 - [2016 Congressional](https://www.elections.ny.gov/2016ElectionResults.html) (in xls format) (only by county)
 
 - [2018 Congressional](https://www.elections.ny.gov/2018ElectionResults.html) (in xls format) (only by county)
+
+Must visit each individual NYS county's website to get the results of its precincts.
+
+- [Albany County]()
+
+- [Allegany County]()
+
+- [Bronx County]()
+
+- [Broome County]()
+
+- [Cattaraugus County ]()
+
+- [Cayuga County ]()
+
+- [Chautauqua County](https://chqgov.com/board-elections/historical-election-results)
+
+- [Chemung County]()
+
+- [Chenango County]()
+
+- [Clinton County]()
+
+- [Columbia County]()
+
+- [Cortland County]()
+
+- [Delaware County]()
+
+- [Dutchess County]()
+
+- [Erie County]()
+
+- [Essex County]()
+
+- [Franklin County]()
+
+- [Fulton County]()
+
+- [Genesee County]()
+
+- [Greene County]()
+
+- [Hamilton County]()
+
+- [Herkimer County]()
+
+- [Jefferson County]()
+
+- [Kings County]()
+
+- [Kings County]()
+
+- [Lewis County]()
+
+- [Livingston County]()
+
+- [Madison County]()
+
+- [Monroe County]()
+
+- [Montgomery County]()
+
+- [Nassau County]()
+
+- [New York County]()
+
+- [Niagara County]()
+
+- [Oneida County]()
+
+- [Onondaga County]()
+
+- [Ontario County]()
+
+- [Orange County]()
+
+- [Orleans County]()
+
+- [Oswego County]()
+
+- [Otsego County]()
+
+- [Putnam County]()
+
+- [Queens County]()
+
+- [Rensselaer County]()
+
+- [Richmond County]()
+
+- [Rockland County]()
+
+- [St. Lawrence County]()
+
+- [Saratoga County]()
+
+- [Schenectady County]()
+
+- [Schoharie County]()
+
+- [Schuyler County]()
+
+- [Seneca County]()
+
+- [Steuben County]()
+
+- [Suffolk County]()
+
+- [Sullivan County]()
+
+- [Tioga County]()
+
+- [Tompkins County]()
+
+- [Ulster County]()
+
+- [Warren County]()
+
+- [Washington County]()
+
+- [Wayne County]()
+
+- [Westchester County]()
+
+- [Wyoming County]()
+
+- [Yates County]()
 
 Other Data:
 
