@@ -117,6 +117,14 @@ Voter Data:
 
 - [2018 Congressional](https://www.elections.ny.gov/2018ElectionResults.html) (in xls format) (only by county)
 
+County FIPS Codes:
+
+- County FIPS is a unique number that identifies each county in the whole country.
+
+- Our precinct boundary data (from Harvard) shows each of the precincts with a County FIPS code concatenated with county-level-precinct # identifying the precinct (# starting from 1..n precincts in the whole state), so this code help in identifying what goes where.
+
+- [FIPS to County Code Chart](https://www.nrcs.usda.gov/wps/portal/nrcs/detail/national/home/?cid=nrcs143_013697)
+
 Must visit each individual NYS county's website to get the results of its precincts.
 
 - [Albany County]()
