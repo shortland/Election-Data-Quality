@@ -48,21 +48,51 @@ def ny_parse_elect_data(elect_file, parsed_data):
             # county_fip = next(i for i, county in enumerate(
             #     parsed_data) if county["name"] == parts[0].lower())
             for i, (fips, county_data) in enumerate(parsed_data.items()):
-                if county_data["name"].lower() == parts[0].lower().strip('\"'):
-                    # print("the fips of %s is %d" %
-                    #       (parts[0].lower().strip('\"'), fips))
+                # special cases for nyc boroughs
+                # election data puts them all under "new york city"
+                nyc_boroughs_to_county = {
+                    "queens": "queens",
+                    "brooklyn": "kings",
+                    "manhattan": "new york",
+                    "bronx": "bronx",
+                    "staten island": "richmond",
+                }
 
+                read_county_name = parts[0].lower().strip('\"')
+                if read_county_name == "new york city":
+                    if parts[1].lower().strip('\"') in nyc_boroughs_to_county:
+                        read_county_name = nyc_boroughs_to_county[parts[1].lower().strip(
+                            '\"')]
+
+                if county_data["county_name"].lower() == read_county_name:
                     # loop thru the precincts in a county
-                    # find the precinct that has the same "elect_id" as our parts.
+                    # find the precinct that has the same "election_district_(geosrc)" as our parts.
                     for j, precinct in enumerate(county_data["precincts"]):
-                        try:
-                            if precinct["elect_id"] == int(parts[4]):
-                                parsed_data[fips]["precincts"][j]["town_city"] = parts[1].lower().strip(
-                                    '\"')
-                                parsed_data[fips]["precincts"][j]["ed_or_ad"] = parts[3].lower().strip(
-                                    '\"')
-                        except:
-                            pass
+                        if precinct["election_district_(geosrc)"] == parts[4].lower().strip('\"'):
+                            area_name = parts[1].lower().strip('\"')
+                            area_type = "borough"
+
+                            if area_name[-2:] == " t":
+                                area_name = area_name[:len(area_name) - 2]
+                                area_type = "town"
+                            elif area_name[-2:] == " c":
+                                area_name = area_name[:len(area_name) - 2]
+                                area_type = "city"
+
+                            parsed_data[fips]["precincts"][j]["area_name"] = area_name
+                            parsed_data[fips]["precincts"][j]["area_type"] = area_type
+                            parsed_data[fips]["precincts"][j]["election_district_or_assembly_district"] = parts[3].lower().strip(
+                                '\"')
+                            parsed_data[fips]["precincts"][j]["assembly_district"] = parts[5].lower().strip(
+                                '\"')
+                            parsed_data[fips]["precincts"][j]["election_district"] = parts[6].lower().strip(
+                                '\"')
+                            parsed_data[fips]["precincts"][j]["congressional_district"] = parts[7].lower().strip(
+                                '\"')
+                            parsed_data[fips]["precincts"][j]["senate_district"] = parts[8].lower().strip(
+                                '\"')
+                            parsed_data[fips]["precincts"][j]["county_legislative_district"] = parts[9].lower().strip(
+                                '\"')
     return parsed_data
 
 
@@ -79,7 +109,8 @@ def ny_parse_geo_data(geo_file, parsed_data):
             precinct_data["w-AKA-localCindex"] = int(parts[2])
             precinct_data["geoid10-AKA-countyfips_localCindex"] = int(parts[3])
             precinct_data["name10-AKA-global_index"] = parts[5].lower().strip('\"')
-            precinct_data["elect_id"] = int(parts[6])
+            precinct_data["election_district_(geosrc)"] = parts[6].lower().strip(
+                '\"')
             parsed_data[county_fip]["precincts"].append(precinct_data)
 
     return parsed_data
@@ -92,7 +123,7 @@ def ny_parse_fips_file(fips_file):
         for cnt, line in enumerate(fp):
             parts = line.split(",")
             county_info = dict()
-            county_info["name"] = parts[1].lower()
+            county_info["county_name"] = parts[1].lower()
             fips_data[int(parts[0])] = county_info
 
     return fips_data
