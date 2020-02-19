@@ -32,10 +32,10 @@ Using our own dedicated database. Ilan will set it up (I have a database server 
 #### Database Login
 
 ```text
-Username: TODO
-Password: TODO
-IP Address: TODO
-Web Interface/Login: TODO
+Username: jerryman
+Password: JerryManderingIsBad123!
+IP Address: 45.55.121.121
+Web Interface/Login: http://45.55.121.121/phpmyadmin
 ```
 
 ## Data Sources
@@ -76,7 +76,6 @@ Voter Data:
 
 Other Data:
 - State Parks: https://gis.utah.gov/data/boundaries/wilderness/
-
 
 ### New York Sources
 
