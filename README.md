@@ -31,69 +31,90 @@ Using our own dedicated database. Ilan will set it up (I have a database server 
 
 #### Database Login
 
+Web Interface: [Login](http://45.55.121.121/phpmyadmin)
+
 ```text
 Username: jerryman
 Password: JerryManderingIsBad123!
-IP Address: 45.55.121.121
-Web Interface/Login: http://45.55.121.121/phpmyadmin
+IP Address: 45.55.121.121:3306
 ```
 
 ## Data Sources
 
-### Wisconsin Sources
+### Wisconsin
 
 Geographic Data:
-- Precinct Boundries (wards): https://data-ltsb.opendata.arcgis.com/datasets/d0d0b8de487f431281e2be3d488b0825
-- Congressional Boundries: https://data-ltsb.opendata.arcgis.com/datasets/wisconsin-congressional-districts-2011/data
-- Counties: https://data-ltsb.opendata.arcgis.com/datasets/440ac07e5a174e29b28663d15d5f7d95
+
+- [Precinct Boundries (wards)](https://data-ltsb.opendata.arcgis.com/datasets/d0d0b8de487f431281e2be3d488b0825)
+
+- [Congressional Boundries](https://data-ltsb.opendata.arcgis.com/datasets/wisconsin-congressional-districts-2011/data)
+
+- [Counties](https://data-ltsb.opendata.arcgis.com/datasets/440ac07e5a174e29b28663d15d5f7d95)
 
 Demographic Data:
-- 2010 Census: https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#
+
+- [2010 Census](https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#)
 
 Voter Data:
-- 2016 Presidential: https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards
-- 2016 Congressional: https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards
-- 2018 Congressional: https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards
+
+- [2016 Presidential](https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards)
+
+- [2016 Congressional](https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards)
+
+- [2018 Congressional](https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards)
 
 Other Data:
-- State Parks:
 
-### Utah Sources
+- State Parks
+
+### Utah
 
 Geographic Data:
-- Precinct Boundries: https://gis.utah.gov/data/political/voter-precincts/
-- Congressional Boundries: https://gis.utah.gov/data/political/2012-2021-house-senate-congressional-districts/
-- Counties: https://gis.utah.gov/data/boundaries/citycountystate/
 
-Demographic Data:
-- 2010 Census: https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#
-- 2010 Census: https://gis.utah.gov/data/demographic/census/#2010Census
+- [Precinct Boundries](https://gis.utah.gov/data/political/voter-precincts/)
 
-Voter Data:
+- [Congressional Boundries](https://gis.utah.gov/data/political/2012-2021-house-senate-congressional-districts/)
+
+- [Counties](https://gis.utah.gov/data/boundaries/citycountystate/)
+
+Demographic Data
+
+- [2010 Census](https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#)
+
+- [2010 Census](https://gis.utah.gov/data/demographic/census/#2010Census)
+
+Voter Data
+
 - 2016 Presidential: Waiting for email reply
 - 2016 Congressional: Waiting for email reply
 - 2018 Congressional: Waiting for email reply
 
 Other Data:
-- State Parks: https://gis.utah.gov/data/boundaries/wilderness/
 
-### New York Sources
+- [State Parks](https://gis.utah.gov/data/boundaries/wilderness/)
+
+### New York
 
 Geographic Data:
-- Precinct Boundries: 
-- Congressional Boundries: 
-- Counties: 
+
+- Precinct Boundries
+
+- Congressional Boundries
+
+- Counties
 
 Demographic Data:
-- 2010 Census: https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#
+
+- [2010 Census](https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#)
 
 Voter Data:
-- 2016 Presidential: 
-- 2016 Congressional: 
-- 2018 Congressional: 
+
+- 2016 Presidential
+
+- 2016 Congressional
+
+- 2018 Congressional
 
 Other Data:
-- State Parks:
 
-
-
+- State Parks
