@@ -83,7 +83,7 @@ Demographic Data
 
 - [2010 Census](https://gis.utah.gov/data/demographic/census/#2010Census)
 
-Voter Data
+Voter Data (Data expires March 3rd)
 
 - [2016 Presidential](https://myaccount.dropsend.com/file/1d42ada04fb995c8)
 
