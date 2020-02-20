@@ -12,8 +12,8 @@
 Something something something.
 
 ## Running
-use 'npm install' to install dependencies
-then use 'yarn start' to start the react app. You may need to install yarn
+use `npm install` to install dependencies
+Then use `yarn start` to start the react app. You may need to install yarn
 
 ### States
 
