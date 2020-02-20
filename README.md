@@ -13,7 +13,7 @@ Something something something.
 
 ### Running
 use `npm install` to install dependencies
-Then use `yarn start` to start the react app. You may need to install yarn
+Then use `npm start` to start the react app ...I think this should work
 
 ### States
 
