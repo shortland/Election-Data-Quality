@@ -1,68 +1,258 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# CSE-416-Project
 
-## Available Scripts
+## Project Members
 
-In the project directory, you can run:
+- David Lin
+- Ilan Kleiman
+- Reed Gantz
+- Samuel Hoffmann
 
-### `yarn start`
+## Project Description
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Something something something.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### States
 
-### `yarn test`
+- Wisconsin
+- Utah
+- New York
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Frontend
 
-### `yarn build`
+Javascript stuff is cool. React and Bootstrap probably
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Backend
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Java backend seems whatever.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Database
 
-### `yarn eject`
+Using our own dedicated database. Ilan will set it up (I have a database server already running, I'll create a new user account so we can all have login access to it).
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### Database Login
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Web Interface: [Login](http://45.55.121.121/phpmyadmin)
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```text
+Username: jerryman
+Password: JerryManderingIsBad123!
+IP Address: 45.55.121.121:3306
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Data Sources
 
-## Learn More
+### Wisconsin
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Geographic Data:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- [Precinct Boundries (wards)](https://data-ltsb.opendata.arcgis.com/datasets/d0d0b8de487f431281e2be3d488b0825)
 
-### Code Splitting
+- [Congressional Boundries](https://data-ltsb.opendata.arcgis.com/datasets/wisconsin-congressional-districts-2011/data)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+- [Counties](https://data-ltsb.opendata.arcgis.com/datasets/440ac07e5a174e29b28663d15d5f7d95)
 
-### Analyzing the Bundle Size
+Demographic Data:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+- [2010 Census](https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#)
 
-### Making a Progressive Web App
+Voter Data:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+- [2016 Presidential](https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards)
 
-### Advanced Configuration
+- [2016 Congressional](https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+- [2018 Congressional](https://data-ltsb.opendata.arcgis.com/datasets/2012-2020-election-data-with-2018-wards)
 
-### Deployment
+Other Data:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+- State Parks
 
-### `yarn build` fails to minify
+### Utah
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Geographic Data:
+
+- [Precinct Boundries](https://gis.utah.gov/data/political/voter-precincts/)
+
+- [Congressional Boundries](https://gis.utah.gov/data/political/2012-2021-house-senate-congressional-districts/)
+
+- [Counties](https://gis.utah.gov/data/boundaries/citycountystate/)
+
+Demographic Data
+
+- [2010 Census](https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#)
+
+- [2010 Census](https://gis.utah.gov/data/demographic/census/#2010Census)
+
+Voter Data
+
+- [2016 Presidential](https://myaccount.dropsend.com/file/1d42ada04fb995c8)
+
+- [2016 Congressional](https://myaccount.dropsend.com/file/1d42ada04fb995c8)
+
+- [2018 Congressional](https://myaccount.dropsend.com/file/1d42ada04fb995c8)
+
+Other Data:
+
+- [State Parks](https://gis.utah.gov/data/boundaries/wilderness/)
+
+### New York
+
+Geographic Data:
+
+- [Precinct Boundries](https://dataverse.harvard.edu/dataset.xhtml?persistentId=hdl:1902.1/16320&studyListingIndex=2_3cfc56a7c5a06219bd1114590f1c)
+
+- Congressional Boundries
+
+- [Counties](http://gis.ny.gov/gisdata/inventories/details.cfm?DSID=927)
+
+Demographic Data:
+
+- [2010 Census](https://www2.census.gov/census_2010/03-Demographic_Profile_with_SF1geos/?#)
+
+Voter Data:
+
+- [2016 Presidential](https://www.elections.ny.gov/2016ElectionResults.html) (in xls format) (only by county)
+
+- [2016 Congressional](https://www.elections.ny.gov/2016ElectionResults.html) (in xls format) (only by county)
+
+- [2018 Congressional](https://www.elections.ny.gov/2018ElectionResults.html) (in xls format) (only by county)
+
+County FIPS Codes:
+
+- County FIPS is a unique number that identifies each county in the whole country.
+
+- Our precinct boundary data (from Harvard) shows each of the precincts with a County FIPS code concatenated with county-level-precinct # identifying the precinct (# starting from 1..n precincts in the whole state), so this code help in identifying what goes where.
+
+- [FIPS to County Code Chart](https://www.nrcs.usda.gov/wps/portal/nrcs/detail/national/home/?cid=nrcs143_013697)
+
+Must visit each individual NYS county's website to get the results of its precincts.
+
+- [Albany County]()
+
+- [Allegany County]()
+
+- [Bronx County]()
+
+- [Broome County]()
+
+- [Cattaraugus County ]()
+
+- [Cayuga County ]()
+
+- [Chautauqua County](https://chqgov.com/board-elections/historical-election-results)
+
+- [Chemung County]()
+
+- [Chenango County]()
+
+- [Clinton County]()
+
+- [Columbia County]()
+
+- [Cortland County]()
+
+- [Delaware County]()
+
+- [Dutchess County]()
+
+- [Erie County]()
+
+- [Essex County]()
+
+- [Franklin County]()
+
+- [Fulton County]()
+
+- [Genesee County]()
+
+- [Greene County]()
+
+- [Hamilton County]()
+
+- [Herkimer County]()
+
+- [Jefferson County]()
+
+- [Kings County]()
+
+- [Kings County]()
+
+- [Lewis County]()
+
+- [Livingston County]()
+
+- [Madison County]()
+
+- [Monroe County]()
+
+- [Montgomery County]()
+
+- [Nassau County]()
+
+- [New York County]()
+
+- [Niagara County]()
+
+- [Oneida County]()
+
+- [Onondaga County]()
+
+- [Ontario County]()
+
+- [Orange County]()
+
+- [Orleans County]()
+
+- [Oswego County]()
+
+- [Otsego County]()
+
+- [Putnam County]()
+
+- [Queens County]()
+
+- [Rensselaer County]()
+
+- [Richmond County]()
+
+- [Rockland County]()
+
+- [St. Lawrence County]()
+
+- [Saratoga County]()
+
+- [Schenectady County]()
+
+- [Schoharie County]()
+
+- [Schuyler County]()
+
+- [Seneca County]()
+
+- [Steuben County]()
+
+- [Suffolk County]()
+
+- [Sullivan County]()
+
+- [Tioga County]()
+
+- [Tompkins County]()
+
+- [Ulster County]()
+
+- [Warren County]()
+
+- [Washington County]()
+
+- [Wayne County]()
+
+- [Westchester County]()
+
+- [Wyoming County]()
+
+- [Yates County]()
+
+Other Data:
+
+- [State Parks](https://gis.ny.gov/gisdata/inventories/details.cfm?DSID=430)
