@@ -21,36 +21,40 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      //currentState: "NY",
       viewport: {
         width: "95vw",
         height: "95vh",
-        latitude: 43.2994,
-        longitude: -74.2179,
-        zoom: 8
+        latitude: 37.0902,
+        longitude: -95.7129,
+        zoom: 4,
       }
     }
   }
 
   stateSelect(name){
-    var latitude = 0;
-    var longitude = 0;
-    var zoom = 8;
+    let latitude = 0;
+    let longitude = 0;
+    let zoom;
+
     switch(name){
       case "NY":
         latitude = 43.2994;
         longitude = -74.2179;
+        zoom = 6;
         break;
       case "WI":
         latitude = 43.7844;
         longitude = -88.7879;
+        zoom = 6;
         break;
       case "UT":
-        latitude = 40.4173;
-        longitude = -82.9071;
+        latitude = 39.3210;
+        longitude = -111.0937;
+        zoom = 6;
         break;
       default:
     }
+
     this.setState({
       viewport: {
         ...this.state.viewport,
@@ -69,13 +73,14 @@ class App extends Component {
         <StateSelector 
           select_state={(state_abv) => this.stateSelect.bind(this, state_abv)} 
           />
+
         <ReactMapGL
           {...viewport}
           onViewportChange={(viewport => this.setState({viewport}))}
           mapStyle= "mapbox://styles/reedm121/ck6modif70t8r1ilazl4xfw4c"
           mapboxApiAccessToken="pk.eyJ1IjoicmVlZG0xMjEiLCJhIjoiY2s2bW81dWlnMHJ2djNra2dmbGJvaDByNCJ9.T6GQYdURKxuqQHUTczcZ-g">
         </ReactMapGL>
-      
+
       </div>
     );
   }
