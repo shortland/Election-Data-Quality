@@ -25,6 +25,8 @@ Then use `npm start` to start the react app ...I think this should work
 
 Javascript stuff is cool. React and Bootstrap probably
 
+[react-mapbox-gl](https://uber.github.io/react-map-gl/docs)
+
 ### Backend
 
 Java backend seems whatever.
