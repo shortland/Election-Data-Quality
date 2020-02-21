@@ -12,9 +12,9 @@ class StateSelector extends Component{
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                    <Dropdown.Item href="#/NewYork" onClick={this.props.selectNY()}>New York</Dropdown.Item>
-                    <Dropdown.Item href="#/Ohio" onClick={this.props.selectOH()}>Ohio</Dropdown.Item>
-                    <Dropdown.Item href="#/Wisconsin" onClick={this.props.selectWI()}>Wisconsin</Dropdown.Item>
+                    <Dropdown.Item href="#/NewYork" onClick={this.props.select_state("NY")}>New York</Dropdown.Item>
+                    <Dropdown.Item href="#/Utah" onClick={this.props.select_state("UT")}>Utah</Dropdown.Item>
+                    <Dropdown.Item href="#/Wisconsin" onClick={this.props.select_state("WI")}>Wisconsin</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
         );

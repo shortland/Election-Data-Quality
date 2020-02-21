@@ -45,10 +45,11 @@ class App extends Component {
         latitude = 43.7844;
         longitude = -88.7879;
         break;
-      case "OH":
+      case "UT":
         latitude = 40.4173;
         longitude = -82.9071;
         break;
+      default:
     }
     this.setState({
       viewport: {
@@ -66,9 +67,7 @@ class App extends Component {
     return (
       <div className="App">
         <StateSelector 
-          selectNY={() => this.stateSelect.bind(this, "NY")} 
-          selectWI={() => this.stateSelect.bind(this, "WI")}
-          selectOH={() => this.stateSelect.bind(this, "OH")}
+          select_state={(state_abv) => this.stateSelect.bind(this, state_abv)} 
           />
         <ReactMapGL
           {...viewport}
