@@ -8,7 +8,7 @@ class StateSelector extends Component{
         return(
             <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    State
+                    Select State
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
