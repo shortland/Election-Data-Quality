@@ -37,3 +37,36 @@
     transform: rotate(360deg);
   }
 }
+
+.state-tooltip {
+  position: absolute;
+  margin: 8px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  max-width: 300px;
+  font-size: 10px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.FullScreenController {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+}
+
+.NavigationController {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  padding: 10px;
+}
+
+.ScaleController {
+  position: absolute;
+  bottom: 36px;
+  left: 0;
+  padding: 10px;
+}
