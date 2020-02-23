@@ -42,10 +42,7 @@ const fullscreenControlStyle = {
 };
 
 const navStyle = {
-  position: 'absolute',
-  top: 36,
-  left: 0,
-  padding: '10px'
+
 };
 
 const scaleControlStyle = {
