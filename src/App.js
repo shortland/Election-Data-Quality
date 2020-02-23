@@ -86,7 +86,6 @@ class App extends Component {
         break;
       case "UT":
         latitude = 39.3210;
-        longitude = -111.0937;
         zoom = 6;
         break;
       default:
@@ -100,6 +99,10 @@ class App extends Component {
         zoom: zoom,
       },
     });
+  }
+
+  testing(n){
+      return null;
   }
 
   _onClickMarker = city => {
