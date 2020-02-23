@@ -25,18 +25,21 @@ import { updateStateColors } from './utils';
  */
 import CITIES from './data/cities.json';
 import STATES_TOOLTIP_DATA from './data/states_tooltip_data.geojson';
+import NY_COUNTY_SHORELINE_DATA from './data/ny_county_shoreline.geojson';
 
 /**
  * Mapbox Style & API Key
  */
-const MAPBOX_STYLE = 'mapbox://styles/shortland/ck6bf8xag0zv81io8o68otfdr/draft';
+const MAPBOX_STYLE = 'mapbox://styles/shortland/ck6znfze13muv1ilie4lf3kyh/draft';
 const MAPBOX_API = 'pk.eyJ1Ijoic2hvcnRsYW5kIiwiYSI6ImNqeXVzOWhsbjBpYzczY29hNGZycTlqdXAifQ.B6l-uEqGG-Pw6-quz4eflQ';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
+      countyData: null,
+      countyDataOutline: null,
+      stateData: null,
       hoveredFeature: null,
       viewport: {
         width: "100%",
@@ -50,29 +53,58 @@ export default class App extends Component {
   }
 
   componentDidMount() {
+    /**
+     * State data
+     */
     json(
       STATES_TOOLTIP_DATA,
       (error, response) => {
         if (!error) {
-          this._loadData(response);
+          this.setState({
+            stateData: updateStateColors(response, f => f.properties.amount_counties),
+          });
+        }
+      }
+    );
+
+    /**
+     * County data outline
+     */
+    json(
+      NY_COUNTY_SHORELINE_DATA,
+      (error, response) => {
+        if (!error) {
+          this.setState({
+            countyDataOutline: response,
+          });
+        }
+      }
+    );
+
+    /**
+     * County data
+     */
+    json(
+      NY_COUNTY_SHORELINE_DATA,
+      (error, response) => {
+        if (!error) {
+          this.setState({
+            countyData: response,
+          });
         }
       }
     );
   }
 
-  _loadData = data => {
-    this.setState({
-      data: updateStateColors(data, f => f.properties.amount_counties)
-    });
-  };
-
   _onClick = event => {
     const feature = event.features[0];
+
+    if (!feature) {
+      return;
+    }
    
-    if (feature.source === "jsx-source-0") {
-      // calculate the bounding box of the feature
+    if (feature.layer.id === "stateData" || feature.layer.id === "countyData") {
       const [minLng, minLat, maxLng, maxLat] = bbox(feature);
-      // construct a viewport instance from the current state
       const viewport = new WebMercatorViewport(this.state.viewport);
       const {longitude, latitude, zoom} = viewport.fitBounds([[minLng, minLat], [maxLng, maxLat]], {
         padding: 40
@@ -90,6 +122,8 @@ export default class App extends Component {
           transitionDuration: 1000,
         }
       });
+
+      return;
     }
   };
 
@@ -99,24 +133,43 @@ export default class App extends Component {
       srcEvent: {offsetX, offsetY},
     } = event;
 
-    const hoveredFeature = features && features.find(f => f.layer.id === 'data');
-
+    const hoveredFeature = features && features.find(f => f.layer.id === 'stateData');
     this.setState({hoveredFeature, x: offsetX, y: offsetY});
+    
+    if (!hoveredFeature) {
+      const countyHoveredFeature = features && features.find(f => f.layer.id === 'countyData');
+      this.setState({countyHoveredFeature, x: offsetX, y: offsetY});
+    }
   };
 
   _renderTooltip() {
-    const {hoveredFeature, x, y} = this.state;
+    const {hoveredFeature, countyHoveredFeature, x, y} = this.state;
 
-    return (
-      hoveredFeature && (
-        <div className="state-tooltip" style={{left: x, top: y}}>
-          <h5>{hoveredFeature.properties.name}</h5>
-          <div>Counties: {hoveredFeature.properties.amount_counties}</div>
-          <br/>
-          <div style={{"fontStyle": "italic"}}>(click to enlarge)</div>
-        </div>
-      )
-    );
+    if (hoveredFeature) {
+      return (
+        hoveredFeature && (
+          <div className="state-tooltip" style={{left: x, top: y}}>
+            <h5>{hoveredFeature.properties.name}</h5>
+            <div>Counties: {hoveredFeature.properties.amount_counties}</div>
+            <br/>
+            <div style={{"fontStyle": "italic"}}>(click to enlarge)</div>
+          </div>
+        )
+      );      
+    }
+
+    if (countyHoveredFeature) {
+      return (
+        countyHoveredFeature && (
+          <div className="state-tooltip" style={{left: x, top: y}}>
+            <h5>{countyHoveredFeature.properties.NAME} County</h5>
+            <div>FIPS Code: {countyHoveredFeature.properties.FIPS_CODE}</div>
+            <br/>
+            <div style={{"fontStyle": "italic"}}>(click to enlarge)</div>
+          </div>
+        )
+      );
+    }
   }
 
   stateSelect(name) {
@@ -179,7 +232,7 @@ export default class App extends Component {
   }
 
   render() {
-    const {viewport, data} = this.state;
+    const { viewport, stateData, countyDataOutline, countyData } = this.state;
 
     return (
       <div className="App">
@@ -227,9 +280,27 @@ export default class App extends Component {
                 <div className="ScaleController">
                   <ScaleControl />
                 </div>
+
+                {/* For rendering (NYS) county colors & tooltips over counties */}
+                <Source type="geojson" data={countyData}>
+                  <Layer 
+                    {...countyDataLayerFillable}
+                    minzoom={5}
+                    maxzoom={8} 
+                  />
+                </Source>
+
+                {/* For rendering (NYS) county data outline */}
+                <Source type="geojson" data={countyDataOutline}>
+                  <Layer 
+                    {...countyDataLayerOutline}
+                    minzoom={5}
+                    maxzoom={8} 
+                  />
+                </Source>
                 
-                {/* For rendering colors & tooltips over our states */}
-                <Source type="geojson" data={data}>
+                {/* For rendering state colors & tooltips over states */}
+                <Source type="geojson" data={stateData}>
                   <Layer 
                     {...dataLayer} 
                     maxzoom={5} 
@@ -246,8 +317,51 @@ export default class App extends Component {
   }
 }
 
+const countyDataLayerFillable = {
+  id: 'countyData',
+  type: 'fill',
+  paint: {
+    'fill-color': {
+      property: 'percentile',
+      stops: [
+        [0, '#3288bd'],
+        [1, '#66c2a5'],
+        [2, '#abdda4'],
+        [3, '#e6f598'],
+        [4, '#ffffbf'],
+        [5, '#fee08b'],
+        [6, '#fdae61'],
+        [7, '#f46d43'],
+        [8, '#d53e4f']
+      ]
+    },
+    'fill-opacity': 0.0,
+  },
+};
+
+const countyDataLayerOutline = {
+  id: 'countyDataOutline',
+  type: 'line',
+  paint: {
+    'line-color': {
+      property: 'percentile',
+      stops: [
+        [0, '#3288bd'],
+        [1, '#66c2a5'],
+        [2, '#abdda4'],
+        [3, '#e6f598'],
+        [4, '#ffffbf'],
+        [5, '#fee08b'],
+        [6, '#fdae61'],
+        [7, '#f46d43'],
+        [8, '#d53e4f']
+      ]
+    },
+  },
+};
+
 const dataLayer = {
-  id: 'data',
+  id: 'stateData',
   type: 'fill',
   paint: {
     'fill-color': {
