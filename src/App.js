@@ -18,6 +18,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import Pins from './components/map-components/pins';
 import CityInfo from './components/map-components/city-info';
 import StateSelector from './components/StateSelector';
+import LeftSidebar from './components/LeftSidebar';
 import { updateStateColors } from './utils';
 
 /**
@@ -255,7 +256,9 @@ export default class App extends Component {
 
         <div>
           <Row>
-            <Col></Col>
+            <Col>
+              <LeftSidebar/>
+            </Col>
             <Col xs={8}>
               <MapGL
                 {...viewport}
