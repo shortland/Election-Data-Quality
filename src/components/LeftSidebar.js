@@ -8,7 +8,6 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 class LeftSidebar extends Component{
     constructor(props){
         super(props);
-
     }
 
     createList = () => {
@@ -28,9 +27,10 @@ class LeftSidebar extends Component{
     }
 
     render(){
+        const list = this.createList();
        return(
            <div>
-           {this.createList()}
+           {list}
            </div>
        );
     }

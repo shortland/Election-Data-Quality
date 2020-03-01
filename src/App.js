@@ -116,6 +116,7 @@ export default class App extends Component {
   }
 
   _onClick = event => {
+    console.log(event);
     //sets the selected feature onclcik, to have properties displayed by LeftSidebar
     const {
       features,
@@ -165,6 +166,41 @@ export default class App extends Component {
     */
 
   };
+
+  _onDblClick = event => {
+    console.log(event);
+  //CODE for ZOOM ONCLICK
+  /*
+  event.stopPropagation();
+  const feature = event.features[0];
+
+  if (!feature) {
+    return;
+  }
+
+  if (feature.layer.id === "stateData" || feature.layer.id === "countyData") {
+    const [minLng, minLat, maxLng, maxLat] = bbox(feature);
+    const viewport = new WebMercatorViewport(this.state.viewport);
+    const {longitude, latitude, zoom} = viewport.fitBounds([[minLng, minLat], [maxLng, maxLat]], {
+      padding: 40
+    });
+
+    this.setState({
+      viewport: {
+        ...this.state.viewport,
+        longitude,
+        latitude,
+        zoom,
+        transitionInterpolator: new LinearInterpolator({
+          around: [event.offsetCenter.x, event.offsetCenter.y]
+        }),
+        transitionDuration: 1000,
+      }
+    });
+    return;
+  } 
+  */
+  }
 
   _onHover = event => {
     const {
@@ -232,6 +268,7 @@ export default class App extends Component {
       case "Utah":
       case "UT":
         latitude = 39.3210;
+        longitude = -111.0937
         zoom = 6;
         break;
       default:
@@ -307,6 +344,8 @@ export default class App extends Component {
                 mapboxApiAccessToken={MAPBOX_API}
                 onHover={this._onHover}
                 onClick={this._onClick}
+                onDblClick={this._onDblClick}
+                doubleClickZoom={false}
               >
                 
                 {/* For rendering pins over our map */}
