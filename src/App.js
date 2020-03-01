@@ -112,29 +112,48 @@ export default class App extends Component {
         }
       }
     );
-
   }
 
   _onClick = event => {
-    //sets the selected feature onclcik, to have properties displayed by LeftSidebar
+    // sets the selected feature onclcik, to have properties displayed by LeftSidebar
     const {
       features,
     } = event;
 
-      const stateFeature = features && features.find(f => f.layer.id === 'stateData');
-      this.setState({ selectedFeature: stateFeature });
-
-      if(!stateFeature){
-        const countyFeature = features && features.find(f => f.layer.id === 'countyData');
-        this.setState({ selectedFeature: countyFeature});
-
-        if(!countyFeature){
-          const precinctFeature = features && features.find(f => f.layer.id === 'precinctData');
-          this.setState({ selectedFeature: precinctFeature });
+    const stateFeature = features && features.find(f => f.layer.id === 'stateData');
+    if (stateFeature) {
+      // if a clicks on a county that was already selected/clicked on
+      if (this.state.selectedFeature) {
+        if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
+          this._zoomToFeature(event);
+          return;
         }
       }
 
-    /* CODE for ZOOM ONCLICK
+      this.setState({ selectedFeature: stateFeature });
+      return;
+    }
+
+    const countyFeature = features && features.find(f => f.layer.id === 'countyData');
+    if (countyFeature) {
+      // if a clicks on a county that was already selected/clicked on
+      if (countyFeature.properties.NAME === this.state.selectedFeature.properties.NAME) {
+        this._zoomToFeature(event);
+        return;
+      }
+
+      this.setState({ selectedFeature: countyFeature });
+      return;
+    }
+
+    const precinctFeature = features && features.find(f => f.layer.id === 'precinctData');
+    if (precinctFeature) {
+      this.setState({ selectedFeature: precinctFeature });
+      return;
+    }
+  };
+
+  _zoomToFeature(event) {
     const feature = event.features[0];
 
     if (!feature) {
@@ -144,7 +163,7 @@ export default class App extends Component {
     if (feature.layer.id === "stateData" || feature.layer.id === "countyData") {
       const [minLng, minLat, maxLng, maxLat] = bbox(feature);
       const viewport = new WebMercatorViewport(this.state.viewport);
-      const {longitude, latitude, zoom} = viewport.fitBounds([[minLng, minLat], [maxLng, maxLat]], {
+      const { longitude, latitude, zoom } = viewport.fitBounds([[minLng, minLat], [maxLng, maxLat]], {
         padding: 40
       });
 
@@ -162,49 +181,47 @@ export default class App extends Component {
       });
       return;
     }
-    */
-
-  };
+  }
 
   _onHover = event => {
     const {
       features,
-      srcEvent: {offsetX, offsetY},
+      srcEvent: { offsetX, offsetY },
     } = event;
 
     const hoveredFeature = features && features.find(f => f.layer.id === 'stateData');
-    this.setState({hoveredFeature, x: offsetX, y: offsetY});
-    
+    this.setState({ hoveredFeature, x: offsetX, y: offsetY });
+
     if (!hoveredFeature) {
       const countyHoveredFeature = features && features.find(f => f.layer.id === 'countyData');
-      this.setState({countyHoveredFeature, x: offsetX, y: offsetY});
+      this.setState({ countyHoveredFeature, x: offsetX, y: offsetY });
     }
   };
 
   _renderTooltip() {
-    const {hoveredFeature, countyHoveredFeature, x, y} = this.state;
+    const { hoveredFeature, countyHoveredFeature, x, y } = this.state;
 
     if (hoveredFeature) {
       return (
         hoveredFeature && (
-          <div className="state-tooltip" style={{left: x, top: y}}>
+          <div className="state-tooltip" style={{ left: x, top: y }}>
             <h5>{hoveredFeature.properties.name}</h5>
             <div>Counties: {hoveredFeature.properties.amount_counties}</div>
-            <br/>
-            <div style={{"fontStyle": "italic"}}>(click to enlarge)</div>
+            <br />
+            <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div>
           </div>
         )
-      );      
+      );
     }
 
     if (countyHoveredFeature) {
       return (
         countyHoveredFeature && (
-          <div className="state-tooltip" style={{left: x, top: y}}>
+          <div className="state-tooltip" style={{ left: x, top: y }}>
             <h5>{countyHoveredFeature.properties.NAME} County</h5>
             <div>FIPS Code: {countyHoveredFeature.properties.FIPS_CODE}</div>
-            <br/>
-            <div style={{"fontStyle": "italic"}}>(click to enlarge)</div>
+            <br />
+            <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div>
           </div>
         )
       );
@@ -220,18 +237,19 @@ export default class App extends Component {
       case "New York":
       case "NY":
         latitude = 43.2994;
-        longitude = -74.2179;
+        longitude = -76.2179;
         zoom = 6;
         break;
       case "Wisconsin":
       case "WI":
-        latitude = 43.7844;
-        longitude = -88.7879;
+        latitude = 44.7844;
+        longitude = -89.7879;
         zoom = 6;
         break;
       case "Utah":
       case "UT":
         latitude = 39.3210;
+        longitude = -112.0937;
         zoom = 6;
         break;
       default:
@@ -296,7 +314,7 @@ export default class App extends Component {
           <Row>
             <Col>
               <LeftSidebar
-                selected = {this.state.selectedFeature}
+                selected={this.state.selectedFeature}
               />
             </Col>
             <Col xs={8}>
@@ -308,7 +326,7 @@ export default class App extends Component {
                 onHover={this._onHover}
                 onClick={this._onClick}
               >
-                
+
                 {/* For rendering pins over our map */}
                 {/* <Pins data={CITIES} onClick={this._onClickMarker} />
                 {this._renderPopup()} */}
@@ -326,27 +344,27 @@ export default class App extends Component {
 
                 {/* For rendering (NYS) county colors & tooltips over counties */}
                 <Source type="geojson" data={countyData}>
-                  <Layer 
+                  <Layer
                     {...countyDataLayerFillable}
                     minzoom={5}
-                    maxzoom={8} 
+                    maxzoom={8}
                   />
                 </Source>
 
                 {/* For rendering (NYS) county data outline */}
                 <Source type="geojson" data={countyDataOutline}>
-                  <Layer 
+                  <Layer
                     {...countyDataLayerOutline}
                     minzoom={5}
-                    maxzoom={8} 
+                    maxzoom={8}
                   />
                 </Source>
-                
+
                 {/* For rendering state colors & tooltips over states */}
                 <Source type="geojson" data={stateData}>
-                  <Layer 
-                    {...dataLayer} 
-                    maxzoom={5} 
+                  <Layer
+                    {...dataLayer}
+                    maxzoom={5}
                   />
                 </Source>
 
