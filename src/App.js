@@ -27,6 +27,7 @@ import { updateStateColors } from './utils';
 import CITIES from './data/cities.json';
 import STATES_TOOLTIP_DATA from './data/states_tooltip_data.geojson';
 import NY_COUNTY_SHORELINE_DATA from './data/ny_county_shoreline.geojson';
+import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 
 /**
  * Mapbox Style & API Key
@@ -42,6 +43,7 @@ export default class App extends Component {
       countyDataOutline: null,
       stateData: null,
       hoveredFeature: null,
+      precinctData: null,
       viewport: {
         width: "100%",
         height: "90vh",
@@ -50,6 +52,7 @@ export default class App extends Component {
         zoom: 3.3,
       },
       popupInfo: null,
+      selectedFeature: null
     };
   }
 
@@ -95,15 +98,49 @@ export default class App extends Component {
         }
       }
     );
+
+    /**
+     * example/testing precinct data
+     */
+    json(
+      TESTING_PRECINCT_DATA,
+      (error, response) => {
+        if (!error) {
+          this.setState({
+            precinctData: response,
+          });
+        }
+      }
+    );
+
   }
 
   _onClick = event => {
+    //sets the selected feature onclcik, to have properties displayed by LeftSidebar
+    const {
+      features,
+    } = event;
+
+      const stateFeature = features && features.find(f => f.layer.id === 'stateData');
+      this.setState({ selectedFeature: stateFeature });
+
+      if(!stateFeature){
+        const countyFeature = features && features.find(f => f.layer.id === 'countyData');
+        this.setState({ selectedFeature: countyFeature});
+
+        if(!countyFeature){
+          const precinctFeature = features && features.find(f => f.layer.id === 'precinctData');
+          this.setState({ selectedFeature: precinctFeature });
+        }
+      }
+
+    /* CODE for ZOOM ONCLICK
     const feature = event.features[0];
 
     if (!feature) {
       return;
     }
-   
+
     if (feature.layer.id === "stateData" || feature.layer.id === "countyData") {
       const [minLng, minLat, maxLng, maxLat] = bbox(feature);
       const viewport = new WebMercatorViewport(this.state.viewport);
@@ -123,9 +160,10 @@ export default class App extends Component {
           transitionDuration: 1000,
         }
       });
-
       return;
     }
+    */
+
   };
 
   _onHover = event => {
@@ -233,7 +271,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { viewport, stateData, countyDataOutline, countyData } = this.state;
+    const { viewport, stateData, countyDataOutline, countyData, precinctData } = this.state;
 
     return (
       <div className="App">
@@ -257,7 +295,9 @@ export default class App extends Component {
         <div>
           <Row>
             <Col>
-              <LeftSidebar/>
+              <LeftSidebar
+                selected = {this.state.selectedFeature}
+              />
             </Col>
             <Col xs={8}>
               <MapGL
@@ -309,6 +349,14 @@ export default class App extends Component {
                     maxzoom={5} 
                   />
                 </Source>
+
+                {/* PRECINCT EXAMPLE DATA */}
+                <Source type="geojson" data={precinctData}>
+                  <Layer
+                    {...precinctDataLayerFillable}
+                    minzoom={8}
+                  />
+                </Source>
                 {this._renderTooltip()}
               </MapGL>
             </Col>
@@ -319,6 +367,28 @@ export default class App extends Component {
     );
   }
 }
+
+const precinctDataLayerFillable = {
+  id: 'precinctData',
+  type: 'fill',
+  paint: {
+    'fill-color': {
+      property: 'percentile',
+      stops: [
+        [0, '#3288bd'],
+        [1, '#66c2a5'],
+        [2, '#abdda4'],
+        [3, '#e6f598'],
+        [4, '#ffffbf'],
+        [5, '#fee08b'],
+        [6, '#fdae61'],
+        [7, '#f46d43'],
+        [8, '#d53e4f']
+      ]
+    },
+    'fill-opacity': 0.5,
+  },
+};
 
 const countyDataLayerFillable = {
   id: 'countyData',

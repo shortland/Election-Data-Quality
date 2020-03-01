@@ -5,7 +5,7 @@
       "type": "Feature",
       "properties": {
           "type": "precinct",
-          "name": "Precinct 1",
+          "name": "Greenwich-Precinct-1",
           "population": 450,
           "racial-demographics": {"White": 60, "Black": 12, "Hispanic": 18, "Asian": 6},
           "2016-presidential-results": {"Trump": 65, "Hillary": 35}
@@ -52,7 +52,21 @@
     },
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+          "type": "precinct",
+        "name": "Greenwich-Precinct-2",
+        "population": 116,
+        "racial-demographics": {
+            "White": 58,
+            "Black": 10,
+            "Hispanic": 10,
+            "Asian": 14
+        },
+        "2016-presidential-results": {
+            "Trump": 50,
+            "Hillary": 50
+        }
+      },
       "geometry": {
         "type": "Polygon",
         "coordinates": [

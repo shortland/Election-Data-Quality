@@ -3,54 +3,36 @@ import React, { Component } from 'react';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 class LeftSidebar extends Component{
+    constructor(props){
+        super(props);
+
+    }
+
+    createList = () => {
+        let list = [];
+
+        const feature = this.props.selected; //the selected feature
+
+        if (feature) {
+            if (feature.properties) {
+                const properties = feature.properties;
+                for (const p in properties){
+                    list.push(<div>{`${p}: ${properties[p]}`}</div>)
+                }
+            }
+        }
+        return list;
+    }
 
     render(){
-        return(
-            <div>
-                <InputGroup className="mb-3">
-                    <InputGroup.Prepend>
-                        <InputGroup.Text id="basic-addon1">Name</InputGroup.Text>
-                    </InputGroup.Prepend>
-                    <FormControl
-                        placeholder="Precinct Name"
-                        defaultValue="heelloooo"
-                        aria-label="Username"
-                        aria-describedby="basic-addon1"
-                    />
-                </InputGroup>
-
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>Race</th>
-                            <th>Population</th>
-                            <th>Percentage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>White</td>
-                            <td>num</td>
-                            <td>%</td>
-                            
-                        </tr>
-                        <tr>
-                            <td>Hispanic</td>
-                            <td>num</td>
-                            <td>%</td>
-                            
-                        </tr>
-                        <tr>
-                            <td>Black</td>
-                            <td>num</td>
-                            <td>%</td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </div>
-        )
+       return(
+           <div>
+           {this.createList()}
+           </div>
+       );
     }
 }
 
