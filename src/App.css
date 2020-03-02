@@ -90,3 +90,7 @@
     margin: 10px 0px 10px 0px;
     background-color: rgb(234, 0, 0);
 }
+
+#leftCol {
+    left: 1%;
+}

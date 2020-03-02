@@ -347,7 +347,7 @@ export default class App extends Component {
 
                 <div>
                     <Row>
-                        <Col>
+                        <Col id="leftCol">
                             <LeftSidebar
                                 selected={this.state.selectedFeature}
                             />
