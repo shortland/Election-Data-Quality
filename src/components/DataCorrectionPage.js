@@ -15,7 +15,7 @@ class DataCorrectionPage extends Component {
     }
 
     dismiss() {
-        this.props.callBackLeftSideBar("done");
+        this.props.data_correction_page_status("done");
     }
 
 

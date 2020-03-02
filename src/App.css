@@ -94,3 +94,9 @@
 #leftCol {
     left: 1%;
 }
+
+/*Comment Modal*/
+
+#commentModalInput {
+    width: 460px;
+}
