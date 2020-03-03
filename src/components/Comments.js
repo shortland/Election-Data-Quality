@@ -35,7 +35,7 @@ class Comments extends Component {
     get_comments() {
         let numComments = Math.ceil(Math.random() * 3);
         let commenter = ["David", "Ilan", "Reed", "Sam"];
-        let content = ["This is interesting.", "That is really cool.", "Hi!", "I ran out of idea."];
+        let content = ["Some comment about changing the election data b/c old source was invalid.", "Some comment about undoing the yesterdays changes done to the boundaries of the Albany county of NY.", "Some test comment.", "Another test comment."];
         let comments = [];
         for (let i = 0; i < numComments; i++) {
             let comment = {
@@ -54,7 +54,7 @@ class Comments extends Component {
             displayed_comments.push(
                 <Card>
                     <Card.Body>
-                        {comments[i].commenter}{":"}{comments[i].content}
+                        {comments[i].commenter}{": "}{comments[i].content}
                     </Card.Body>
                 </Card>
             );

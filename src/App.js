@@ -1,30 +1,40 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import MapGL, { Popup, NavigationControl, FullscreenControl, ScaleControl, Source, Layer, LinearInterpolator, WebMercatorViewport } from 'react-map-gl';
-import { Row, Col, Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
+import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import { json } from 'd3-request';
 import bbox from '@turf/bbox';
-
+import { ToastContainer, toast } from 'react-toastify';
+import DeckGL from '@deck.gl/react';
+import { GeoJsonLayer } from '@deck.gl/layers';
+import Geocoder from 'react-map-gl-geocoder';
+import { Editor, EditorModes } from 'react-map-gl-draw';
 /**
  * CSS Styling
  */
 import './App.css';
+import './styles/Collapsible.css';
+import './static/app.css';
+// import './styles/GeoCodeSearch.css';
+import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 /**
  * Our components
  */
-import Pins from './components/map-components/pins';
+// import Pins from './components/map-components/pins';
 import CityInfo from './components/map-components/city-info';
 import StateSelector from './components/StateSelector';
 import LeftSidebar from './components/LeftSidebar';
 import { updateStateColors } from './utils';
+import Toolbar from './toolbar';
 
 /**
  * Static data files
  */
-import CITIES from './data/cities.json';
+// import CITIES from './data/cities.json';
 import STATES_TOOLTIP_DATA from './data/states_tooltip_data.geojson';
 import NY_COUNTY_SHORELINE_DATA from './data/ny_county_shoreline.geojson';
 import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
@@ -32,7 +42,7 @@ import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 /**
  * Mapbox Style & API Key
  */
-const MAPBOX_STYLE = 'mapbox://styles/shortland/ck6znfze13muv1ilie4lf3kyh/draft';
+const MAPBOX_STYLE = 'mapbox://styles/shortland/ck6bf8xag0zv81io8o68otfdr';
 const MAPBOX_API = 'pk.eyJ1Ijoic2hvcnRsYW5kIiwiYSI6ImNqeXVzOWhsbjBpYzczY29hNGZycTlqdXAifQ.B6l-uEqGG-Pw6-quz4eflQ';
 
 export default class App extends Component {
@@ -46,15 +56,166 @@ export default class App extends Component {
             precinctData: null,
             viewport: {
                 width: "100%",
-                height: "90vh",
+                height: window.innerHeight - 56,
                 latitude: 37.0902,
-                longitude: -95.7129,
+                longitude: -105.7129,
                 zoom: 3.3,
             },
             popupInfo: null,
-            selectedFeature: null
+            selectedFeature: null,
+            selectedMode: EditorModes.READ_ONLY,
+            features: {},
+            selectedFeatureIndex: null,
         };
+
+        this._editorRef = null;
     }
+
+    /**
+     * For Mapbox geocoding
+     */
+    mapRef = React.createRef();
+
+    handleViewportChange = viewport => {
+        this.setState({
+            viewport: { ...this.state.viewport, ...viewport }
+        });
+    };
+
+    handleGeocoderViewportChange = viewport => {
+        const geocoderDefaultOverrides = { transitionDuration: 1000 };
+
+        return this.handleViewportChange({
+            ...viewport,
+            ...geocoderDefaultOverrides,
+        });
+    };
+
+    handleOnResult = event => {
+        console.log(event.result);
+        this.setState({
+            searchResultLayer: new GeoJsonLayer({
+                id: "search-result",
+                data: event.result.geometry,
+                getFillColor: [255, 0, 0, 128],
+                getRadius: 1000,
+                pointRadiusMinPixels: 10,
+                pointRadiusMaxPixels: 10,
+            })
+        });
+    };
+
+    /**
+     * For React Map Gl Draw
+     */
+    _onDelete = () => {
+        const { selectedFeatureIndex } = this.state;
+        if (selectedFeatureIndex === null || selectedFeatureIndex === undefined) {
+            return;
+        }
+
+        this._editorRef.deleteFeatures(selectedFeatureIndex);
+    };
+
+    _switchMode = evt => {
+        let selectedMode = evt.target.id;
+        if (selectedMode === this.state.selectedMode) {
+            selectedMode = null;
+        }
+
+        this.setState({ selectedMode });
+    };
+
+    //Map GL Draw select a feature (a created shape by the MapGLDraw)
+    _onSelect = selected => {
+        this.setState({ selectedFeatureIndex: (selected && selected.selectedFeatureIndex) });
+    };
+    //Map GL Draw update (user draw a new shape)
+    _onUpdate = (features) => {
+        this.setState({ features: features });
+    }
+    // _updateViewport = viewport => {
+    //     this.setState({ viewport });
+    // };
+
+    //toobar save button click event
+    _onSaveRequest = (toolBarRequest) => {
+        if (toolBarRequest) {
+            let selected_saved_feature = this.state.features.data[this.state.selectedFeatureIndex];
+            console.log(selected_saved_feature);
+            if (selected_saved_feature) {
+                toast.info("New precinct is saved", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+            else {
+                toast.info("Please select a new created precint to save", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        }
+    }
+
+    _renderToolbar = () => {
+        return (
+            <Toolbar
+                selectedMode={this.state.selectedMode}
+                onSwitchMode={this._switchMode}
+                onDelete={this._onDelete}
+                onSelect={this._onSelect}
+                features={this.state.features}
+                selectedFeatureId={this.state.selectedFeatureId}
+                toolBarRequest={this._onSaveRequest}
+            />
+        );
+    };
+    // _updateViewport = (viewport) => {
+    //     this.setState({ viewport });
+    // }
+
+    // _onSelect = ({ selectedFeatureId }) => {
+    //     this.setState({ selectedFeatureId });
+    // };
+
+    // _onUpdate = features => {
+    //     this.setState({
+    //         features
+    //     });
+    // };
+
+    // _switchMode = evt => {
+    //     const selectedMode = evt.target.id === this.state.selectedMode ? EditorModes.READ_ONLY : evt.target.id;
+    //     this.setState({
+    //         selectedMode,
+    //         selectedFeatureId: null
+    //     });
+    // };
+
+    // _renderControlPanel = () => {
+    //     return (
+    //         <div style={{ position: 'absolute', top: 0, right: 0, maxWidth: '320px' }}>
+    //             <select onChange={this._switchMode}>
+    //                 <option value="">--Please choose a mode--</option>
+    //                 {MODES.map(mode => <option value={mode.id}>{mode.text}</option>)}
+    //             </select>
+    //         </div>
+    //     );
+    // }
+
+    // _getEditHandleStyle = ({ feature, featureState, vertexIndex, vertexState }) => {
+    //     return {
+    //         fill: vertexState === `SELECTED` ? '#000' : '#aaa',
+    //         stroke: vertexState === `SELECTED` ? '#000' : 'none'
+    //     }
+    // }
+
+    // _getFeatureStyle = ({ feature, featureState }) => {
+    //     return {
+    //         stroke: featureState === `SELECTED` ? '#000' : 'none',
+    //         fill: featureState === `SELECTED` ? '#080' : 'none',
+    //         fillOpacity: 0.8
+    //     }
+    // }
 
     componentDidMount() {
         /**
@@ -122,12 +283,16 @@ export default class App extends Component {
 
         const stateFeature = features && features.find(f => f.layer.id === 'stateData');
         if (stateFeature) {
-            // if a clicks on a county that was already selected/clicked on
+            // if a clicks on a state that was already selected/clicked on
             if (this.state.selectedFeature) {
                 if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
                     this._zoomToFeature(event);
                     return;
                 }
+            } else {
+                toast.info("Click the same feature (state/county) again to zoom in.", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
             }
 
             this.setState({ selectedFeature: stateFeature });
@@ -183,41 +348,6 @@ export default class App extends Component {
         }
     }
 
-    _onDblClick = event => {
-        console.log(event);
-        //CODE for ZOOM ONCLICK
-        /*
-        event.stopPropagation();
-        const feature = event.features[0];
-      
-        if (!feature) {
-          return;
-        }
-      
-        if (feature.layer.id === "stateData" || feature.layer.id === "countyData") {
-          const [minLng, minLat, maxLng, maxLat] = bbox(feature);
-          const viewport = new WebMercatorViewport(this.state.viewport);
-          const {longitude, latitude, zoom} = viewport.fitBounds([[minLng, minLat], [maxLng, maxLat]], {
-            padding: 40
-          });
-      
-          this.setState({
-            viewport: {
-              ...this.state.viewport,
-              longitude,
-              latitude,
-              zoom,
-              transitionInterpolator: new LinearInterpolator({
-                around: [event.offsetCenter.x, event.offsetCenter.y]
-              }),
-              transitionDuration: 1000,
-            }
-          });
-          return;
-        } 
-        */
-    }
-
     _onHover = event => {
         const {
             features,
@@ -242,8 +372,8 @@ export default class App extends Component {
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h5>{hoveredFeature.properties.name}</h5>
                         <div>Counties: {hoveredFeature.properties.amount_counties}</div>
-                        <br />
-                        <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div>
+                        {/* <br /> */}
+                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
                 )
             );
@@ -255,8 +385,8 @@ export default class App extends Component {
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h5>{countyHoveredFeature.properties.NAME} County</h5>
                         <div>FIPS Code: {countyHoveredFeature.properties.FIPS_CODE}</div>
-                        <br />
-                        <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div>
+                        {/* <br /> */}
+                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
                 )
             );
@@ -324,12 +454,12 @@ export default class App extends Component {
     }
 
     render() {
-        const { viewport, stateData, countyDataOutline, countyData, precinctData } = this.state;
+        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer, selectedMode, features } = this.state;
 
         return (
             <div className="App">
                 <Navbar bg="dark" expand="lg" variant="dark">
-                    <Navbar.Brand href="#home">Map Data Viewer</Navbar.Brand>
+                    <Navbar.Brand href="#home">Election Data Quality</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
@@ -338,87 +468,105 @@ export default class App extends Component {
                                 select_state={(state_abv) => this.stateSelect.bind(this, state_abv)}
                             />
                         </Nav>
-                        <Form inline>
-                            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                            <Button variant="outline-success">Search</Button>
-                        </Form>
                     </Navbar.Collapse>
                 </Navbar>
 
                 <div>
-                    <Row>
-                        <Col id="leftCol">
-                            <LeftSidebar
-                                selected={this.state.selectedFeature}
+                    <div id="leftCol">
+                        <LeftSidebar
+                            selected={this.state.selectedFeature}
+                        />
+                    </div>
+
+                    <MapGL
+                        {...viewport}
+                        onViewportChange={(viewport => this.setState({ viewport: viewport }))}
+                        mapStyle={MAPBOX_STYLE}
+                        mapboxApiAccessToken={MAPBOX_API}
+                        onHover={this._onHover}
+                        onClick={this._onClick}
+                        // onDblClick={this._onDblClick}
+                        doubleClickZoom={false}
+                        ref={this.mapRef}
+                    >
+                        <Editor
+                            ref={_ => (this._editorRef = _)}
+                            clickRadius={12}
+                            onSelect={(selected) => this._onSelect(selected)}
+                            onUpdate={(features) => this._onUpdate(features)}
+                            mode={selectedMode}
+                        />
+
+                        {/* Geocoder - enables searching on the map */}
+                        <Geocoder
+                            mapRef={this.mapRef}
+                            onResult={this.handleOnResult}
+                            onViewportChange={this.handleGeocoderViewportChange}
+                            mapboxApiAccessToken={MAPBOX_API}
+                            position="top-right"
+                        />
+                        {/* This is used alongside the Geocoder... 
+                            But apparently it doesn't need to be here for the geocoder to work?
+                            I commented it out - because it mysteriously breaks the Editor...
+                         */}
+                        {/* <DeckGL {...viewport} layers={[searchResultLayer]} /> */}
+
+                        {/* For rendering pins over our map */}
+                        {/* <Pins data={CITIES} onClick={this._onClickMarker} />*/}
+                        {/* {this._renderPopup()} */}
+
+                        {/* For rendering the controls at top left of the map */}
+                        <div className="FullScreenController MapControllers">
+                            <FullscreenControl />
+                        </div>
+                        <div className="NavigationController MapControllers">
+                            <NavigationControl />
+                        </div>
+                        <div className="ScaleController MapControllers">
+                            <ScaleControl />
+                        </div>
+
+                        {/* For rendering (NYS) county colors & tooltips over counties */}
+                        <Source type="geojson" data={countyData}>
+                            <Layer
+                                {...countyDataLayerFillable}
+                                minzoom={5}
+                                maxzoom={8}
                             />
-                        </Col>
-                        <Col xs={8}>
-                            <MapGL
-                                {...viewport}
-                                onViewportChange={(viewport => this.setState({ viewport: viewport }))}
-                                mapStyle={MAPBOX_STYLE}
-                                mapboxApiAccessToken={MAPBOX_API}
-                                onHover={this._onHover}
-                                onClick={this._onClick}
-                                onDblClick={this._onDblClick}
-                                doubleClickZoom={false}
-                            >
+                        </Source>
 
-                                {/* For rendering pins over our map */}
-                                {/* <Pins data={CITIES} onClick={this._onClickMarker} />
-                {this._renderPopup()} */}
+                        {/* For rendering (NYS) county data outline */}
+                        <Source type="geojson" data={countyDataOutline}>
+                            <Layer
+                                {...countyDataLayerOutline}
+                                minzoom={5}
+                            // maxzoom={8}
+                            />
+                        </Source>
 
-                                {/* For rendering the controls at top left of the map */}
-                                <div className="FullScreenController">
-                                    <FullscreenControl />
-                                </div>
-                                <div className="NavigationController">
-                                    <NavigationControl />
-                                </div>
-                                <div className="ScaleController">
-                                    <ScaleControl />
-                                </div>
+                        {/* For rendering state colors & tooltips over states */}
+                        <Source type="geojson" data={stateData}>
+                            <Layer
+                                {...dataLayer}
+                                maxzoom={5}
+                            />
+                        </Source>
 
-                                {/* For rendering (NYS) county colors & tooltips over counties */}
-                                <Source type="geojson" data={countyData}>
-                                    <Layer
-                                        {...countyDataLayerFillable}
-                                        minzoom={5}
-                                        maxzoom={8}
-                                    />
-                                </Source>
+                        {/* PRECINCT EXAMPLE DATA */}
+                        <Source type="geojson" data={precinctData}>
+                            <Layer
+                                {...precinctDataLayerFillable}
+                                minzoom={8}
+                            />
+                        </Source>
+                        {this._renderTooltip()}
 
-                                {/* For rendering (NYS) county data outline */}
-                                <Source type="geojson" data={countyDataOutline}>
-                                    <Layer
-                                        {...countyDataLayerOutline}
-                                        minzoom={5}
-                                        maxzoom={8}
-                                    />
-                                </Source>
-
-                                {/* For rendering state colors & tooltips over states */}
-                                <Source type="geojson" data={stateData}>
-                                    <Layer
-                                        {...dataLayer}
-                                        maxzoom={5}
-                                    />
-                                </Source>
-
-                                {/* PRECINCT EXAMPLE DATA */}
-                                <Source type="geojson" data={precinctData}>
-                                    <Layer
-                                        {...precinctDataLayerFillable}
-                                        minzoom={8}
-                                    />
-                                </Source>
-                                {this._renderTooltip()}
-                            </MapGL>
-                        </Col>
-                        <Col></Col>
-                    </Row>
+                        {this._renderToolbar()}
+                    </MapGL>
                 </div>
-            </div>
+
+                <ToastContainer />
+            </div >
         );
     }
 }
@@ -471,20 +619,8 @@ const countyDataLayerOutline = {
     id: 'countyDataOutline',
     type: 'line',
     paint: {
-        'line-color': {
-            property: 'percentile',
-            stops: [
-                [0, '#3288bd'],
-                [1, '#66c2a5'],
-                [2, '#abdda4'],
-                [3, '#e6f598'],
-                [4, '#ffffbf'],
-                [5, '#fee08b'],
-                [6, '#fdae61'],
-                [7, '#f46d43'],
-                [8, '#d53e4f']
-            ]
-        },
+        'line-color': '#000000',
+        'line-width': 2,
     },
 };
 

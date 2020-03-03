@@ -36,6 +36,20 @@ class ElectionDisplayBar extends Component {
                         <Button variant="outline-primary" id="btn2" className="button" onClick={this.changeElection.bind(this, 2012)}>2012</Button>
                         <Button variant="outline-primary" id="btn3" className="button" onClick={this.changeElection.bind(this, 2008)}>2008</Button>
                     </ButtonGroup>
+                    <br />
+                    <hr />
+                    Presidential:
+                    <div className="BarDisplay">
+                        <div className="BlueBar" style={{ width: electionResults[keys[0]] + '%' }}>
+                            {keys[0] + ' ' + electionResults[keys[0]] + '%'}
+                        </div>
+                        <div className="RedBar" style={{ width: electionResults[keys[1]] + '%' }}>
+                            {keys[1] + ' ' + electionResults[keys[1]] + '%'}
+                        </div>
+                    </div>
+                    <br />
+                    <hr />
+                    Congressional:
                     <div className="BarDisplay">
                         <div className="BlueBar" style={{ width: electionResults[keys[0]] + '%' }}>
                             {keys[0] + ' ' + electionResults[keys[0]] + '%'}

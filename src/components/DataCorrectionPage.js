@@ -20,7 +20,6 @@ class DataCorrectionPage extends Component {
 
 
     render() {
-        //let key = Object.keys(targetData);
         return (
             <div className="data_correction_page">
                 <h4>Data Correction Form</h4>
@@ -41,6 +40,7 @@ class DataCorrectionPage extends Component {
                     <Button variant="outline-primary" id="data_change" onClick={() => { this.save_changes() }}>Change</Button>
                     <Button variant="outline-primary" id="data_change_cancel" onClick={() => { this.dismiss() }}>Cancel</Button>
                 </div>
+                <br />
             </div>
         );
     }
