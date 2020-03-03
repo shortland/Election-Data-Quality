@@ -5,12 +5,17 @@ import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import { json } from 'd3-request';
 import bbox from '@turf/bbox';
 import { ToastContainer, toast } from 'react-toastify';
+import DeckGL from '@deck.gl/react';
+import { GeoJsonLayer } from '@deck.gl/layers';
+import Geocoder from "react-map-gl-geocoder";
 
 /**
  * CSS Styling
  */
 import './App.css';
 import './styles/Collapsible.css';
+// import './styles/GeoCodeSearch.css';
+import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,6 +43,10 @@ import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 const MAPBOX_STYLE = 'mapbox://styles/shortland/ck6bf8xag0zv81io8o68otfdr';
 const MAPBOX_API = 'pk.eyJ1Ijoic2hvcnRsYW5kIiwiYSI6ImNqeXVzOWhsbjBpYzczY29hNGZycTlqdXAifQ.B6l-uEqGG-Pw6-quz4eflQ';
 
+const geoQueryParams = {
+    country: 'us',
+};
+
 export default class App extends Component {
     constructor(props) {
         super(props);
@@ -55,9 +64,43 @@ export default class App extends Component {
                 zoom: 3.3,
             },
             popupInfo: null,
-            selectedFeature: null
+            selectedFeature: null,
         };
     }
+
+    /**
+     * For Mapbox geocoding
+     */
+    mapRef = React.createRef();
+
+    handleViewportChange = viewport => {
+        this.setState({
+            viewport: { ...this.state.viewport, ...viewport }
+        });
+    };
+
+    handleGeocoderViewportChange = viewport => {
+        const geocoderDefaultOverrides = { transitionDuration: 1000 };
+
+        return this.handleViewportChange({
+            ...viewport,
+            ...geocoderDefaultOverrides,
+        });
+    };
+
+    handleOnResult = event => {
+        console.log(event.result);
+        this.setState({
+            searchResultLayer: new GeoJsonLayer({
+                id: "search-result",
+                data: event.result.geometry,
+                getFillColor: [255, 0, 0, 128],
+                getRadius: 1000,
+                pointRadiusMinPixels: 10,
+                pointRadiusMaxPixels: 10,
+            })
+        });
+    };
 
     componentDidMount() {
         /**
@@ -331,12 +374,12 @@ export default class App extends Component {
     }
 
     render() {
-        const { viewport, stateData, countyDataOutline, countyData, precinctData } = this.state;
+        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer } = this.state;
 
         return (
             <div className="App">
                 <Navbar bg="dark" expand="lg" variant="dark">
-                    <Navbar.Brand href="#home">Map Data Viewer</Navbar.Brand>
+                    <Navbar.Brand href="#home">Election Data Quality</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
@@ -345,9 +388,6 @@ export default class App extends Component {
                                 select_state={(state_abv) => this.stateSelect.bind(this, state_abv)}
                             />
                         </Nav>
-                        <Form inline>
-                            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                        </Form>
                     </Navbar.Collapse>
                 </Navbar>
 
@@ -358,7 +398,6 @@ export default class App extends Component {
                         />
                     </div>
 
-
                     <MapGL
                         {...viewport}
                         onViewportChange={(viewport => this.setState({ viewport: viewport }))}
@@ -368,7 +407,17 @@ export default class App extends Component {
                         onClick={this._onClick}
                         onDblClick={this._onDblClick}
                         doubleClickZoom={false}
+                        ref={this.mapRef}
                     >
+                        {/* Geocoder - enables searching on the map */}
+                        <Geocoder
+                            mapRef={this.mapRef}
+                            onResult={this.handleOnResult}
+                            onViewportChange={this.handleGeocoderViewportChange}
+                            mapboxApiAccessToken={MAPBOX_API}
+                            position="top-right"
+                        />
+                        <DeckGL {...viewport} layers={[searchResultLayer]} />
 
                         {/* For rendering pins over our map */}
                         {/* <Pins data={CITIES} onClick={this._onClickMarker} />*/}
@@ -423,7 +472,7 @@ export default class App extends Component {
                 </div>
 
                 <ToastContainer />
-            </div>
+            </div >
         );
     }
 }
