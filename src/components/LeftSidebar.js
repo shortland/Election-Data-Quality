@@ -7,6 +7,7 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import Button from 'react-bootstrap/Tab';
+import Collapsible from 'react-collapsible';
 
 import ElectionDisplayBar from '../components/ElectionDisplayBar';
 import DemographicsTable from '../components/DemographicsTable';
@@ -32,8 +33,9 @@ class LeftSidebar extends Component {
             if (feature.properties) {
                 const properties = feature.properties;
                 for (const p in properties) {
-                    list.push(<div>{`${p}: ${properties[p]}`}</div>)
+                    list.push(<div>{`${p}: ${properties[p]}`}</div>);
                 }
+                // list.push(<div>State: {properties['name']}</div>);
             }
         }
         return list;
@@ -69,7 +71,7 @@ class LeftSidebar extends Component {
             if (mode === "data_display") {
                 return (
                     <div >
-                        <div className="border-bottom border-dark" >
+                        {/* <div className="border-bottom border-dark" >
                             <Tabs defaultActiveKey="general_display" id="left_side_bar_data_tabs">
                                 <Tab eventKey="general_display" title="General Data">
                                     {list}
@@ -90,7 +92,22 @@ class LeftSidebar extends Component {
                         <br />
                         <div className="left_side_bar_btns">
                             <button id="data_correction_btn" onClick={() => this.data_correct_selected()}>Correct Data</button>
-                        </div>
+                        </div> */}
+                        <Collapsible trigger="View General Info">
+                            {list}
+                        </Collapsible>
+                        <Collapsible trigger="View Elections">
+                            <ElectionDisplayBar />
+                        </Collapsible>
+                        <Collapsible trigger="View Demographics">
+                            <DemographicsTable />
+                        </Collapsible>
+                        <Collapsible trigger="View Comments">
+                            <Comments savedCommentData={comment_data} />
+                            <br />
+                            <CommentModal savedCommentData={this.get_comments_modal_data} />
+                        </Collapsible>
+
                     </div >
                 );
             }
@@ -106,7 +123,7 @@ class LeftSidebar extends Component {
         }
         return (
             <div>
-
+                Click on a highlighted state to view details
             </div>
         );
     }

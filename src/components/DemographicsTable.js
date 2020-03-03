@@ -1,23 +1,17 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import Table from 'react-bootstrap/Table';
 
-class DemographicsTable extends Component {
-    constructor(props) {
-        super(props);
-
-    }
-
+class DemographicsTable extends PureComponent {
     render() {
         return (
             <div>
-                <h3>Demographic Data:</h3>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
                             <th>Race</th>
                             <th>Num</th>
-                            <th>Percentage</th>
+                            <th>Percent</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,7 +43,7 @@ class DemographicsTable extends Component {
                     </tbody>
                 </Table>
             </div>
-        )
+        );
     }
 }
 

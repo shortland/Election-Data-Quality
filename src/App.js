@@ -9,6 +9,7 @@ import bbox from '@turf/bbox';
  * CSS Styling
  */
 import './App.css';
+import './styles/Collapsible.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -347,7 +348,6 @@ export default class App extends Component {
 
                 <div>
                     <div id="leftCol">
-                        Click on a highlighted state to view details
                         <LeftSidebar
                             selected={this.state.selectedFeature}
                         />
