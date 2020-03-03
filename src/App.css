@@ -99,6 +99,12 @@
     background-color: rgba(255, 255, 255, 0.9);
 }
 
+/*New Added By David*/
+
+#leftCol {
+    overflow: scroll;
+}
+
 /*Comment Modal*/
 
 #commentModalInput {
@@ -113,10 +119,19 @@
     z-index: 4;
 }
 
+
 .Extra-Large-Button {
     width: 100%;
 }
 
 .Extra-Large-Button:hover {
     text-decoration: underline;
+
+.dataSource {
+    position: relative;
+    font-style: italic;
+    font-size: 8pt;
+    text-align: end;
+    right: -40%;
+    top: -8pt;
 }

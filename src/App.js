@@ -69,6 +69,8 @@ export default class App extends Component {
             features: [],
             selectedFeatureId: null,
             shouldShowPins: false,
+            features: {},
+            selectedFeatureIndex: null,
         };
 
         this._editorRef = null;
@@ -115,9 +117,21 @@ export default class App extends Component {
     _onDelete = () => {
         const { selectedFeatureIndex } = this.state;
         if (selectedFeatureIndex === null || selectedFeatureIndex === undefined) {
+            toast.info("Please select a new created precint before deleting action", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
             return;
         }
-
+        else {
+            toast.info("Selected precinct is deleted", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+            let features = this.state.features;
+            if (selectedFeatureIndex > -1) {
+                features.data.splice(selectedFeatureIndex, 1);
+            }
+            this.setState({ selectedFeatureIndex: null, selectedMode: EditorModes.READ_ONLY, features: features });
+        }
         this._editorRef.deleteFeatures(selectedFeatureIndex);
     };
 
@@ -130,9 +144,36 @@ export default class App extends Component {
         this.setState({ selectedMode });
     };
 
+    //Map GL Draw select a feature (a created shape by the MapGLDraw)
+    _onSelect = selected => {
+        this.setState({ selectedFeatureIndex: (selected && selected.selectedFeatureIndex) });
+    };
+    //Map GL Draw update (user draw a new shape)
+    _onUpdate = (features) => {
+        this.setState({ features: features, selectedMode: EditorModes.READ_ONLY, selectedFeatureIndex: null });
+    }
     // _updateViewport = viewport => {
     //     this.setState({ viewport });
     // };
+
+    //toobar save button click event
+    _onSaveRequest = (toolBarRequest) => {
+        if (toolBarRequest) {
+            let selected_saved_feature = this.state.features.data[this.state.selectedFeatureIndex];
+            console.log(selected_saved_feature);
+            this.setState({ selectedMode: EditorModes.READ_ONLY, selectedFeatureIndex: null })
+            if (selected_saved_feature) {
+                toast.info("New precinct is saved", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+            else {
+                toast.info("Please select a new created precint to save", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        }
+    }
 
     _renderToolbar = () => {
         return (
@@ -140,8 +181,13 @@ export default class App extends Component {
                 selectedMode={this.state.selectedMode}
                 onSwitchMode={this._switchMode}
                 onDelete={this._onDelete}
+                onSelect={this._onSelect}
+                features={this.state.features}
+                selectedFeatureId={this.state.selectedFeatureId}
+                toolBarRequest={this._onSaveRequest}
             />
         );
+
     };
     // _updateViewport = (viewport) => {
     //     this.setState({ viewport });
@@ -190,6 +236,9 @@ export default class App extends Component {
     //         fillOpacity: 0.8
     //     }
     // }
+
+
+
 
     componentDidMount() {
         /**
@@ -441,7 +490,7 @@ export default class App extends Component {
     }
 
     render() {
-        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer, selectedMode, shouldShowPins } = this.state;
+        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer, selectedMode, features, shouldShowPins } = this.state;
 
         return (
             <div className="App">
@@ -480,9 +529,8 @@ export default class App extends Component {
                         <Editor
                             ref={_ => (this._editorRef = _)}
                             clickRadius={12}
-                            onSelect={selected => {
-                                this.setState({ selectedFeatureIndex: selected && selected.selectedFeatureIndex });
-                            }}
+                            onSelect={(selected) => this._onSelect(selected)}
+                            onUpdate={(features) => this._onUpdate(features)}
                             mode={selectedMode}
                         />
 

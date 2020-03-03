@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import { EditorModes } from 'react-map-gl-draw';
 
+
 const MODES = [
     { id: EditorModes.SELECT, text: 'Edit Feature', icon: 'icon-select.svg' },
     { id: EditorModes.DRAW_POINT, text: 'Draw Point', icon: 'icon-point.svg' },
@@ -71,7 +72,7 @@ export default class Toolbar extends PureComponent {
         super(props);
         this.state = {
             deleting: false,
-            hoveredId: null
+            hoveredId: null,
         };
     }
 
@@ -79,16 +80,22 @@ export default class Toolbar extends PureComponent {
         this.setState({ hoveredId: evt && evt.target.id });
     };
 
+    //TODO probably dont neet to pass the evt 
     _onDelete = evt => {
         this.props.onDelete(evt);
         this.setState({ deleting: true });
         setTimeout(() => this.setState({ deleting: false }), 500);
     };
 
+    _onSaveChange = () => {
+        console.log(this.props.features)
+        this.props.toolBarRequest(this.props.features.data);
+    }
+
     render() {
         const { selectedMode } = this.props;
         const { hoveredId } = this.state;
-
+        const { selectedFeatureId, features } = this.state;
         return (
             <Container>
                 {MODES.map(m => {
@@ -121,6 +128,12 @@ export default class Toolbar extends PureComponent {
                     />
                     {hoveredId === 'delete' && <Tooltip>{'Delete'}</Tooltip>}
                 </Delete>
+                <Row
+                    onClick={() => this._onSaveChange()}
+                    onMouseOver={this._onHover}
+                    onMouseOut={_ => this._onHover(null)}
+                    id="saveDrawBtn"
+                ><span style={{ "fontSize": "10px" }}> save</span></Row>
             </Container>
         );
     }
