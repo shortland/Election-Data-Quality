@@ -48,6 +48,7 @@ class DemographicsTable extends PureComponent {
                         </tr>
                     </tfoot>
                 </Table>
+                <a className="dataSource" href="https://electionlab.mit.edu/data">source</a>
             </div>
         );
     }
