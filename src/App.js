@@ -4,6 +4,7 @@ import MapGL, { Popup, NavigationControl, FullscreenControl, ScaleControl, Sourc
 import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import { json } from 'd3-request';
 import bbox from '@turf/bbox';
+import { ToastContainer, toast } from 'react-toastify';
 
 /**
  * CSS Styling
@@ -12,6 +13,7 @@ import './App.css';
 import './styles/Collapsible.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 /**
  * Our components
@@ -123,12 +125,16 @@ export default class App extends Component {
 
         const stateFeature = features && features.find(f => f.layer.id === 'stateData');
         if (stateFeature) {
-            // if a clicks on a county that was already selected/clicked on
+            // if a clicks on a state that was already selected/clicked on
             if (this.state.selectedFeature) {
                 if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
                     this._zoomToFeature(event);
                     return;
                 }
+            } else {
+                toast.info("Click the same feature (state/county) again to zoom in.", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
             }
 
             this.setState({ selectedFeature: stateFeature });
@@ -341,7 +347,6 @@ export default class App extends Component {
                         </Nav>
                         <Form inline>
                             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                            <Button variant="outline-success">Search</Button>
                         </Form>
                     </Navbar.Collapse>
                 </Navbar>
@@ -394,7 +399,7 @@ export default class App extends Component {
                             <Layer
                                 {...countyDataLayerOutline}
                                 minzoom={5}
-                                maxzoom={8}
+                            // maxzoom={8}
                             />
                         </Source>
 
@@ -416,7 +421,9 @@ export default class App extends Component {
                         {this._renderTooltip()}
                     </MapGL>
                 </div>
-            </div >
+
+                <ToastContainer />
+            </div>
         );
     }
 }
@@ -469,20 +476,8 @@ const countyDataLayerOutline = {
     id: 'countyDataOutline',
     type: 'line',
     paint: {
-        'line-color': {
-            property: 'percentile',
-            stops: [
-                [0, '#3288bd'],
-                [1, '#66c2a5'],
-                [2, '#abdda4'],
-                [3, '#e6f598'],
-                [4, '#ffffbf'],
-                [5, '#fee08b'],
-                [6, '#fdae61'],
-                [7, '#f46d43'],
-                [8, '#d53e4f']
-            ]
-        },
+        'line-color': '#000000',
+        'line-width': 2,
     },
 };
 

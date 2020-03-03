@@ -42,9 +42,9 @@ class LeftSidebar extends Component {
     }
 
     //For data correction page
-    data_correct_selected() {
-        this.setState({ mode: "data_correction" });
-    }
+    // data_correct_selected() {
+    //     this.setState({ mode: "data_correction" });
+    // }
 
     //For data correction page to return page_status
     get_data_correction_page_status = (page_status) => {
@@ -65,35 +65,13 @@ class LeftSidebar extends Component {
         const { mode } = this.state;
         const { comment_data } = this.state;
         const list = this.createList();
-        const feature = this.props.selected;
+        // const feature = this.props.selected;
 
         if (list.length > 0) {
             if (mode === "data_display") {
                 return (
                     <div >
-                        {/* <div className="border-bottom border-dark" >
-                            <Tabs defaultActiveKey="general_display" id="left_side_bar_data_tabs">
-                                <Tab eventKey="general_display" title="General Data">
-                                    {list}
-                                </Tab>
-                                <Tab eventKey="demographic_display" title="DemographicsTable">
-                                    <DemographicsTable />
-                                </Tab>
-                                <Tab eventKey="election_display" title="ElectionBar">
-                                    <ElectionDisplayBar />
-                                </Tab>
-                                <Tab eventKey="comments_display" title="Comments">
-                                    <Comments savedCommentData={comment_data} />
-                                    <br />
-                                    <CommentModal savedCommentData={this.get_comments_modal_data} />
-                                </Tab>
-                            </Tabs>
-                        </div>
-                        <br />
-                        <div className="left_side_bar_btns">
-                            <button id="data_correction_btn" onClick={() => this.data_correct_selected()}>Correct Data</button>
-                        </div> */}
-                        <Collapsible trigger="View General Info">
+                        <Collapsible trigger="View General Info" open={true}>
                             {list}
                         </Collapsible>
                         <Collapsible trigger="View Elections">
@@ -102,22 +80,16 @@ class LeftSidebar extends Component {
                         <Collapsible trigger="View Demographics">
                             <DemographicsTable />
                         </Collapsible>
+                        <Collapsible trigger="Modify Data">
+                            <DataCorrectionPage data_correction_page_status={this.get_data_correction_page_status} />
+                        </Collapsible>
                         <Collapsible trigger="View Comments">
                             <Comments savedCommentData={comment_data} />
                             <br />
                             <CommentModal savedCommentData={this.get_comments_modal_data} />
+                            <br />
                         </Collapsible>
-
                     </div >
-                );
-            }
-            else if (mode === "data_correction") {
-                return (
-                    <div>
-                        <div>
-                            <DataCorrectionPage data_correction_page_status={this.get_data_correction_page_status} />
-                        </div >
-                    </div>
                 );
             }
         }

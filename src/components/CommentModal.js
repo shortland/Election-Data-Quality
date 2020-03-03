@@ -27,7 +27,7 @@ class CommentModal extends Component {
         const { show } = this.state;
         return (
             <div>
-                <Button variant="primary" onClick={() => { this.handle_modal_display(true) }}>Make a comment</Button>
+                <Button variant="primary" onClick={() => { this.handle_modal_display(true) }}>Create Comment</Button>
                 <Modal show={show} onHide={() => { this.handle_modal_display(false) }}>
                     <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
