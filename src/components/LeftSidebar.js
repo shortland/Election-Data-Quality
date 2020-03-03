@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
-import Table from 'react-bootstrap/Table';
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Tabs from 'react-bootstrap/Tabs';
-import Tab from 'react-bootstrap/Tab';
-import Button from 'react-bootstrap/Tab';
+// import InputGroup from 'react-bootstrap/InputGroup';
+// import FormControl from 'react-bootstrap/FormControl';
+// import Table from 'react-bootstrap/Table';
+// import Jumbotron from 'react-bootstrap/Jumbotron';
+// import Tabs from 'react-bootstrap/Tabs';
+// import Tab from 'react-bootstrap/Tab';
+// import Button from 'react-bootstrap/Tab';
 import Collapsible from 'react-collapsible';
 
 import ElectionDisplayBar from '../components/ElectionDisplayBar';
@@ -54,7 +54,6 @@ class LeftSidebar extends Component {
     }
 
     get_comments_modal_data = (comment_modal_data) => {
-        console.log("++++++++++++++++++++", comment_modal_data)
         if (comment_modal_data) {
             this.setState({ comment_data: comment_modal_data });
         }

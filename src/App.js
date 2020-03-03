@@ -64,8 +64,8 @@ export default class App extends Component {
             popupInfo: null,
             selectedFeature: null,
             selectedMode: EditorModes.READ_ONLY,
-            features: [],
-            selectedFeatureId: null,
+            features: {},
+            selectedFeatureIndex: null,
         };
 
         this._editorRef = null;
@@ -126,9 +126,35 @@ export default class App extends Component {
         this.setState({ selectedMode });
     };
 
+    //Map GL Draw select a feature (a created shape by the MapGLDraw)
+    _onSelect = selected => {
+        this.setState({ selectedFeatureIndex: (selected && selected.selectedFeatureIndex) });
+    };
+    //Map GL Draw update (user draw a new shape)
+    _onUpdate = (features) => {
+        this.setState({ features: features });
+    }
     // _updateViewport = viewport => {
     //     this.setState({ viewport });
     // };
+
+    //toobar save button click event
+    _onSaveRequest = (toolBarRequest) => {
+        if (toolBarRequest) {
+            let selected_saved_feature = this.state.features.data[this.state.selectedFeatureIndex];
+            console.log(selected_saved_feature);
+            if (selected_saved_feature) {
+                toast.info("New precinct is saved", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+            else {
+                toast.info("Please select a new created precint to save", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        }
+    }
 
     _renderToolbar = () => {
         return (
@@ -136,6 +162,10 @@ export default class App extends Component {
                 selectedMode={this.state.selectedMode}
                 onSwitchMode={this._switchMode}
                 onDelete={this._onDelete}
+                onSelect={this._onSelect}
+                features={this.state.features}
+                selectedFeatureId={this.state.selectedFeatureId}
+                toolBarRequest={this._onSaveRequest}
             />
         );
     };
@@ -424,7 +454,7 @@ export default class App extends Component {
     }
 
     render() {
-        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer, selectedMode } = this.state;
+        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer, selectedMode, features } = this.state;
 
         return (
             <div className="App">
@@ -462,9 +492,8 @@ export default class App extends Component {
                         <Editor
                             ref={_ => (this._editorRef = _)}
                             clickRadius={12}
-                            onSelect={selected => {
-                                this.setState({ selectedFeatureIndex: selected && selected.selectedFeatureIndex });
-                            }}
+                            onSelect={(selected) => this._onSelect(selected)}
+                            onUpdate={(features) => this._onUpdate(features)}
                             mode={selectedMode}
                         />
 

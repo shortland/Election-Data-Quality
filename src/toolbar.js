@@ -71,7 +71,7 @@ export default class Toolbar extends PureComponent {
         super(props);
         this.state = {
             deleting: false,
-            hoveredId: null
+            hoveredId: null,
         };
     }
 
@@ -85,10 +85,15 @@ export default class Toolbar extends PureComponent {
         setTimeout(() => this.setState({ deleting: false }), 500);
     };
 
+    _onSaveChange = () => {
+        console.log(this.props.features)
+        this.props.toolBarRequest(this.props.features.data);
+    }
+
     render() {
         const { selectedMode } = this.props;
         const { hoveredId } = this.state;
-
+        const { selectedFeatureId, features } = this.state;
         return (
             <Container>
                 {MODES.map(m => {
@@ -121,6 +126,12 @@ export default class Toolbar extends PureComponent {
                     />
                     {hoveredId === 'delete' && <Tooltip>{'Delete'}</Tooltip>}
                 </Delete>
+                <Row
+                    onClick={() => this._onSaveChange()}
+                    onMouseOver={this._onHover}
+                    onMouseOut={_ => this._onHover(null)}
+                    id="saveDrawBtn"
+                ><span style={{ "font-size": "10px" }}> save</span></Row>
             </Container>
         );
     }
