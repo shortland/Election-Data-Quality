@@ -37,7 +37,7 @@ const Row = styled.div`
 `;
 
 const Img = styled.img`
-
+  max-width: 20px !important;
 `;
 
 const Tooltip = styled.div`
