@@ -1,4 +1,4 @@
-# CSE-416-Project
+# Election Data Quality
 
 ## Project Members
 
@@ -12,8 +12,8 @@
 Something something something.
 
 ### Running
-use `npm install` to install dependencies
-Then use `npm start` to start the react app ...I think this should work
+use `yarn` to install dependencies
+Then use `yarn start` to start the react app.
 
 ### States
 
@@ -33,7 +33,7 @@ Java backend seems whatever.
 
 ### Database
 
-Using our own dedicated database. Ilan will set it up (I have a database server already running, I'll create a new user account so we can all have login access to it).
+Using our own dedicated database.
 
 #### Database Login
 
@@ -133,131 +133,131 @@ County FIPS Codes:
 
 Must visit each individual NYS county's website to get the results of its precincts.
 
-- [Albany County]()
+- [Albany County](#)
 
-- [Allegany County]()
+- [Allegany County](#)
 
-- [Bronx County]()
+- [Bronx County](#)
 
-- [Broome County]()
+- [Broome County](#)
 
-- [Cattaraugus County ]()
+- [Cattaraugus County ](#)
 
-- [Cayuga County ]()
+- [Cayuga County ](#)
 
 - [Chautauqua County](https://chqgov.com/board-elections/historical-election-results)
 
-- [Chemung County]()
+- [Chemung County](#)
 
-- [Chenango County]()
+- [Chenango County](#)
 
-- [Clinton County]()
+- [Clinton County](#)
 
-- [Columbia County]()
+- [Columbia County](#)
 
-- [Cortland County]()
+- [Cortland County](#)
 
-- [Delaware County]()
+- [Delaware County](#)
 
-- [Dutchess County]()
+- [Dutchess County](#)
 
-- [Erie County]()
+- [Erie County](#)
 
-- [Essex County]()
+- [Essex County](#)
 
-- [Franklin County]()
+- [Franklin County](#)
 
-- [Fulton County]()
+- [Fulton County](#)
 
-- [Genesee County]()
+- [Genesee County](#)
 
-- [Greene County]()
+- [Greene County](#)
 
-- [Hamilton County]()
+- [Hamilton County](#)
 
-- [Herkimer County]()
+- [Herkimer County](#)
 
-- [Jefferson County]()
+- [Jefferson County](#)
 
-- [Kings County]()
+- [Kings County](#)
 
-- [Kings County]()
+- [Kings County](#)
 
-- [Lewis County]()
+- [Lewis County](#)
 
-- [Livingston County]()
+- [Livingston County](#)
 
-- [Madison County]()
+- [Madison County](#)
 
-- [Monroe County]()
+- [Monroe County](#)
 
-- [Montgomery County]()
+- [Montgomery County](#)
 
-- [Nassau County]()
+- [Nassau County](#)
 
-- [New York County]()
+- [New York County](#)
 
-- [Niagara County]()
+- [Niagara County](#)
 
-- [Oneida County]()
+- [Oneida County](#)
 
-- [Onondaga County]()
+- [Onondaga County](#)
 
-- [Ontario County]()
+- [Ontario County](#)
 
-- [Orange County]()
+- [Orange County](#)
 
-- [Orleans County]()
+- [Orleans County](#)
 
-- [Oswego County]()
+- [Oswego County](#)
 
-- [Otsego County]()
+- [Otsego County](#)
 
-- [Putnam County]()
+- [Putnam County](#)
 
-- [Queens County]()
+- [Queens County](#)
 
-- [Rensselaer County]()
+- [Rensselaer County](#)
 
-- [Richmond County]()
+- [Richmond County](#)
 
-- [Rockland County]()
+- [Rockland County](#)
 
-- [St. Lawrence County]()
+- [St. Lawrence County](#)
 
-- [Saratoga County]()
+- [Saratoga County](#)
 
-- [Schenectady County]()
+- [Schenectady County](#)
 
-- [Schoharie County]()
+- [Schoharie County](#)
 
-- [Schuyler County]()
+- [Schuyler County](#)
 
-- [Seneca County]()
+- [Seneca County](#)
 
-- [Steuben County]()
+- [Steuben County](#)
 
-- [Suffolk County]()
+- [Suffolk County](#)
 
-- [Sullivan County]()
+- [Sullivan County](#)
 
-- [Tioga County]()
+- [Tioga County](#)
 
-- [Tompkins County]()
+- [Tompkins County](#)
 
-- [Ulster County]()
+- [Ulster County](#)
 
-- [Warren County]()
+- [Warren County](#)
 
-- [Washington County]()
+- [Washington County](#)
 
-- [Wayne County]()
+- [Wayne County](#)
 
-- [Westchester County]()
+- [Westchester County](#)
 
-- [Wyoming County]()
+- [Wyoming County](#)
 
-- [Yates County]()
+- [Yates County](#)
 
 Other Data:
 
