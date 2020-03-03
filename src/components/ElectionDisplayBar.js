@@ -33,8 +33,8 @@ class ElectionDisplayBar extends Component {
                 <div>
                     <ButtonGroup size="sm" className="mt-3">
                         <Button variant="outline-primary" id="btn1" className="button" onClick={this.changeElection.bind(this, 2016)}>2016</Button>
-                        <Button variant="outline-primary" id="btn2" className="button" onClick={this.changeElection.bind(this, 2012)}>2012</Button>
-                        <Button variant="outline-primary" id="btn3" className="button" onClick={this.changeElection.bind(this, 2008)}>2008</Button>
+                        {/* <Button variant="outline-primary" id="btn2" className="button" onClick={this.changeElection.bind(this, 2012)}>2016</Button> */}
+                        <Button variant="outline-primary" id="btn3" className="button" onClick={this.changeElection.bind(this, 2008)}>2018</Button>
                     </ButtonGroup>
                     <br />
                     <hr />
