@@ -111,9 +111,21 @@ export default class App extends Component {
     _onDelete = () => {
         const { selectedFeatureIndex } = this.state;
         if (selectedFeatureIndex === null || selectedFeatureIndex === undefined) {
+            toast.info("Please select a new created precint before deleting action", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
             return;
         }
-
+        else {
+            toast.info("Selected precinct is deleted", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+            let features = this.state.features;
+            if (selectedFeatureIndex > -1) {
+                features.data.splice(selectedFeatureIndex, 1);
+            }
+            this.setState({ selectedFeatureIndex: null, selectedMode: EditorModes.READ_ONLY, features: features });
+        }
         this._editorRef.deleteFeatures(selectedFeatureIndex);
     };
 
@@ -132,7 +144,7 @@ export default class App extends Component {
     };
     //Map GL Draw update (user draw a new shape)
     _onUpdate = (features) => {
-        this.setState({ features: features });
+        this.setState({ features: features, selectedMode: EditorModes.READ_ONLY, selectedFeatureIndex: null });
     }
     // _updateViewport = viewport => {
     //     this.setState({ viewport });
@@ -143,6 +155,7 @@ export default class App extends Component {
         if (toolBarRequest) {
             let selected_saved_feature = this.state.features.data[this.state.selectedFeatureIndex];
             console.log(selected_saved_feature);
+            this.setState({ selectedMode: EditorModes.READ_ONLY, selectedFeatureIndex: null })
             if (selected_saved_feature) {
                 toast.info("New precinct is saved", {
                     position: toast.POSITION.BOTTOM_RIGHT,
@@ -168,6 +181,7 @@ export default class App extends Component {
                 toolBarRequest={this._onSaveRequest}
             />
         );
+
     };
     // _updateViewport = (viewport) => {
     //     this.setState({ viewport });
@@ -216,6 +230,9 @@ export default class App extends Component {
     //         fillOpacity: 0.8
     //     }
     // }
+
+
+
 
     componentDidMount() {
         /**
