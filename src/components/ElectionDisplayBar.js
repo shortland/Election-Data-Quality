@@ -58,6 +58,7 @@ class ElectionDisplayBar extends Component {
                             {keys[1] + ' ' + electionResults[keys[1]] + '%'}
                         </div>
                     </div>
+                    <a className="dataSource" href="https://electionlab.mit.edu/data">source</a>
                 </div>
             )
         }
