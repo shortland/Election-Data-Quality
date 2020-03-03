@@ -46,7 +46,7 @@ export default class App extends Component {
             precinctData: null,
             viewport: {
                 width: "100%",
-                height: "90vh",
+                height: window.innerHeight - 56,
                 latitude: 37.0902,
                 longitude: -95.7129,
                 zoom: 3.3,
