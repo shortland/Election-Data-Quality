@@ -61,6 +61,10 @@ class LeftSidebar extends Component {
         console.log(this.state);
     }
 
+    _handleClick = event => {
+        this.props.showErrorPins();
+    }
+
     render() {
         const { mode } = this.state;
         const { comment_data } = this.state;
@@ -88,6 +92,14 @@ class LeftSidebar extends Component {
                             <br />
                             <CommentModal savedCommentData={this.get_comments_modal_data} />
                             <br />
+                        </Collapsible>
+                        <Collapsible trigger="View Map Errors">
+                            <button className="Extra-Large-Button" onClick={this._handleClick}>View All</button>
+                            <button className="Extra-Large-Button" onClick={this._handleClick}>View Self Intersecting Boundaries</button>
+                            <button className="Extra-Large-Button" onClick={this._handleClick}>View Open Borders</button>
+                            <button className="Extra-Large-Button" onClick={this._handleClick}>View Gaps in Precinct Coverage</button>
+                            <button className="Extra-Large-Button" onClick={this._handleClick}>View Precinct Multipolygon</button>
+                            <button className="Extra-Large-Button" onClick={this._handleClick}>View Overlapping Precincts</button>
                         </Collapsible>
                     </div >
                 );
