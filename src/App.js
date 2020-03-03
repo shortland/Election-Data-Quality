@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import MapGL, { Popup, NavigationControl, FullscreenControl, ScaleControl, Source, Layer, LinearInterpolator, WebMercatorViewport } from 'react-map-gl';
-import { Row, Col, Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
+import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import { json } from 'd3-request';
 import bbox from '@turf/bbox';
 
@@ -15,7 +15,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 /**
  * Our components
  */
-import Pins from './components/map-components/pins';
+// import Pins from './components/map-components/pins';
 import CityInfo from './components/map-components/city-info';
 import StateSelector from './components/StateSelector';
 import LeftSidebar from './components/LeftSidebar';
@@ -24,7 +24,7 @@ import { updateStateColors } from './utils';
 /**
  * Static data files
  */
-import CITIES from './data/cities.json';
+// import CITIES from './data/cities.json';
 import STATES_TOOLTIP_DATA from './data/states_tooltip_data.geojson';
 import NY_COUNTY_SHORELINE_DATA from './data/ny_county_shoreline.geojson';
 import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
@@ -32,7 +32,7 @@ import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 /**
  * Mapbox Style & API Key
  */
-const MAPBOX_STYLE = 'mapbox://styles/shortland/ck6znfze13muv1ilie4lf3kyh/draft';
+const MAPBOX_STYLE = 'mapbox://styles/shortland/ck6bf8xag0zv81io8o68otfdr';
 const MAPBOX_API = 'pk.eyJ1Ijoic2hvcnRsYW5kIiwiYSI6ImNqeXVzOWhsbjBpYzczY29hNGZycTlqdXAifQ.B6l-uEqGG-Pw6-quz4eflQ';
 
 export default class App extends Component {
@@ -242,8 +242,8 @@ export default class App extends Component {
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h5>{hoveredFeature.properties.name}</h5>
                         <div>Counties: {hoveredFeature.properties.amount_counties}</div>
-                        <br />
-                        <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div>
+                        {/* <br /> */}
+                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
                 )
             );
@@ -255,8 +255,8 @@ export default class App extends Component {
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h5>{countyHoveredFeature.properties.NAME} County</h5>
                         <div>FIPS Code: {countyHoveredFeature.properties.FIPS_CODE}</div>
-                        <br />
-                        <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div>
+                        {/* <br /> */}
+                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
                 )
             );
@@ -346,79 +346,77 @@ export default class App extends Component {
                 </Navbar>
 
                 <div>
-                    <Row>
-                        <Col id="leftCol">
-                            <LeftSidebar
-                                selected={this.state.selectedFeature}
+                    <div id="leftCol">
+                        Click on a highlighted state to view details
+                        <LeftSidebar
+                            selected={this.state.selectedFeature}
+                        />
+                    </div>
+
+
+                    <MapGL
+                        {...viewport}
+                        onViewportChange={(viewport => this.setState({ viewport: viewport }))}
+                        mapStyle={MAPBOX_STYLE}
+                        mapboxApiAccessToken={MAPBOX_API}
+                        onHover={this._onHover}
+                        onClick={this._onClick}
+                        onDblClick={this._onDblClick}
+                        doubleClickZoom={false}
+                    >
+
+                        {/* For rendering pins over our map */}
+                        {/* <Pins data={CITIES} onClick={this._onClickMarker} />*/}
+                        {/* {this._renderPopup()} */}
+
+                        {/* For rendering the controls at top left of the map */}
+                        <div className="FullScreenController MapControllers">
+                            <FullscreenControl />
+                        </div>
+                        <div className="NavigationController MapControllers">
+                            <NavigationControl />
+                        </div>
+                        <div className="ScaleController MapControllers">
+                            <ScaleControl />
+                        </div>
+
+                        {/* For rendering (NYS) county colors & tooltips over counties */}
+                        <Source type="geojson" data={countyData}>
+                            <Layer
+                                {...countyDataLayerFillable}
+                                minzoom={5}
+                                maxzoom={8}
                             />
-                        </Col>
-                        <Col xs={8}>
-                            <MapGL
-                                {...viewport}
-                                onViewportChange={(viewport => this.setState({ viewport: viewport }))}
-                                mapStyle={MAPBOX_STYLE}
-                                mapboxApiAccessToken={MAPBOX_API}
-                                onHover={this._onHover}
-                                onClick={this._onClick}
-                                onDblClick={this._onDblClick}
-                                doubleClickZoom={false}
-                            >
+                        </Source>
 
-                                {/* For rendering pins over our map */}
-                                {/* <Pins data={CITIES} onClick={this._onClickMarker} />
-                {this._renderPopup()} */}
+                        {/* For rendering (NYS) county data outline */}
+                        <Source type="geojson" data={countyDataOutline}>
+                            <Layer
+                                {...countyDataLayerOutline}
+                                minzoom={5}
+                                maxzoom={8}
+                            />
+                        </Source>
 
-                                {/* For rendering the controls at top left of the map */}
-                                <div className="FullScreenController">
-                                    <FullscreenControl />
-                                </div>
-                                <div className="NavigationController">
-                                    <NavigationControl />
-                                </div>
-                                <div className="ScaleController">
-                                    <ScaleControl />
-                                </div>
+                        {/* For rendering state colors & tooltips over states */}
+                        <Source type="geojson" data={stateData}>
+                            <Layer
+                                {...dataLayer}
+                                maxzoom={5}
+                            />
+                        </Source>
 
-                                {/* For rendering (NYS) county colors & tooltips over counties */}
-                                <Source type="geojson" data={countyData}>
-                                    <Layer
-                                        {...countyDataLayerFillable}
-                                        minzoom={5}
-                                        maxzoom={8}
-                                    />
-                                </Source>
-
-                                {/* For rendering (NYS) county data outline */}
-                                <Source type="geojson" data={countyDataOutline}>
-                                    <Layer
-                                        {...countyDataLayerOutline}
-                                        minzoom={5}
-                                        maxzoom={8}
-                                    />
-                                </Source>
-
-                                {/* For rendering state colors & tooltips over states */}
-                                <Source type="geojson" data={stateData}>
-                                    <Layer
-                                        {...dataLayer}
-                                        maxzoom={5}
-                                    />
-                                </Source>
-
-                                {/* PRECINCT EXAMPLE DATA */}
-                                <Source type="geojson" data={precinctData}>
-                                    <Layer
-                                        {...precinctDataLayerFillable}
-                                        minzoom={8}
-                                    />
-                                </Source>
-                                {this._renderTooltip()}
-                            </MapGL>
-                        </Col>
-                        <Col></Col>
-                    </Row>
+                        {/* PRECINCT EXAMPLE DATA */}
+                        <Source type="geojson" data={precinctData}>
+                            <Layer
+                                {...precinctDataLayerFillable}
+                                minzoom={8}
+                            />
+                        </Source>
+                        {this._renderTooltip()}
+                    </MapGL>
                 </div>
-            </div>
+            </div >
         );
     }
 }

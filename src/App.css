@@ -50,25 +50,22 @@
     pointer-events: none;
 }
 
-.FullScreenController {
+.MapControllers {
     position: absolute;
-    top: 0;
-    left: 0;
+    left: 250px;
     padding: 10px;
+}
+
+.FullScreenController {
+    top: 0;
 }
 
 .NavigationController {
-    position: absolute;
     top: 36px;
-    left: 0;
-    padding: 10px;
 }
 
 .ScaleController {
-    position: absolute;
     bottom: 36px;
-    left: 0;
-    padding: 10px;
 }
 
 /* ElectionBar styling */
@@ -92,11 +89,22 @@
 }
 
 #leftCol {
-    left: 1%;
+    top: 56px;
+    left: 0px;
+    position: fixed;
+    width: 250px;
+    /* max-width: 20%; */
+    height: calc(100% - 56px);
+    z-index: 3;
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 /*Comment Modal*/
 
 #commentModalInput {
     width: 460px;
+}
+
+.mapboxgl-ctrl-bottom-left {
+    left: 250px !important;
 }
