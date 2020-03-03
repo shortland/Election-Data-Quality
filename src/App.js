@@ -9,11 +9,13 @@ import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import Geocoder from 'react-map-gl-geocoder';
 import { Editor, EditorModes } from 'react-map-gl-draw';
+
 /**
  * CSS Styling
  */
 import './App.css';
 import './styles/Collapsible.css';
+import './styles/PinPopup.css';
 import './static/app.css';
 // import './styles/GeoCodeSearch.css';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
@@ -24,8 +26,8 @@ import 'react-toastify/dist/ReactToastify.css';
 /**
  * Our components
  */
-// import Pins from './components/map-components/pins';
-import CityInfo from './components/map-components/city-info';
+import Pins from './components/map-components/pins';
+import ErrorInfo from './components/map-components/error-info';
 import StateSelector from './components/StateSelector';
 import LeftSidebar from './components/LeftSidebar';
 import { updateStateColors } from './utils';
@@ -34,7 +36,7 @@ import Toolbar from './toolbar';
 /**
  * Static data files
  */
-// import CITIES from './data/cities.json';
+import ERRORS from './data/errors.json';
 import STATES_TOOLTIP_DATA from './data/states_tooltip_data.geojson';
 import NY_COUNTY_SHORELINE_DATA from './data/ny_county_shoreline.geojson';
 import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
@@ -64,11 +66,15 @@ export default class App extends Component {
             popupInfo: null,
             selectedFeature: null,
             selectedMode: EditorModes.READ_ONLY,
+            features: [],
+            selectedFeatureId: null,
+            shouldShowPins: false,
             features: {},
             selectedFeatureIndex: null,
         };
 
         this._editorRef = null;
+        this.showErrorPins = this.showErrorPins.bind(this);
     }
 
     /**
@@ -447,11 +453,15 @@ export default class App extends Component {
         });
     }
 
-    _onClickMarker = city => {
-        this.setState({ popupInfo: city });
+    /**
+     * Rendering error pins on the map & its popup
+     */
+    _onClickError = error_data => {
+        console.log(error_data);
+        this.setState({ popupInfo: error_data });
     };
 
-    _renderPopup() {
+    _renderErrorPopup() {
         const { popupInfo } = this.state;
 
         return (
@@ -464,14 +474,23 @@ export default class App extends Component {
                     closeOnClick={false}
                     onClose={() => this.setState({ popupInfo: null })}
                 >
-                    <CityInfo info={popupInfo} />
+                    <ErrorInfo info={popupInfo} />
                 </Popup>
             )
         );
     }
 
+    showErrorPins() {
+        const { shouldShowPins } = this.state;
+        if (shouldShowPins) {
+            this.setState({ shouldShowPins: false });
+        } else {
+            this.setState({ shouldShowPins: true });
+        }
+    }
+
     render() {
-        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer, selectedMode, features } = this.state;
+        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer, selectedMode, features, shouldShowPins } = this.state;
 
         return (
             <div className="App">
@@ -492,6 +511,7 @@ export default class App extends Component {
                     <div id="leftCol">
                         <LeftSidebar
                             selected={this.state.selectedFeature}
+                            showErrorPins={this.showErrorPins.bind(this)}
                         />
                     </div>
 
@@ -527,10 +547,6 @@ export default class App extends Component {
                             I commented it out - because it mysteriously breaks the Editor...
                          */}
                         {/* <DeckGL {...viewport} layers={[searchResultLayer]} /> */}
-
-                        {/* For rendering pins over our map */}
-                        {/* <Pins data={CITIES} onClick={this._onClickMarker} />*/}
-                        {/* {this._renderPopup()} */}
 
                         {/* For rendering the controls at top left of the map */}
                         <div className="FullScreenController MapControllers">
@@ -579,6 +595,14 @@ export default class App extends Component {
                         {this._renderTooltip()}
 
                         {this._renderToolbar()}
+
+                        {/* For rendering pins over our map */}
+                        <Pins
+                            data={ERRORS}
+                            onClick={this._onClickError}
+                            shouldShowPins={shouldShowPins}
+                        />
+                        {this._renderErrorPopup()}
                     </MapGL>
                 </div>
 
