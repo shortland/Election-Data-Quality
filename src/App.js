@@ -457,8 +457,17 @@ export default class App extends Component {
      * Rendering error pins on the map & its popup
      */
     _onClickError = error_data => {
-        console.log(error_data);
         this.setState({ popupInfo: error_data });
+        console.log(error_data);
+        this.setState({
+            viewport: {
+                ...this.state.viewport,
+                longitude: error_data.longitude,
+                latitude: error_data.latitude,
+                transitionDuration: 1000,
+                zoom: 11,
+            }
+        });
     };
 
     _renderErrorPopup() {
