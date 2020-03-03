@@ -7,13 +7,14 @@ import bbox from '@turf/bbox';
 import { ToastContainer, toast } from 'react-toastify';
 import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
-import Geocoder from "react-map-gl-geocoder";
-
+import Geocoder from 'react-map-gl-geocoder';
+import { Editor, EditorModes } from 'react-map-gl-draw';
 /**
  * CSS Styling
  */
 import './App.css';
 import './styles/Collapsible.css';
+import './static/app.css';
 // import './styles/GeoCodeSearch.css';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -28,6 +29,7 @@ import CityInfo from './components/map-components/city-info';
 import StateSelector from './components/StateSelector';
 import LeftSidebar from './components/LeftSidebar';
 import { updateStateColors } from './utils';
+import Toolbar from './toolbar';
 
 /**
  * Static data files
@@ -42,10 +44,6 @@ import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
  */
 const MAPBOX_STYLE = 'mapbox://styles/shortland/ck6bf8xag0zv81io8o68otfdr';
 const MAPBOX_API = 'pk.eyJ1Ijoic2hvcnRsYW5kIiwiYSI6ImNqeXVzOWhsbjBpYzczY29hNGZycTlqdXAifQ.B6l-uEqGG-Pw6-quz4eflQ';
-
-const geoQueryParams = {
-    country: 'us',
-};
 
 export default class App extends Component {
     constructor(props) {
@@ -65,7 +63,12 @@ export default class App extends Component {
             },
             popupInfo: null,
             selectedFeature: null,
+            selectedMode: EditorModes.READ_ONLY,
+            features: [],
+            selectedFeatureId: null,
         };
+
+        this._editorRef = null;
     }
 
     /**
@@ -101,6 +104,88 @@ export default class App extends Component {
             })
         });
     };
+
+    /**
+     * For React Map Gl Draw
+     */
+    _onDelete = () => {
+        const { selectedFeatureIndex } = this.state;
+        if (selectedFeatureIndex === null || selectedFeatureIndex === undefined) {
+            return;
+        }
+
+        this._editorRef.deleteFeatures(selectedFeatureIndex);
+    };
+
+    _switchMode = evt => {
+        let selectedMode = evt.target.id;
+        if (selectedMode === this.state.selectedMode) {
+            selectedMode = null;
+        }
+
+        this.setState({ selectedMode });
+    };
+
+    // _updateViewport = viewport => {
+    //     this.setState({ viewport });
+    // };
+
+    _renderToolbar = () => {
+        return (
+            <Toolbar
+                selectedMode={this.state.selectedMode}
+                onSwitchMode={this._switchMode}
+                onDelete={this._onDelete}
+            />
+        );
+    };
+    // _updateViewport = (viewport) => {
+    //     this.setState({ viewport });
+    // }
+
+    // _onSelect = ({ selectedFeatureId }) => {
+    //     this.setState({ selectedFeatureId });
+    // };
+
+    // _onUpdate = features => {
+    //     this.setState({
+    //         features
+    //     });
+    // };
+
+    // _switchMode = evt => {
+    //     const selectedMode = evt.target.id === this.state.selectedMode ? EditorModes.READ_ONLY : evt.target.id;
+    //     this.setState({
+    //         selectedMode,
+    //         selectedFeatureId: null
+    //     });
+    // };
+
+    // _renderControlPanel = () => {
+    //     return (
+    //         <div style={{ position: 'absolute', top: 0, right: 0, maxWidth: '320px' }}>
+    //             <select onChange={this._switchMode}>
+    //                 <option value="">--Please choose a mode--</option>
+    //                 {MODES.map(mode => <option value={mode.id}>{mode.text}</option>)}
+    //             </select>
+    //         </div>
+    //     );
+    // }
+
+    // _getEditHandleStyle = ({ feature, featureState, vertexIndex, vertexState }) => {
+    //     return {
+    //         fill: vertexState === `SELECTED` ? '#000' : '#aaa',
+    //         stroke: vertexState === `SELECTED` ? '#000' : 'none'
+    //     }
+    // }
+
+    // _getFeatureStyle = ({ feature, featureState }) => {
+    //     return {
+    //         stroke: featureState === `SELECTED` ? '#000' : 'none',
+    //         fill: featureState === `SELECTED` ? '#080' : 'none',
+    //         fillOpacity: 0.8
+    //     }
+    // }
 
     componentDidMount() {
         /**
@@ -233,41 +318,6 @@ export default class App extends Component {
         }
     }
 
-    _onDblClick = event => {
-        console.log(event);
-        //CODE for ZOOM ONCLICK
-        /*
-        event.stopPropagation();
-        const feature = event.features[0];
-      
-        if (!feature) {
-          return;
-        }
-      
-        if (feature.layer.id === "stateData" || feature.layer.id === "countyData") {
-          const [minLng, minLat, maxLng, maxLat] = bbox(feature);
-          const viewport = new WebMercatorViewport(this.state.viewport);
-          const {longitude, latitude, zoom} = viewport.fitBounds([[minLng, minLat], [maxLng, maxLat]], {
-            padding: 40
-          });
-      
-          this.setState({
-            viewport: {
-              ...this.state.viewport,
-              longitude,
-              latitude,
-              zoom,
-              transitionInterpolator: new LinearInterpolator({
-                around: [event.offsetCenter.x, event.offsetCenter.y]
-              }),
-              transitionDuration: 1000,
-            }
-          });
-          return;
-        } 
-        */
-    }
-
     _onHover = event => {
         const {
             features,
@@ -374,7 +424,7 @@ export default class App extends Component {
     }
 
     render() {
-        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer } = this.state;
+        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer, selectedMode } = this.state;
 
         return (
             <div className="App">
@@ -405,10 +455,19 @@ export default class App extends Component {
                         mapboxApiAccessToken={MAPBOX_API}
                         onHover={this._onHover}
                         onClick={this._onClick}
-                        onDblClick={this._onDblClick}
+                        // onDblClick={this._onDblClick}
                         doubleClickZoom={false}
                         ref={this.mapRef}
                     >
+                        <Editor
+                            ref={_ => (this._editorRef = _)}
+                            clickRadius={12}
+                            onSelect={selected => {
+                                this.setState({ selectedFeatureIndex: selected && selected.selectedFeatureIndex });
+                            }}
+                            mode={selectedMode}
+                        />
+
                         {/* Geocoder - enables searching on the map */}
                         <Geocoder
                             mapRef={this.mapRef}
@@ -417,7 +476,11 @@ export default class App extends Component {
                             mapboxApiAccessToken={MAPBOX_API}
                             position="top-right"
                         />
-                        <DeckGL {...viewport} layers={[searchResultLayer]} />
+                        {/* This is used alongside the Geocoder... 
+                            But apparently it doesn't need to be here for the geocoder to work?
+                            I commented it out - because it mysteriously breaks the Editor...
+                         */}
+                        {/* <DeckGL {...viewport} layers={[searchResultLayer]} /> */}
 
                         {/* For rendering pins over our map */}
                         {/* <Pins data={CITIES} onClick={this._onClickMarker} />*/}
@@ -468,6 +531,8 @@ export default class App extends Component {
                             />
                         </Source>
                         {this._renderTooltip()}
+
+                        {this._renderToolbar()}
                     </MapGL>
                 </div>
 

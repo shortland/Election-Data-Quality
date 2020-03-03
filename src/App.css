@@ -108,3 +108,7 @@
 .mapboxgl-ctrl-bottom-left {
     left: 250px !important;
 }
+
+#editor {
+    z-index: 4;
+}
