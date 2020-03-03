@@ -30,7 +30,7 @@ class CommentModal extends Component {
                 <Button variant="primary" onClick={() => { this.handle_modal_display(true) }}>Create Comment</Button>
                 <Modal show={show} onHide={() => { this.handle_modal_display(false) }}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
+                        <Modal.Title>Enter comment</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <input id="commentModalInput" placeholder=" Please enter your comments here"></input>
