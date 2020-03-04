@@ -123,7 +123,6 @@ export default class Toolbar extends PureComponent {
                     <Img
                         id={'delete'}
                         onMouseOver={this._onHover}
-                        onClick={this._onDelete}
                         src={'icon-delete.svg'}
                     />
                     {hoveredId === 'delete' && <Tooltip>{'Delete'}</Tooltip>}
