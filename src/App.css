@@ -135,3 +135,9 @@
     right: -40%;
     top: -8pt;
 }
+
+/*userModeSelector*/
+
+#userModeSelect {
+    margin-left: 10px;
+}

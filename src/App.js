@@ -32,6 +32,7 @@ import StateSelector from './components/StateSelector';
 import LeftSidebar from './components/LeftSidebar';
 import { updateStateColors } from './utils';
 import Toolbar from './toolbar';
+import UserModeSelector from './components/UserModeSelector';
 
 /**
  * Static data files
@@ -66,11 +67,11 @@ export default class App extends Component {
             popupInfo: null,
             selectedFeature: null,
             selectedMode: EditorModes.READ_ONLY,
-            features: [],
             selectedFeatureId: null,
             shouldShowPins: false,
             features: {},
             selectedFeatureIndex: null,
+            userMode: "View"
         };
 
         this._editorRef = null;
@@ -133,6 +134,7 @@ export default class App extends Component {
             this.setState({ selectedFeatureIndex: null, selectedMode: EditorModes.READ_ONLY, features: features });
         }
         this._editorRef.deleteFeatures(selectedFeatureIndex);
+
     };
 
     _switchMode = evt => {
@@ -176,17 +178,23 @@ export default class App extends Component {
     }
 
     _renderToolbar = () => {
-        return (
-            <Toolbar
-                selectedMode={this.state.selectedMode}
-                onSwitchMode={this._switchMode}
-                onDelete={this._onDelete}
-                onSelect={this._onSelect}
-                features={this.state.features}
-                selectedFeatureId={this.state.selectedFeatureId}
-                toolBarRequest={this._onSaveRequest}
-            />
-        );
+        const { userMode } = this.state;
+        if (userMode === "Edit") {
+            return (
+                <Toolbar
+                    selectedMode={this.state.selectedMode}
+                    onSwitchMode={this._switchMode}
+                    onDelete={this._onDelete}
+                    onSelect={this._onSelect}
+                    features={this.state.features}
+                    selectedFeatureId={this.state.selectedFeatureId}
+                    toolBarRequest={this._onSaveRequest}
+                />
+            );
+        }
+        else {
+            return;
+        }
 
     };
     // _updateViewport = (viewport) => {
@@ -416,6 +424,12 @@ export default class App extends Component {
         }
     }
 
+    userModeSelect = (userMode) => {
+        if (userMode) {
+            this.setState({ userMode: userMode });
+        }
+    }
+
     stateSelect(name) {
         let latitude = 0;
         let longitude = 0;
@@ -503,6 +517,7 @@ export default class App extends Component {
                             <StateSelector
                                 select_state={(state_abv) => this.stateSelect.bind(this, state_abv)}
                             />
+                            <UserModeSelector userModeSelect={(selectedMode) => this.userModeSelect(selectedMode)} />
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
