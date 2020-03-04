@@ -508,7 +508,7 @@ export default class App extends Component {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
-                            <Nav.Link href="#tmp">Something</Nav.Link>
+                            {/* <Nav.Link href="#tmp">Something</Nav.Link> */}
                             <StateSelector
                                 select_state={(state_abv) => this.stateSelect.bind(this, state_abv)}
                             />

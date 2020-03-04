@@ -8,20 +8,20 @@
     {
         "type": "open borders",
         "from": "preprocessing",
-        "latitude": 34.0194,
-        "longitude": -118.4108
+        "latitude": 43.633461,
+        "longitude": -76.797859
     },
     {
         "type": "gaps precinct coverage",
         "from": "preprocessing",
-        "latitude": 41.8376,
-        "longitude": -87.6818
+        "latitude": 40.6071584,
+        "longitude": -74.0881154
     },
     {
         "type": "precinct multi polygon",
         "from": "preprocessing",
-        "latitude": 29.7805,
-        "longitude": -95.3863
+        "latitude": 42.1936482,
+        "longitude": -74.135364
     },
     {
         "type": "overlapping precincts",
