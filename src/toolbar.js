@@ -81,10 +81,10 @@ export default class Toolbar extends PureComponent {
     };
 
     //TODO probably dont neet to pass the evt 
-    _onDelete = evt => {
-        this.props.onDelete(evt);
+    _onDelete = () => {
+        this.props.onDelete();
         this.setState({ deleting: true });
-        setTimeout(() => this.setState({ deleting: false }), 500);
+        setTimeout(() => this.setState({ deleting: false }), 500)
     };
 
     _onSaveChange = () => {
@@ -95,7 +95,6 @@ export default class Toolbar extends PureComponent {
     render() {
         const { selectedMode } = this.props;
         const { hoveredId } = this.state;
-        const { selectedFeatureId, features } = this.state;
         return (
             <Container>
                 {MODES.map(m => {

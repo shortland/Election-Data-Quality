@@ -57,7 +57,6 @@ class LeftSidebar extends Component {
         if (comment_modal_data) {
             this.setState({ comment_data: comment_modal_data });
         }
-        console.log(this.state);
     }
 
     _handleClick = event => {
