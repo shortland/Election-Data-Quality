@@ -357,8 +357,6 @@ export default class App extends Component {
             return;
         }
 
-        console.log(event);
-
         // prevent hovering on pin making the tooltip show at top left of map
         if (x !== 0 && y !== 0) {
             this.setState({ x: x, y: y });
