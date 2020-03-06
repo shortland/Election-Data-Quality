@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/shortland/Election-Data-Quality/static/css/main.e284a3d0.chunk.css",
+    "main.js": "/shortland/Election-Data-Quality/static/js/main.6f062e74.chunk.js",
+    "main.js.map": "/shortland/Election-Data-Quality/static/js/main.6f062e74.chunk.js.map",
+    "runtime-main.js": "/shortland/Election-Data-Quality/static/js/runtime-main.c664c47f.js",
+    "runtime-main.js.map": "/shortland/Election-Data-Quality/static/js/runtime-main.c664c47f.js.map",
+    "static/css/2.637c8785.chunk.css": "/shortland/Election-Data-Quality/static/css/2.637c8785.chunk.css",
+    "static/js/2.d0bac9bd.chunk.js": "/shortland/Election-Data-Quality/static/js/2.d0bac9bd.chunk.js",
+    "static/js/2.d0bac9bd.chunk.js.map": "/shortland/Election-Data-Quality/static/js/2.d0bac9bd.chunk.js.map",
+    "index.html": "/shortland/Election-Data-Quality/index.html",
+    "precache-manifest.be747c0263f22c0cca28145806b8f277.js": "/shortland/Election-Data-Quality/precache-manifest.be747c0263f22c0cca28145806b8f277.js",
+    "service-worker.js": "/shortland/Election-Data-Quality/service-worker.js",
+    "static/css/2.637c8785.chunk.css.map": "/shortland/Election-Data-Quality/static/css/2.637c8785.chunk.css.map",
+    "static/css/main.e284a3d0.chunk.css.map": "/shortland/Election-Data-Quality/static/css/main.e284a3d0.chunk.css.map",
+    "static/js/2.d0bac9bd.chunk.js.LICENSE.txt": "/shortland/Election-Data-Quality/static/js/2.d0bac9bd.chunk.js.LICENSE.txt",
+    "static/media/GeoJSON_example.geojson": "/shortland/Election-Data-Quality/static/media/GeoJSON_example.06e7f91a.geojson",
+    "static/media/ny_county_shoreline.geojson": "/shortland/Election-Data-Quality/static/media/ny_county_shoreline.b5f895d3.geojson",
+    "static/media/states_tooltip_data.geojson": "/shortland/Election-Data-Quality/static/media/states_tooltip_data.1c2d3362.geojson"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.c664c47f.js",
+    "static/css/2.637c8785.chunk.css",
+    "static/js/2.d0bac9bd.chunk.js",
+    "static/css/main.e284a3d0.chunk.css",
+    "static/js/main.6f062e74.chunk.js"
+  ]
+}
