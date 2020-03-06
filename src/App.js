@@ -16,7 +16,6 @@ import './App.css';
 import './styles/Collapsible.css';
 import './styles/PinPopup.css';
 import './static/app.css';
-// import './styles/GeoCodeSearch.css';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -26,14 +25,14 @@ import 'react-toastify/dist/ReactToastify.css';
  * Map layers
  */
 import { countyDataLayerFillable, countyDataLayerFillableHighlight, countyDataLayerOutline } from './layers/CountyLayer';
-import { stateLayerFill } from './layers/StateLayer';
+import { stateLayerFill, stateLayerFillHighlight } from './layers/StateLayer';
 import { precinctLayerFill, precinctLayerFillHighlight, precinctLayerOutline } from './layers/PrecinctLayer';
 
 /**
  * Our components
  */
-import Pins from './components/map-components/pins';
-import ErrorInfo from './components/map-components/error-info';
+import Pins from './components/map-components/ErrorPins';
+import ErrorInfo from './components/map-components/ErrorModal';
 import StateSelector from './components/StateSelector';
 import LeftSidebar from './components/LeftSidebar';
 import Toolbar from './toolbar';
@@ -78,7 +77,9 @@ export default class App extends Component {
             features: {},
             selectedFeatureIndex: null,
             userMode: "View",
-            filter: ['in', 'NAME', ''],
+            countyFilter: ['==', 'NAME', ''],
+            precinctFilter: ['==', 'GEOID10', ''],
+            stateFilter: ['==', 'name', ''],
         };
 
         this._editorRef = null;
@@ -341,40 +342,59 @@ export default class App extends Component {
     _onHover = event => {
         const {
             features,
-            srcEvent: { offsetX, offsetY },
+            srcEvent: { x, y },
         } = event;
 
+        if (!event.type || !event.features || event.features.length === 0 || event.features[0].source === "composite") {
+            this.setState({
+                stateHovered: null,
+                countyHovered: null,
+                precinctHovered: null,
+                stateFilter: ['==', 'name', ''],
+                countyFilter: ['==', 'NAME', ''],
+                precinctFilter: ['==', 'GEOID10', ''],
+            });
+            return;
+        }
+
+        console.log(event);
+
+        // prevent hovering on pin making the tooltip show at top left of map
+        if (x !== 0 && y !== 0) {
+            this.setState({ x: x, y: y });
+        }
+
         const stateHovered = features && features.find(f => f.layer.id === 'stateFill');
-        this.setState({ stateHovered, x: offsetX, y: offsetY });
+        this.setState({ stateHovered: stateHovered });
         if (stateHovered) {
+            this.setState({ stateFilter: ['==', 'name', stateHovered.properties.name] });
             return;
         }
 
         const countyHovered = features && features.find(f => f.layer.id === 'countyFill');
-        this.setState({ countyHovered, x: offsetX, y: offsetY });
+        this.setState({ countyHovered: countyHovered });
         if (countyHovered) {
-            this.setState({ filter: ['in', 'NAME', countyHovered.properties.NAME] });
+            this.setState({ countyFilter: ['==', 'NAME', countyHovered.properties.NAME] });
             return;
         }
 
-
         const precinctHovered = features && features.find(f => f.layer.id === 'precinctFill');
-        this.setState({ precinctHovered, x: offsetX, y: offsetY });
+        this.setState({ precinctHovered: precinctHovered });
         if (precinctHovered) {
-            this.setState({ filter: ['in', 'GEOID10', precinctHovered.properties.GEOID10] });
+            this.setState({ precinctFilter: ['==', 'GEOID10', precinctHovered.properties.GEOID10] });
             return;
         }
     }
 
     _renderTooltip() {
-        const { hoveredFeature, countyHoveredFeature, x, y } = this.state;
+        const { stateHovered, countyHovered, precinctHovered, x, y } = this.state;
 
-        if (hoveredFeature) {
+        if (stateHovered) {
             return (
-                hoveredFeature && (
+                stateHovered && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
-                        <h5>{hoveredFeature.properties.name}</h5>
-                        <div>Counties: {hoveredFeature.properties.amount_counties}</div>
+                        <h5>{stateHovered.properties.name}</h5>
+                        <div>Counties: {stateHovered.properties.amount_counties}</div>
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
@@ -382,12 +402,25 @@ export default class App extends Component {
             );
         }
 
-        if (countyHoveredFeature) {
+        if (countyHovered) {
             return (
-                countyHoveredFeature && (
+                countyHovered && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
-                        <h5>{countyHoveredFeature.properties.NAME} County</h5>
-                        <div>FIPS Code: {countyHoveredFeature.properties.FIPS_CODE}</div>
+                        <h5>{countyHovered.properties.NAME} County</h5>
+                        <div>FIPS Code: {countyHovered.properties.FIPS_CODE}</div>
+                        {/* <br /> */}
+                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                    </div>
+                )
+            );
+        }
+
+        if (precinctHovered) {
+            return (
+                precinctHovered && (
+                    <div className="state-tooltip" style={{ left: x, top: y }}>
+                        <h5>Precinct GEOID: {precinctHovered.properties.GEOID10}</h5>
+                        {/* <div>FIPS Code: {precinctHovered.properties}</div> */}
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
@@ -485,7 +518,7 @@ export default class App extends Component {
     }
 
     render() {
-        const { viewport, stateData, countyDataOutline, countyData, precinctData, selectedMode, shouldShowPins, filter } = this.state;
+        const { viewport, stateData, countyDataOutline, countyData, precinctData, selectedMode, shouldShowPins, stateFilter, countyFilter, precinctFilter } = this.state;
 
         return (
             <div className="App">
@@ -554,11 +587,24 @@ export default class App extends Component {
                             <ScaleControl />
                         </div>
 
-                        {/* NY COUNT DATA (FILL & HOVER) */}
+                        {/* STATES DATA */}
+                        <Source type="geojson" data={stateData}>
+                            <Layer
+                                {...stateLayerFillHighlight}
+                                filter={stateFilter}
+                                maxzoom={5}
+                            />
+                            <Layer
+                                {...stateLayerFill}
+                                maxzoom={5}
+                            />
+                        </Source>
+
+                        {/* NY COUNTY DATA */}
                         <Source type="geojson" data={countyData}>
                             <Layer
                                 {...countyDataLayerFillableHighlight}
-                                filter={filter}
+                                filter={countyFilter}
                                 minzoom={5}
                                 maxzoom={8}
                             />
@@ -578,19 +624,11 @@ export default class App extends Component {
                             />
                         </Source>
 
-                        {/* STATES DATA */}
-                        <Source type="geojson" data={stateData}>
-                            <Layer
-                                {...stateLayerFill}
-                                maxzoom={5}
-                            />
-                        </Source>
-
                         {/* NY PRECINCT DATA */}
                         <Source type="geojson" data={precinctData}>
                             <Layer
                                 {...precinctLayerFillHighlight}
-                                filter={filter}
+                                filter={precinctFilter}
                                 minzoom={8}
                             />
                             <Layer

@@ -39,7 +39,7 @@
 }
 
 .state-tooltip {
-    position: absolute;
+    position: fixed;
     margin: 8px;
     padding: 4px;
     background: rgba(0, 0, 0, 0.8);
