@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import MapGL, { Popup, NavigationControl, FullscreenControl, ScaleControl, Source, Layer, LinearInterpolator, WebMercatorViewport } from 'react-map-gl';
-import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
+import { Nav, Navbar } from 'react-bootstrap';
 import { json } from 'd3-request';
 import bbox from '@turf/bbox';
 import { ToastContainer, toast } from 'react-toastify';
-import DeckGL from '@deck.gl/react';
 import { GeoJsonLayer } from '@deck.gl/layers';
 import Geocoder from 'react-map-gl-geocoder';
 import { Editor, EditorModes } from 'react-map-gl-draw';
@@ -22,6 +21,11 @@ import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-toastify/dist/ReactToastify.css';
+
+/**
+ * Map layers
+ */
+import { countyDataLayerFillable, countyDataLayerFillableHighlight, countyDataLayerOutline } from './layers/CountyLayer';
 
 /**
  * Our components
@@ -71,7 +75,8 @@ export default class App extends Component {
             shouldShowPins: false,
             features: {},
             selectedFeatureIndex: null,
-            userMode: "View"
+            userMode: "View",
+            filter: ['in', 'NAME', ''],
         };
 
         this._editorRef = null;
@@ -197,56 +202,6 @@ export default class App extends Component {
         }
 
     };
-    // _updateViewport = (viewport) => {
-    //     this.setState({ viewport });
-    // }
-
-    // _onSelect = ({ selectedFeatureId }) => {
-    //     this.setState({ selectedFeatureId });
-    // };
-
-    // _onUpdate = features => {
-    //     this.setState({
-    //         features
-    //     });
-    // };
-
-    // _switchMode = evt => {
-    //     const selectedMode = evt.target.id === this.state.selectedMode ? EditorModes.READ_ONLY : evt.target.id;
-    //     this.setState({
-    //         selectedMode,
-    //         selectedFeatureId: null
-    //     });
-    // };
-
-    // _renderControlPanel = () => {
-    //     return (
-    //         <div style={{ position: 'absolute', top: 0, right: 0, maxWidth: '320px' }}>
-    //             <select onChange={this._switchMode}>
-    //                 <option value="">--Please choose a mode--</option>
-    //                 {MODES.map(mode => <option value={mode.id}>{mode.text}</option>)}
-    //             </select>
-    //         </div>
-    //     );
-    // }
-
-    // _getEditHandleStyle = ({ feature, featureState, vertexIndex, vertexState }) => {
-    //     return {
-    //         fill: vertexState === `SELECTED` ? '#000' : '#aaa',
-    //         stroke: vertexState === `SELECTED` ? '#000' : 'none'
-    //     }
-    // }
-
-    // _getFeatureStyle = ({ feature, featureState }) => {
-    //     return {
-    //         stroke: featureState === `SELECTED` ? '#000' : 'none',
-    //         fill: featureState === `SELECTED` ? '#080' : 'none',
-    //         fillOpacity: 0.8
-    //     }
-    // }
-
-
-
 
     componentDidMount() {
         /**
@@ -333,9 +288,11 @@ export default class App extends Component {
         const countyFeature = features && features.find(f => f.layer.id === 'countyData');
         if (countyFeature) {
             // if a clicks on a county that was already selected/clicked on
-            if (countyFeature.properties.NAME === this.state.selectedFeature.properties.NAME) {
-                this._zoomToFeature(event);
-                return;
+            if (this.state.selectedFeature) {
+                if (countyFeature.properties.NAME === this.state.selectedFeature.properties.NAME) {
+                    this._zoomToFeature(event);
+                    return;
+                }
             }
 
             this.setState({ selectedFeature: countyFeature });
@@ -391,6 +348,10 @@ export default class App extends Component {
         if (!hoveredFeature) {
             const countyHoveredFeature = features && features.find(f => f.layer.id === 'countyData');
             this.setState({ countyHoveredFeature, x: offsetX, y: offsetY });
+
+            if (countyHoveredFeature) {
+                this.setState({ filter: ['in', 'NAME', countyHoveredFeature.properties.NAME] });
+            }
         }
     };
 
@@ -513,7 +474,7 @@ export default class App extends Component {
     }
 
     render() {
-        const { viewport, stateData, countyDataOutline, countyData, precinctData, searchResultLayer, selectedMode, features, shouldShowPins } = this.state;
+        const { viewport, stateData, countyDataOutline, countyData, precinctData, selectedMode, shouldShowPins, filter } = this.state;
 
         return (
             <div className="App">
@@ -546,7 +507,6 @@ export default class App extends Component {
                         mapboxApiAccessToken={MAPBOX_API}
                         onHover={this._onHover}
                         onClick={this._onClick}
-                        // onDblClick={this._onDblClick}
                         doubleClickZoom={false}
                         ref={this.mapRef}
                     >
@@ -585,6 +545,12 @@ export default class App extends Component {
 
                         {/* For rendering (NYS) county colors & tooltips over counties */}
                         <Source type="geojson" data={countyData}>
+                            <Layer
+                                {...countyDataLayerFillableHighlight}
+                                filter={filter}
+                                minzoom={5}
+                                maxzoom={8}
+                            />
                             <Layer
                                 {...countyDataLayerFillable}
                                 minzoom={5}
@@ -655,37 +621,6 @@ const precinctDataLayerFillable = {
             ]
         },
         'fill-opacity': 0.5,
-    },
-};
-
-const countyDataLayerFillable = {
-    id: 'countyData',
-    type: 'fill',
-    paint: {
-        'fill-color': {
-            property: 'percentile',
-            stops: [
-                [0, '#3288bd'],
-                [1, '#66c2a5'],
-                [2, '#abdda4'],
-                [3, '#e6f598'],
-                [4, '#ffffbf'],
-                [5, '#fee08b'],
-                [6, '#fdae61'],
-                [7, '#f46d43'],
-                [8, '#d53e4f']
-            ]
-        },
-        'fill-opacity': 0.0,
-    },
-};
-
-const countyDataLayerOutline = {
-    id: 'countyDataOutline',
-    type: 'line',
-    paint: {
-        'line-color': '#000000',
-        'line-width': 2,
     },
 };
 
