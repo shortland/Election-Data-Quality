@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/Election-Data-Quality/static/css/main.e284a3d0.chunk.css",
-    "main.js": "/Election-Data-Quality/static/js/main.fc77687f.chunk.js",
-    "main.js.map": "/Election-Data-Quality/static/js/main.fc77687f.chunk.js.map",
+    "main.js": "/Election-Data-Quality/static/js/main.33c0ecca.chunk.js",
+    "main.js.map": "/Election-Data-Quality/static/js/main.33c0ecca.chunk.js.map",
     "runtime-main.js": "/Election-Data-Quality/static/js/runtime-main.7079e672.js",
     "runtime-main.js.map": "/Election-Data-Quality/static/js/runtime-main.7079e672.js.map",
     "static/css/2.637c8785.chunk.css": "/Election-Data-Quality/static/css/2.637c8785.chunk.css",
-    "static/js/2.a57db2a3.chunk.js": "/Election-Data-Quality/static/js/2.a57db2a3.chunk.js",
-    "static/js/2.a57db2a3.chunk.js.map": "/Election-Data-Quality/static/js/2.a57db2a3.chunk.js.map",
+    "static/js/2.5ea4470b.chunk.js": "/Election-Data-Quality/static/js/2.5ea4470b.chunk.js",
+    "static/js/2.5ea4470b.chunk.js.map": "/Election-Data-Quality/static/js/2.5ea4470b.chunk.js.map",
     "index.html": "/Election-Data-Quality/index.html",
-    "precache-manifest.c6d60054d2114f0e80a815ba35cc856e.js": "/Election-Data-Quality/precache-manifest.c6d60054d2114f0e80a815ba35cc856e.js",
+    "precache-manifest.7ec195473a76fd2e5c7cb43a9a3f5af1.js": "/Election-Data-Quality/precache-manifest.7ec195473a76fd2e5c7cb43a9a3f5af1.js",
     "service-worker.js": "/Election-Data-Quality/service-worker.js",
     "static/css/2.637c8785.chunk.css.map": "/Election-Data-Quality/static/css/2.637c8785.chunk.css.map",
     "static/css/main.e284a3d0.chunk.css.map": "/Election-Data-Quality/static/css/main.e284a3d0.chunk.css.map",
-    "static/js/2.a57db2a3.chunk.js.LICENSE.txt": "/Election-Data-Quality/static/js/2.a57db2a3.chunk.js.LICENSE.txt",
+    "static/js/2.5ea4470b.chunk.js.LICENSE.txt": "/Election-Data-Quality/static/js/2.5ea4470b.chunk.js.LICENSE.txt",
     "static/media/GeoJSON_example.geojson": "/Election-Data-Quality/static/media/GeoJSON_example.06e7f91a.geojson",
     "static/media/ny_county_shoreline.geojson": "/Election-Data-Quality/static/media/ny_county_shoreline.b5f895d3.geojson",
     "static/media/states_tooltip_data.geojson": "/Election-Data-Quality/static/media/states_tooltip_data.1c2d3362.geojson"
@@ -21,8 +21,8 @@
   "entrypoints": [
     "static/js/runtime-main.7079e672.js",
     "static/css/2.637c8785.chunk.css",
-    "static/js/2.a57db2a3.chunk.js",
+    "static/js/2.5ea4470b.chunk.js",
     "static/css/main.e284a3d0.chunk.css",
-    "static/js/main.fc77687f.chunk.js"
+    "static/js/main.33c0ecca.chunk.js"
   ]
 }
