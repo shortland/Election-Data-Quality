@@ -11,9 +11,21 @@
 
 Something something something.
 
-### Running
-use `yarn` to install dependencies
-Then use `yarn start` to start the react app.
+### Install/Build/Run/Deploy
+
+After cloning the directory follow below instructions.
+
+#### Install Dependencies
+
+`$ yarn`
+
+#### Run Project
+
+`$ yarn start`
+
+#### Deploy Project to GitHub-Pages
+
+`$ yarn run deploy`
 
 ### States
 
