@@ -26,6 +26,8 @@ import 'react-toastify/dist/ReactToastify.css';
  * Map layers
  */
 import { countyDataLayerFillable, countyDataLayerFillableHighlight, countyDataLayerOutline } from './layers/CountyLayer';
+import { stateLayerFill } from './layers/StateLayer';
+import { precinctLayerFill, precinctLayerFillHighlight, precinctLayerOutline } from './layers/PrecinctLayer';
 
 /**
  * Our components
@@ -34,7 +36,6 @@ import Pins from './components/map-components/pins';
 import ErrorInfo from './components/map-components/error-info';
 import StateSelector from './components/StateSelector';
 import LeftSidebar from './components/LeftSidebar';
-import { updateStateColors } from './utils';
 import Toolbar from './toolbar';
 import UserModeSelector from './components/UserModeSelector';
 
@@ -44,12 +45,13 @@ import UserModeSelector from './components/UserModeSelector';
 import ERRORS from './data/errors.json';
 import STATES_TOOLTIP_DATA from './data/states_tooltip_data.geojson';
 import NY_COUNTY_SHORELINE_DATA from './data/ny_county_shoreline.geojson';
-import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
+import NY_PRECINCT_DATA from './data/ny_precincts.geojson';
+// import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 
 /**
  * Mapbox Style & API Key
  */
-const MAPBOX_STYLE = 'mapbox://styles/shortland/ck6bf8xag0zv81io8o68otfdr';
+const MAPBOX_STYLE = 'mapbox://styles/shortland/ck7fn4gmu014c1ip60jlumnm2';
 const MAPBOX_API = 'pk.eyJ1Ijoic2hvcnRsYW5kIiwiYSI6ImNqeXVzOWhsbjBpYzczY29hNGZycTlqdXAifQ.B6l-uEqGG-Pw6-quz4eflQ';
 
 export default class App extends Component {
@@ -212,7 +214,7 @@ export default class App extends Component {
             (error, response) => {
                 if (!error) {
                     this.setState({
-                        stateData: updateStateColors(response, f => f.properties.amount_counties),
+                        stateData: response,
                     });
                 }
             }
@@ -247,10 +249,10 @@ export default class App extends Component {
         );
 
         /**
-         * example/testing precinct data
+         * Precinct Data
          */
         json(
-            TESTING_PRECINCT_DATA,
+            NY_PRECINCT_DATA,
             (error, response) => {
                 if (!error) {
                     this.setState({
@@ -267,7 +269,7 @@ export default class App extends Component {
             features,
         } = event;
 
-        const stateFeature = features && features.find(f => f.layer.id === 'stateData');
+        const stateFeature = features && features.find(f => f.layer.id === 'stateFill');
         if (stateFeature) {
             // if a clicks on a state that was already selected/clicked on
             if (this.state.selectedFeature) {
@@ -285,7 +287,7 @@ export default class App extends Component {
             return;
         }
 
-        const countyFeature = features && features.find(f => f.layer.id === 'countyData');
+        const countyFeature = features && features.find(f => f.layer.id === 'countyFill');
         if (countyFeature) {
             // if a clicks on a county that was already selected/clicked on
             if (this.state.selectedFeature) {
@@ -299,7 +301,7 @@ export default class App extends Component {
             return;
         }
 
-        const precinctFeature = features && features.find(f => f.layer.id === 'precinctData');
+        const precinctFeature = features && features.find(f => f.layer.id === 'precinctFill');
         if (precinctFeature) {
             this.setState({ selectedFeature: precinctFeature });
             return;
@@ -313,7 +315,7 @@ export default class App extends Component {
             return;
         }
 
-        if (feature.layer.id === "stateData" || feature.layer.id === "countyData") {
+        if (feature.layer.id === "stateFill" || feature.layer.id === "countyFill") {
             const [minLng, minLat, maxLng, maxLat] = bbox(feature);
             const viewport = new WebMercatorViewport(this.state.viewport);
             const { longitude, latitude, zoom } = viewport.fitBounds([[minLng, minLat], [maxLng, maxLat]], {
@@ -342,18 +344,27 @@ export default class App extends Component {
             srcEvent: { offsetX, offsetY },
         } = event;
 
-        const hoveredFeature = features && features.find(f => f.layer.id === 'stateData');
-        this.setState({ hoveredFeature, x: offsetX, y: offsetY });
-
-        if (!hoveredFeature) {
-            const countyHoveredFeature = features && features.find(f => f.layer.id === 'countyData');
-            this.setState({ countyHoveredFeature, x: offsetX, y: offsetY });
-
-            if (countyHoveredFeature) {
-                this.setState({ filter: ['in', 'NAME', countyHoveredFeature.properties.NAME] });
-            }
+        const stateHovered = features && features.find(f => f.layer.id === 'stateFill');
+        this.setState({ stateHovered, x: offsetX, y: offsetY });
+        if (stateHovered) {
+            return;
         }
-    };
+
+        const countyHovered = features && features.find(f => f.layer.id === 'countyFill');
+        this.setState({ countyHovered, x: offsetX, y: offsetY });
+        if (countyHovered) {
+            this.setState({ filter: ['in', 'NAME', countyHovered.properties.NAME] });
+            return;
+        }
+
+
+        const precinctHovered = features && features.find(f => f.layer.id === 'precinctFill');
+        this.setState({ precinctHovered, x: offsetX, y: offsetY });
+        if (precinctHovered) {
+            this.setState({ filter: ['in', 'GEOID10', precinctHovered.properties.GEOID10] });
+            return;
+        }
+    }
 
     _renderTooltip() {
         const { hoveredFeature, countyHoveredFeature, x, y } = this.state;
@@ -543,7 +554,7 @@ export default class App extends Component {
                             <ScaleControl />
                         </div>
 
-                        {/* For rendering (NYS) county colors & tooltips over counties */}
+                        {/* NY COUNT DATA (FILL & HOVER) */}
                         <Source type="geojson" data={countyData}>
                             <Layer
                                 {...countyDataLayerFillableHighlight}
@@ -558,7 +569,7 @@ export default class App extends Component {
                             />
                         </Source>
 
-                        {/* For rendering (NYS) county data outline */}
+                        {/* NY COUNTY DATA (OUTLINE) */}
                         <Source type="geojson" data={countyDataOutline}>
                             <Layer
                                 {...countyDataLayerOutline}
@@ -567,21 +578,31 @@ export default class App extends Component {
                             />
                         </Source>
 
-                        {/* For rendering state colors & tooltips over states */}
+                        {/* STATES DATA */}
                         <Source type="geojson" data={stateData}>
                             <Layer
-                                {...dataLayer}
+                                {...stateLayerFill}
                                 maxzoom={5}
                             />
                         </Source>
 
-                        {/* PRECINCT EXAMPLE DATA */}
+                        {/* NY PRECINCT DATA */}
                         <Source type="geojson" data={precinctData}>
                             <Layer
-                                {...precinctDataLayerFillable}
+                                {...precinctLayerFillHighlight}
+                                filter={filter}
+                                minzoom={8}
+                            />
+                            <Layer
+                                {...precinctLayerOutline}
+                                minzoom={8}
+                            />
+                            <Layer
+                                {...precinctLayerFill}
                                 minzoom={8}
                             />
                         </Source>
+
                         {this._renderTooltip()}
 
                         {this._renderToolbar()}
@@ -601,50 +622,6 @@ export default class App extends Component {
         );
     }
 }
-
-const precinctDataLayerFillable = {
-    id: 'precinctData',
-    type: 'fill',
-    paint: {
-        'fill-color': {
-            property: 'percentile',
-            stops: [
-                [0, '#3288bd'],
-                [1, '#66c2a5'],
-                [2, '#abdda4'],
-                [3, '#e6f598'],
-                [4, '#ffffbf'],
-                [5, '#fee08b'],
-                [6, '#fdae61'],
-                [7, '#f46d43'],
-                [8, '#d53e4f']
-            ]
-        },
-        'fill-opacity': 0.5,
-    },
-};
-
-const dataLayer = {
-    id: 'stateData',
-    type: 'fill',
-    paint: {
-        'fill-color': {
-            property: 'percentile',
-            stops: [
-                [0, '#3288bd'],
-                [1, '#66c2a5'],
-                [2, '#abdda4'],
-                [3, '#e6f598'],
-                [4, '#ffffbf'],
-                [5, '#fee08b'],
-                [6, '#fdae61'],
-                [7, '#f46d43'],
-                [8, '#d53e4f']
-            ]
-        },
-        'fill-opacity': 0.8,
-    },
-};
 
 export function renderToDom(container) {
     render(<App />, container);

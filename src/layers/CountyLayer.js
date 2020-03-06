@@ -1,19 +1,18 @@
 export const countyDataLayerFillable = {
-    id: 'countyData',
+    id: 'countyFill',
     type: 'fill',
     paint: {
-        'fill-color': 'rgba(20, 100, 50, 0.0)',
+        'fill-color': 'rgba(0, 0, 0, 0.0)',
     },
 };
 
 export const countyDataLayerFillableHighlight = {
-    id: 'countyData-highlighted',
+    id: 'countyFillHighlighted',
     type: 'fill',
-    source: 'countyData',
+    source: 'countyFill',
     paint: {
-        'fill-color': '#6e599f',
-        'fill-opacity': 0.75
-    }
+        'fill-color': 'rgba(66, 135, 245, 0.5)',
+    },
 };
 
 export const countyDataLayerOutline = {
