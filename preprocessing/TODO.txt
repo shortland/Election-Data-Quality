@@ -1,5 +1,4 @@
 Todo list of scripts to make:
-- find neighbors of precincts and add that data to precinct geojson properties (Sam)
 - megre demographic data with cencus blocks
 - merge demographic data cencus blocks with precincts
 - 
