@@ -11,9 +11,9 @@
 
 Something something something.
 
-### Install/Build/Run/Deploy
+### Frontend Install/Build/Run/Deploy
 
-After cloning the directory follow below instructions.
+After cloning the directory and entering the `frontend` directory, follow the below instructions.
 
 #### Install Dependencies
 
@@ -26,6 +26,24 @@ After cloning the directory follow below instructions.
 #### Deploy Project to GitHub-Pages
 
 `$ yarn run deploy`
+
+### Backend Install/Build/Run/Deploy
+
+After cloning the directory and entering the `backend` directory, follow the below instructions.
+
+**Note**: this project uses gradle - not maven.
+
+#### Building .jar executable
+
+`$ ./gradlew build`
+
+#### Executing .jar executable
+
+`$ java -jar build/libs/rest-service-0.0.1-SNAPSHOT.jar`
+
+#### Deploying new .jar release to server
+
+`$ TODO`
 
 ### States
 
