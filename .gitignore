@@ -19,8 +19,8 @@ frontend/node_modules
 .env.production.local
 
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
 
 # ide settings
 /.vscode
