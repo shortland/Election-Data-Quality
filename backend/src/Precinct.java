@@ -4,7 +4,7 @@ import data_for_precinct.*;
 
 // @Entity
 // @Table(name = "PRECINTS")
-public class Precinct{
+public class Precinct {
     private int id;
     private String canonicalName;
     private String fullName;
@@ -12,8 +12,10 @@ public class Precinct{
     private VotingData votingData;
     private DemographicData demographicData;
     private HashSet<Integer> neigborsId;
-    private HashMap<Integer,Error> precinctErrors;
-    public Precinct(int id, String canonicalName, String fullName, int parentDistrictId, VotingData votingData,DemographicData demographicData){
+    private HashMap<Integer, Error> precinctErrors;
+
+    public Precinct(int id, String canonicalName, String fullName, int parentDistrictId, VotingData votingData,
+            DemographicData demographicData) {
         this.id = id;
         this.canonicalName = canonicalName;
         this.fullName = fullName;
@@ -22,33 +24,33 @@ public class Precinct{
         this.demographicData = demographicData;
     }
 
-    public int getId(){
+    public int getId() {
         return this.id;
     }
 
-    public int getParentDistrictId(){
+    public int getParentDistrictId() {
         return this.parentDistrictId;
     }
 
-    public String getCanonicalName(){
+    public String getCanonicalName() {
         return this.canonicalName;
     }
-    
-    public String getFullName(){
+
+    public String getFullName() {
         return this.fullName;
     }
 
-    public VotingData getVotingData(){
+    public VotingData getVotingData() {
         return this.votingData;
     }
 
-    public DemographicData getDemographicData(){
+    public DemographicData getDemographicData() {
         return this.demographicData;
     }
 
-    public String toString(){
-        String str= "";
-        str = str + "PrecinctId : " + this.getId()+ "\n";
+    public String toString() {
+        String str = "";
+        str = str + "PrecinctId : " + this.getId() + "\n";
         str = str + "Name : " + this.getFullName() + " (" + this.getCanonicalName() + ")\n";
         str = str + "ParentId : " + this.getParentDistrictId() + "\n";
         str = str + this.getVotingData().toString() + this.getDemographicData().toString();
@@ -67,14 +69,14 @@ public class Precinct{
         arrER[1] = e1;
         arrER[2] = e2;
         VotingData vd = new VotingData(arrER);
-        DemographicData dd = new DemographicData(200,200,300,300,200);
+        DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
         System.out.println(vd.toString());
         System.out.println(dd.toString());
 
         vd.getElectionData("2016PRES").setVotes(PARTIES.REPUBLICAN, 300);
         dd.setDemographic(RACE.ASIAN, 400);
 
-        Precinct p = new Precinct(10409, "NP", "NewPrecinct", 10, vd,dd);
+        Precinct p = new Precinct(10409, "NPS", "NewPrecinct", 10, vd, dd);
         System.out.println(p.toString());
     }
 }
