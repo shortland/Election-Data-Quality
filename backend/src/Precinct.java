@@ -76,7 +76,7 @@ public class Precinct {
         vd.getElectionData("2016PRES").setVotes(PARTIES.REPUBLICAN, 300);
         dd.setDemographic(RACE.ASIAN, 400);
 
-        Precinct p = new Precinct(10409, "NPS", "NewPrecinct", 10, vd, dd);
+        Precinct p = new Precinct(10409, "NP", "NewPrecinct", 10, vd, dd);
         System.out.println(p.toString());
     }
 }
