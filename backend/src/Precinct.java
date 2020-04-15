@@ -68,6 +68,8 @@ public class Precinct{
         arrER[2] = e2;
         VotingData vd = new VotingData(arrER);
         DemographicData dd = new DemographicData(200,200,300,300,200);
+        System.out.println(vd.toString());
+        System.out.println(dd.toString());
 
         vd.getElectionData("2016PRES").setVotes(PARTIES.REPUBLICAN, 300);
         dd.setDemographic(RACE.ASIAN, 400);
