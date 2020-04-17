@@ -1,34 +1,34 @@
 package data_for_precinct;
-import java.util.HashMap;
+import java.util.EnumMap;
 import data_for_precinct.*;
 
 public class VotingData {
-    private HashMap<String, ElectionResults> electionData;
+    private EnumMap<ELECTIONS, ElectionResults> electionData;
     private int precinctId;
 
     public VotingData(ElectionResults[] arrE) {
-        this.electionData = new HashMap<String, ElectionResults>();
+        this.electionData = new EnumMap<ELECTIONS, ElectionResults>(ELECTIONS.class);
         for (int i = 0; i < arrE.length; i++) {
             ElectionResults currE = arrE[i];
-            this.electionData.put(currE.getElectionAndYear(), currE);
+            this.electionData.put(currE.getElection(), currE);
         }
     }
 
-    public String[] getAllElections() {
-        String[] allElections = new String[this.electionData.size()];
+    public ELECTIONS[] getAllElections() {
+        ELECTIONS[] allElections = new ELECTIONS[this.electionData.size()];
         int counter = 0;
-        for (String e : this.electionData.keySet()) {
+        for (ELECTIONS e : this.electionData.keySet()) {
             allElections[counter] = e;
             counter += 1;
         }
         return allElections;
     }
 
-    public ElectionResults getElectionData(String e) {
+    public ElectionResults getElectionData(ELECTIONS e) {
         return this.electionData.get(e);
     }
 
-    public void setElectionData(String e, ElectionResults er) {
+    public void setElectionData(ELECTIONS e, ElectionResults er) {
         if (this.electionData.containsKey(e)) {
             this.electionData.remove(e); 
         }
@@ -37,8 +37,8 @@ public class VotingData {
 
     public String toString() {
         String str = "";
-        for (String e : electionData.keySet()) {
-            str = str + e + ":\n" + electionData.get(e).toString() + "\n";
+        for (ELECTIONS e : electionData.keySet()) {
+            str = str + e.name() + ":\n" + electionData.get(e).toString() + "\n";
         }
         return str;
     }

@@ -1,4 +1,5 @@
 package data_for_precinct;
+
 public enum ELECTIONS {
-    PRES, CONG;
+    PRES2016, CONG2016, CONG2018;
 }

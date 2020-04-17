@@ -1,6 +1,10 @@
 import java.util.HashMap;
 import java.util.HashSet;
+
+//import self created packages
 import data_for_precinct.*;
+import error.*;
+import comment.*;
 
 // @Entity
 // @Table(name = "PRECINTS")
@@ -11,17 +15,29 @@ public class Precinct {
     private int parentDistrictId;
     private VotingData votingData;
     private DemographicData demographicData;
-    private HashSet<Integer> neigborsId;
-    private HashMap<Integer, Error> precinctErrors;
+    private HashSet<Integer> neighborsId;
+    private HashMap<Integer, PrecinctError> precinctErrors;
+    private boolean isGhost;
 
     public Precinct(int id, String canonicalName, String fullName, int parentDistrictId, VotingData votingData,
-            DemographicData demographicData) {
+            DemographicData demographicData, HashSet<Integer> neighborsId, HashSet<PrecinctError> errors) {
         this.id = id;
         this.canonicalName = canonicalName;
         this.fullName = fullName;
         this.parentDistrictId = parentDistrictId;
         this.votingData = votingData;
         this.demographicData = demographicData;
+        this.isGhost = false;
+        this.neighborsId = neighborsId;
+        this.precinctErrors = this.populateErrorsMap(errors);
+    }
+
+    private HashMap<Integer, PrecinctError> populateErrorsMap(HashSet<PrecinctError> errors){
+        HashMap<Integer, PrecinctError> errorMap = new HashMap<Integer, PrecinctError>();
+        for (PrecinctError e : errors){
+            errorMap.put(e.getId(), e);
+        }
+        return errorMap;
     }
 
     public int getId() {
@@ -40,43 +56,125 @@ public class Precinct {
         return this.fullName;
     }
 
+    public HashSet<Integer> getNeighborsId(){
+        return this.neighborsId;
+    }
+
+    public boolean addNeighbor(int neighborId){
+        return this.neighborsId.add(neighborId);
+    }
+    
+    public boolean deleteNeighbor(int neighborId){
+        return this.neighborsId.remove(neighborId);
+    }
+
     public VotingData getVotingData() {
         return this.votingData;
+    }
+
+    public void setVotingData(VotingData votingData){
+        this.votingData = votingData;
     }
 
     public DemographicData getDemographicData() {
         return this.demographicData;
     }
 
+    public void setDemographicData(DemographicData demographicData){
+        this.demographicData = demographicData;
+    }
+
+    public boolean isGhost(){
+        return this.isGhost;
+    }
+
+    public void setGhost(boolean isGhost){
+        this.isGhost = isGhost;
+    }
+
+    public HashSet<PrecinctError> getAllError(){
+        HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
+        for(Integer id : precinctErrors.keySet()){
+            errorSet.add(precinctErrors.get(id));
+        }
+        return errorSet;
+    }
+
+    public void addError(PrecinctError error){
+        int eId = error.getId();
+        if(this.precinctErrors.containsKey(eId)){
+            this.precinctErrors.remove(eId);
+        }
+        this.precinctErrors.put(eId, error);
+    }
+
+    public void deleteError(int errorId){
+        if(this.precinctErrors.containsKey(errorId)){
+            this.precinctErrors.remove(errorId);
+        }
+    }
+
+
     public String toString() {
         String str = "";
         str = str + "PrecinctId : " + this.getId() + "\n";
         str = str + "Name : " + this.getFullName() + " (" + this.getCanonicalName() + ")\n";
         str = str + "ParentId : " + this.getParentDistrictId() + "\n";
+        str = str + "NeighborsId : " + this.getNeighborsId().toString()+ "\n";
         str = str + this.getVotingData().toString() + this.getDemographicData().toString();
+        for (Integer eId : this.precinctErrors.keySet()){
+            str = str + this.precinctErrors.get(eId).toString()+"\n";
+        }
         return str;
     }
 
     public static void main(String[] args) {
         ElectionResults[] arrER = new ElectionResults[3];
-        ElectionResults e = new ElectionResults(100, 200, 50, 50, ELECTIONS.PRES, 2016);
-        ElectionResults e1 = new ElectionResults(400, 600, 500, 510, ELECTIONS.CONG, 2016);
-        ElectionResults e2 = new ElectionResults(200, 230, 120, 150, ELECTIONS.CONG, 2018);
-        // System.out.println(e.toString());
-        // e.setVotes(PARTIES.REPUBLICAN, 300);
-        // System.out.println(e.toString());
+        ElectionResults e = new ElectionResults(100, 200, 50, 50, ELECTIONS.PRES2016);
+        ElectionResults e1 = new ElectionResults(400, 600, 500, 510, ELECTIONS.CONG2016);
+        ElectionResults e2 = new ElectionResults(200, 230, 120, 150, ELECTIONS.CONG2018);
         arrER[0] = e;
         arrER[1] = e1;
         arrER[2] = e2;
         VotingData vd = new VotingData(arrER);
-        DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
-        System.out.println(vd.toString());
-        System.out.println(dd.toString());
 
-        vd.getElectionData("2016PRES").setVotes(PARTIES.REPUBLICAN, 300);
+        DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
+        // System.out.println(vd.toString());
+        // System.out.println(dd.toString());
+
+        // Testing for setterMethod 
+        vd.getElectionData(ELECTIONS.PRES2016).setVotes(PARTIES.REPUBLICAN, 300);
         dd.setDemographic(RACE.ASIAN, 400);
 
-        Precinct p = new Precinct(10409, "NP", "NewPrecinct", 10, vd, dd);
+        //create neighbor IDs
+        HashSet<Integer> neighbor = new HashSet<Integer>();
+        for (int i = 1 ; i < 5 ; i++){
+            neighbor.add(i);
+        }
+
+        // create Errors
+        String[] arrstr = {"cool", "intersting","no","voting"};
+        HashSet<Comment> comments = new HashSet<Comment>();
+        for (int i = 1 ; i<5 ; i++){
+            Comment c = new Comment(i,arrstr[i-1]);
+            comments.add(c);
+        }
+        PrecinctError er = new PrecinctError(ERROR_TYPE.NO_VOTERS,1,"has no voter", false, comments);
+        PrecinctError er1 = new PrecinctError(ERROR_TYPE.GHOST, 2, "is ghost", false, comments);
+        HashSet<PrecinctError> errors = new HashSet<PrecinctError>();
+        errors.add(er);
+        errors.add(er1);
+        //System.out.println(er.toString());
+
+
+        Precinct p = new Precinct(10409, "NP", "NewPrecinct", 10, vd, dd,neighbor,errors);
+        System.out.println(p.toString());
+        p.addNeighbor(10);
+        p.deleteNeighbor(2);
+        PrecinctError newError = new PrecinctError(ERROR_TYPE.NO_DEMOGRAPHICS,3,"has no demo", false, comments);
+        p.addError(newError);
+        p.deleteError(2);
+        System.out.println("-----------------------");
         System.out.println(p.toString());
     }
 }

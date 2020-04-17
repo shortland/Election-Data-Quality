@@ -7,9 +7,8 @@ public class ElectionResults {
     private PARTIES majorityParty;
     private int totalVoters;
     private ELECTIONS election;
-    private int year;
 
-    public ElectionResults(int rVotes, int dVotes, int lVotes, int others, ELECTIONS election, int year) {
+    public ElectionResults(int rVotes, int dVotes, int lVotes, int others, ELECTIONS election) {
         this.resultsByParty = new EnumMap<PARTIES, Integer>(PARTIES.class);
         this.resultsByParty.put(PARTIES.REPUBLICAN, rVotes);
         this.resultsByParty.put(PARTIES.DEMOCRAT, dVotes);
@@ -18,7 +17,6 @@ public class ElectionResults {
         this.majorityParty = this.findMajorityParty();
         this.totalVoters = rVotes + dVotes + lVotes + others;
         this.election = election;
-        this.year = year;
     }
 
     private int calculateTotalVoters() {
@@ -69,9 +67,8 @@ public class ElectionResults {
         }
     }
 
-    public String getElectionAndYear() {
-        String str = Integer.toString(this.year) + this.election.name();
-        return str;
+    public ELECTIONS getElection() {
+        return election;
     }
 
     public void setVotes(PARTIES parties, int newVotes) {
