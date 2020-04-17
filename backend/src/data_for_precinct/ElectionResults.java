@@ -1,12 +1,28 @@
 package data_for_precinct;
 import java.util.EnumMap;
-import data_for_precinct.*;
 
 public class ElectionResults {
     private EnumMap<PARTIES, Integer> resultsByParty;
     private PARTIES majorityParty;
     private int totalVoters;
     private ELECTIONS election;
+
+    //Static methods
+
+    public static ElectionResults mergeElectionResults(ElectionResults er1, ElectionResults er2){
+        if(er1.getElection() == er2.getElection()){
+            PARTIES[] allParties = {PARTIES.REPUBLICAN, PARTIES.DEMOCRAT, PARTIES.LIBRATARIAN, PARTIES.DEMOCRAT};
+            int[] votes = new int[4];
+            for (int i = 0 ; i < 4; i++){
+                votes[i] = er1.getResultByParty(allParties[i]) + er2.getResultByParty(allParties[i]);
+            }
+            ElectionResults mergedER = new ElectionResults(votes[0],votes[1],votes[2],votes[3],er1.getElection());
+            return mergedER;
+        }  
+        else {
+            return null;
+        }
+    }
 
     public ElectionResults(int rVotes, int dVotes, int lVotes, int others, ELECTIONS election) {
         this.resultsByParty = new EnumMap<PARTIES, Integer>(PARTIES.class);

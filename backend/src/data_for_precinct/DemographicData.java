@@ -1,10 +1,20 @@
 package data_for_precinct;
 import java.util.EnumMap;
-//import data_for_precinct.*;
 
 public class DemographicData {
     private EnumMap<RACE, Integer> demographicByRace;
     private int total;
+
+    public static DemographicData mergeDemographicData(DemographicData dd1, DemographicData dd2){
+        int[] population = new int[5];
+        RACE[] rs = {RACE.ASIAN, RACE.BLACK, RACE.HISPANIC, RACE.OTHER, RACE.WHITE};
+        for(int i = 0 ; i < rs.length ; i++){
+            population[i] = dd1.getDemogaphic(rs[i]) + dd2.getDemogaphic(rs[i]);
+        }
+        DemographicData mergedDD = new DemographicData(population[0],population[1],population[2],population[3],population[4]);
+        return mergedDD;
+    }
+
     public DemographicData(int dA, int dB, int dH, int dO, int dW){
         this.demographicByRace = new EnumMap<RACE, Integer>(RACE.class);
         this.demographicByRace.put(RACE.ASIAN, dA);

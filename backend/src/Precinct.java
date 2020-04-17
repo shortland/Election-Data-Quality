@@ -138,11 +138,17 @@ public class Precinct {
         arrER[2] = e2;
         VotingData vd = new VotingData(arrER);
 
-        DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
-        // System.out.println(vd.toString());
-        // System.out.println(dd.toString());
+        //TEST: static mergeVotinData()
+        //VotingData vd2 = new VotingData(arrER);
+        //System.out.println(VotingData.mergeVotingData(vd,vd2).toString());
 
-        // Testing for setterMethod 
+        DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
+
+        //TEST: static mergeDemographicData()
+        //DemographicData dd2 = new DemographicData(100, 100, 100, 100, 100);
+        //System.out.println(DemographicData.mergeDemographicData(dd,dd2).toString());
+
+        // Test for setterMethod 
         vd.getElectionData(ELECTIONS.PRES2016).setVotes(PARTIES.REPUBLICAN, 300);
         dd.setDemographic(RACE.ASIAN, 400);
 
@@ -164,8 +170,6 @@ public class Precinct {
         HashSet<PrecinctError> errors = new HashSet<PrecinctError>();
         errors.add(er);
         errors.add(er1);
-        //System.out.println(er.toString());
-
 
         Precinct p = new Precinct(10409, "NP", "NewPrecinct", 10, vd, dd,neighbor,errors);
         System.out.println(p.toString());
