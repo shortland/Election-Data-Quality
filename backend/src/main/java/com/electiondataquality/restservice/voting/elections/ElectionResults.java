@@ -1,5 +1,9 @@
-package data_for_precinct;
+package com.electiondataquality.restservice.voting.elections;
+
 import java.util.EnumMap;
+
+import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
+import com.electiondataquality.restservice.voting.elections.enums.PARTIES;
 
 public class ElectionResults {
     private EnumMap<PARTIES, Integer> resultsByParty;
@@ -7,19 +11,18 @@ public class ElectionResults {
     private int totalVoters;
     private ELECTIONS election;
 
-    //Static methods
+    // Static methods
 
-    public static ElectionResults mergeElectionResults(ElectionResults er1, ElectionResults er2){
-        if(er1.getElection() == er2.getElection()){
-            PARTIES[] allParties = {PARTIES.REPUBLICAN, PARTIES.DEMOCRAT, PARTIES.LIBRATARIAN, PARTIES.DEMOCRAT};
+    public static ElectionResults mergeElectionResults(ElectionResults er1, ElectionResults er2) {
+        if (er1.getElection() == er2.getElection()) {
+            PARTIES[] allParties = { PARTIES.REPUBLICAN, PARTIES.DEMOCRAT, PARTIES.LIBRATARIAN, PARTIES.DEMOCRAT };
             int[] votes = new int[4];
-            for (int i = 0 ; i < 4; i++){
+            for (int i = 0; i < 4; i++) {
                 votes[i] = er1.getResultByParty(allParties[i]) + er2.getResultByParty(allParties[i]);
             }
-            ElectionResults mergedER = new ElectionResults(votes[0],votes[1],votes[2],votes[3],er1.getElection());
+            ElectionResults mergedER = new ElectionResults(votes[0], votes[1], votes[2], votes[3], er1.getElection());
             return mergedER;
-        }  
-        else {
+        } else {
             return null;
         }
     }
@@ -65,20 +68,18 @@ public class ElectionResults {
     }
 
     public int getResultByParty(PARTIES p) {
-        if (this.resultsByParty.containsKey(p)){
+        if (this.resultsByParty.containsKey(p)) {
             return this.resultsByParty.get(p);
-        }
-        else{
+        } else {
             return 0;
         }
     }
-    
-    public double getResultPercentage(PARTIES p){
-        if (this.resultsByParty.containsKey(p)){
-            double percentage = Double.valueOf(this.resultsByParty.get(p))/Double.valueOf(this.totalVoters);
+
+    public double getResultPercentage(PARTIES p) {
+        if (this.resultsByParty.containsKey(p)) {
+            double percentage = Double.valueOf(this.resultsByParty.get(p)) / Double.valueOf(this.totalVoters);
             return percentage;
-        }
-        else{
+        } else {
             return 0.0;
         }
     }
@@ -100,10 +101,10 @@ public class ElectionResults {
         String str = "";
         str = str + "\tMajority : " + this.getMajorityParty() + "\n";
         str = str + "\tTotal : " + this.getTotalVoters() + "\n";
-        for (PARTIES party : this.resultsByParty.keySet()){
-            str = str + "\t\t" + party.name() + " : " +this.getResultByParty(party) +" ["+this.getResultPercentage(party) +"]\n";
+        for (PARTIES party : this.resultsByParty.keySet()) {
+            str = str + "\t\t" + party.name() + " : " + this.getResultByParty(party) + " ["
+                    + this.getResultPercentage(party) + "]\n";
         }
         return str;
     }
-
 }
