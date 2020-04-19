@@ -1,7 +1,8 @@
-package error;
+package com.electiondataquality.restservice.features.precinct.error;
 
 import java.util.HashSet;
-import comment.*;
+
+import com.electiondataquality.restservice.comments.Comment;
 
 public class PrecinctError {
     private ERROR_TYPE errorType;

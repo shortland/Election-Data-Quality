@@ -1,4 +1,4 @@
-package comment;
+package com.electiondataquality.restservice.comments;
 
 public class Comment {
     private int commentId;
