@@ -9,7 +9,7 @@
 
 ## Project Description
 
-Something something something.
+Frontend is currently being hosted on Github Pages. Backend is hosted on http://67.80.171.107:1234 with a restful api alongside with the relational database on the same host.
 
 ### Frontend Install/Build/Run/Deploy
 
