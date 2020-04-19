@@ -31,6 +31,6 @@ backend/.settings/org.eclipse.buildship.core.prefs
 
 # backend ignore gradle new files
 backend/.classpath
-backend/.gradle
+backend/.gradle/
 backend/bin/
 backend/build/

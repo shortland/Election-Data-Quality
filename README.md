@@ -9,7 +9,7 @@
 
 ## Project Description
 
-Something something something.
+Frontend is currently being hosted on Github Pages. Backend is hosted on http://67.80.171.107:1234 with a restful api alongside with the relational database on the same host.
 
 ### Frontend Install/Build/Run/Deploy
 
@@ -41,9 +41,30 @@ After cloning the directory and entering the `backend` directory, follow the bel
 
 `$ java -jar build/libs/rest-service-0.0.1-SNAPSHOT.jar`
 
-#### Deploying new .jar release to server
+#### Deploying updated server-code to the server
 
-`$ TODO`
+Visit the webpage: `http://67.80.171.107:1234/pull` once. It may not appear to ever finish loading but it should upgrade the server to the current github master branch server build.
+
+The auto-deploy script is a small http servlet written in Golang, Bash, and uses a system service file for uptime.
+Location of service file: /etc/systemd/system/election-upgrader.service
+
+```service
+[Unit]
+Description=ElectionDataUpgraderService
+After=network.target
+
+[Service]
+WorkingDirectory=/home/ilankleiman
+User=ilankleiman
+Group=users
+Type=simple
+ExecStart=/home/ilankleiman/ElectionDataQualityUpgrader
+RestartSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
 
 ### States
 
