@@ -25,8 +25,10 @@ if __name__ == '__main__':
     # has been modified to find that ID Number.
     precinctTXT = open(statePrecinctDataFileName, mode="rt")
     tempData = precinctTXT.read()
+    stateID = ""
     if tempData.find("STATE_ID") == -1:
         id = tempData[tempData.find("\"GEOID\": \"")+10:tempData.find("\"GEOID\": \"")+12]
+        stateID = id
         tempData = tempData.replace(", \"GEOID\":", ", \"STATE_ID\": "+str(id)+", \"GEOID\":")
     precinctTXT.close()
 
@@ -56,7 +58,24 @@ if __name__ == '__main__':
     # Explode Multipolygons into multiple single polygons
     ghosts = ghosts.explode()
 
+    ghosts['GEOID'] = None
+    for index, ghost in ghosts.iterrows():
+        CNTY_FIPS = '999'
+        COUSUBFP = '99999'
+        precinctID = str(index).zfill(4)
+        ghost.__setattr__("GEOID", str(stateID)+CNTY_FIPS+COUSUBFP+precinctID)
+        ghost.__setattr__("CNTY_FIPS", CNTY_FIPS)
+        ghost.__setattr__("CNTY_NAME", None)
+        ghost.__setattr__("COUSUBFP", COUSUBFP)
+        ghost.__setattr__("MCD_FIPS", str(stateID)+CNTY_FIPS+COUSUBFP)
+        ghost.__setattr__("MCD_NAME", None)
+        ghost.__setattr__("WARD_FIPS", str(stateID)+CNTY_FIPS+COUSUBFP+precinctID)
+        ghost.__setattr__("WARDID", precinctID)
+
+
     ghosts.__setattr__(attr='NOTES', val='Ghosts')
+
+    ghosts.append(precinctGDF)
 
     ghosts.to_file(outputFileName, driver='GeoJSON')
 
