@@ -10,13 +10,13 @@ import com.electiondataquality.restservice.features.state.State;
 public class StateManager {
     private HashMap<Integer, State> stateMap;
 
-    // Default Constructor
     public StateManager() {
         this.stateMap = new HashMap<Integer, State>();
     }
 
     public StateManager(HashSet<State> stateSet) {
         this.stateMap = new HashMap<Integer, State>();
+
         for (State s : stateSet) {
             this.stateMap.put(s.getId(), s);
         }
@@ -25,6 +25,7 @@ public class StateManager {
     // NOTE: this clears the map and populate the map with the stateSet
     public void populate(HashSet<State> stateSet) {
         this.stateMap.clear();
+
         for (State s : stateSet) {
             this.stateMap.put(s.getId(), s);
         }
@@ -68,9 +69,11 @@ public class StateManager {
 
     public String toString() {
         String str = "";
+
         for (int id : this.stateMap.keySet()) {
             str = str + this.stateMap.get(id).toString() + "\n";
         }
+
         return str;
     }
 }
