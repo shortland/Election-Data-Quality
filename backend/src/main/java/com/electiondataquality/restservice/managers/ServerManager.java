@@ -4,10 +4,14 @@ import java.util.HashSet;
 
 import com.electiondataquality.restservice.features.state.State;
 import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
+import com.electiondataquality.restservice.features.precinct.Precinct;
+import com.electiondataquality.restservice.comments.Comment;
 
 public class ServerManager {
     private static StateManager stateManager;
     private static CongressionalManager congressionalManager;
+    private static PrecinctManager precinctManager;
+    private static CommentManager commentManager;
 
     /**
      * Manager Class Constructors
@@ -15,16 +19,21 @@ public class ServerManager {
 
     public ServerManager() {
         ServerManager.stateManager = new StateManager();
+        ServerManager.congressionalManager = new CongressionalManager();
+        ServerManager.precinctManager = new PrecinctManager();
+        ServerManager.commentManager = new CommentManager();
     }
 
-    public ServerManager(StateManager sm) {
+    public ServerManager(StateManager sm, CongressionalManager cgm, PrecinctManager pm, CommentManager cm) {
         ServerManager.stateManager = sm;
+        ServerManager.congressionalManager = cgm;
+        ServerManager.precinctManager = pm;
+        ServerManager.commentManager = cm;
     }
 
     /**
      * StateManager Methods
      */
-
     public void populateStateManager(HashSet<State> stateSet) {
         ServerManager.stateManager.populate(stateSet);
     }
@@ -55,8 +64,30 @@ public class ServerManager {
     /**
      * PrecinctManager Methods
      */
+    public void populatePrecinctManager(HashSet<Precinct> precinctSet) {
+        ServerManager.precinctManager.populate(precinctSet);
+    }
+
+    public PrecinctManager getPrecinctManager() {
+        return ServerManager.precinctManager;
+    }
+
+    public void setPrecinctManager(PrecinctManager pm) {
+        ServerManager.precinctManager = pm;
+    }
 
     /**
      * CommentManager Methods
      */
+    public void populateCommentManager(HashSet<Comment> commentSet) {
+        ServerManager.commentManager.populate(commentSet);
+    }
+
+    public CommentManager getCommentManager() {
+        return ServerManager.commentManager;
+    }
+
+    public void setCommentManager(CommentManager cm) {
+        ServerManager.commentManager = cm;
+    }
 }

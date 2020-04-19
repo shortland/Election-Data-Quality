@@ -1,10 +1,9 @@
-package manager;
+package com.electiondataquality.restservice.managers;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
-//import self created packages
-import feature.*;
+import com.electiondataquality.restservice.features.precinct.Precinct;
 
 public class PrecinctManager {
     private HashMap<Integer, Precinct> precinctMap;

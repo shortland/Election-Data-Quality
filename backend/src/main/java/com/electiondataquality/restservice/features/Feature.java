@@ -1,4 +1,4 @@
-package feature;
+package com.electiondataquality.restservice.features;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,10 @@ public class Feature {
 
     public ArrayList<ArrayList<double[]>> getShape() {
         return this.shape;
+    }
+
+    public void setShape(ArrayList<ArrayList<double[]>> newShape) {
+        this.shape = newShape;
     }
 
     // double[][][2]

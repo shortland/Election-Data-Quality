@@ -33,9 +33,9 @@ public class RestServiceApplication {
         /**
          * POPULATE STATES
          */
-        State a = new State(36, "New York", "NY", null, null);
-        State b = new State(49, "Utah", "UT", null, null);
-        State c = new State(55, "Wisconsin", "WI", null, null);
+        State a = new State(36, "New York", "NY", null, null, null);
+        State b = new State(49, "Utah", "UT", null, null, null);
+        State c = new State(55, "Wisconsin", "WI", null, null, null);
 
         HashSet<State> stateSet = new HashSet<State>();
         stateSet.add(a);
