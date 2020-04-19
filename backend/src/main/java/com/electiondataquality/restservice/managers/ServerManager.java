@@ -3,9 +3,11 @@ package com.electiondataquality.restservice.managers;
 import java.util.HashSet;
 
 import com.electiondataquality.restservice.features.state.State;
+import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
 
 public class ServerManager {
     private static StateManager stateManager;
+    private static CongressionalManager congressionalManager;
 
     /**
      * Manager Class Constructors
@@ -36,11 +38,22 @@ public class ServerManager {
     }
 
     /**
-     * PrecinctManager Methods
+     * CongressionalDistrictManager Methods
      */
+    public void populateCongressionalManager(HashSet<CongressionalDistrict> congressionalSet) {
+        ServerManager.congressionalManager.populate(congressionalSet);
+    }
+
+    public CongressionalManager getCongressionalManager() {
+        return ServerManager.congressionalManager;
+    }
+
+    public void setCongressionalManager(CongressionalManager cm) {
+        ServerManager.congressionalManager = cm;
+    }
 
     /**
-     * CongressionalDistrictManager Methods
+     * PrecinctManager Methods
      */
 
     /**

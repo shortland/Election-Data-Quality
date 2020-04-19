@@ -1,9 +1,9 @@
-package feature;
+package com.electiondataquality.restservice.features.congressional_district;
 
 import java.util.HashSet;
 
-//import self created packages
-import data_for_precinct.*;
+import com.electiondataquality.restservice.demographics.DemographicData;
+import com.electiondataquality.restservice.voting.VotingData;
 
 public class CongressionalDistrict {
     private String name;
@@ -63,5 +63,4 @@ public class CongressionalDistrict {
                 + Integer.toString(this.getParentId()) + "\nChildren : " + this.getChildrenId().toString();
         return str;
     }
-
 }

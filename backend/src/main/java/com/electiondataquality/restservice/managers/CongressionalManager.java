@@ -1,21 +1,20 @@
-package manager;
+package com.electiondataquality.restservice.managers;
 
 import java.util.HashSet;
 import java.util.HashMap;
 
-//import self created package
-import feature.*;
+import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
 
-public class CongDistrictManager {
+public class CongressionalManager {
     private HashMap<Integer, CongressionalDistrict> congressionalDistrictMap;
 
-    // Default consturctor
-    public CongDistrictManager() {
+    public CongressionalManager() {
         this.congressionalDistrictMap = new HashMap<Integer, CongressionalDistrict>();
     }
 
-    public CongDistrictManager(HashSet<CongressionalDistrict> congDistrictSet) {
+    public CongressionalManager(HashSet<CongressionalDistrict> congDistrictSet) {
         this.congressionalDistrictMap = new HashMap<Integer, CongressionalDistrict>();
+
         for (CongressionalDistrict cd : congDistrictSet) {
             this.congressionalDistrictMap.put(cd.getId(), cd);
         }
@@ -24,6 +23,7 @@ public class CongDistrictManager {
     // NOTE: this clears the map and populate the map with the congDistrictSet
     public void populate(HashSet<CongressionalDistrict> congDistrictSet) {
         this.congressionalDistrictMap.clear();
+
         for (CongressionalDistrict cd : congDistrictSet) {
             this.congressionalDistrictMap.put(cd.getId(), cd);
         }
@@ -47,9 +47,11 @@ public class CongDistrictManager {
 
     public String toString() {
         String str = "";
+
         for (int id : this.congressionalDistrictMap.keySet()) {
             str = str + this.congressionalDistrictMap.get(id).toString() + "\n";
         }
+
         return str;
     }
 }
