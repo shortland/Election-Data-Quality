@@ -1,9 +1,9 @@
-package manager;
+package com.electiondataquality.restservice.managers;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
-import comment.*;
+import com.electiondataquality.restservice.comments.Comment;
 
 public class CommentManager {
     private HashMap<Integer, Comment> commentMap;
