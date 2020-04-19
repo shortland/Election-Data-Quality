@@ -35,7 +35,7 @@ public class DataPopulator {
         this.readJson("~/Desktop/national_parks.geojson");
     }
 
-    public static void readJson(String file) {
+    public void readJson(String file) {
         JSONParser parser = new JSONParser();
         try {
             Object obj = parser.parse(new FileReader(file));
