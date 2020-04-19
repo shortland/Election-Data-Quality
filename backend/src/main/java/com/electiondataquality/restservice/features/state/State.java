@@ -3,8 +3,8 @@ package com.electiondataquality.restservice.features.state;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.features.Feature;
+import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 
 public class State extends Feature {
@@ -13,18 +13,16 @@ public class State extends Feature {
     private String stateAbreviation;
     private HashSet<Integer> counties;
     private HashSet<Integer> districts;
-    private ArrayList<ArrayList<double[]>> shape;
 
     public State(int stateId, String stateName, String stateAbreviation, HashSet<Integer> counties,
             HashSet<Integer> districts, ArrayList<ArrayList<double[]>> shape) {
-        super();
+        super(shape);
 
         this.stateId = stateId;
         this.stateName = stateName;
         this.stateAbreviation = stateAbreviation;
         this.counties = counties;
         this.districts = districts;
-        this.shape = shape;
     }
 
     public int getId() {

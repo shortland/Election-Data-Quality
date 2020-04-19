@@ -1,15 +1,17 @@
 package com.electiondataquality.restservice.features.precinct;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.electiondataquality.restservice.features.Feature;
 import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 
 // @Entity
 // @Table(name = "PRECINTS")
-public class Precinct {
+public class Precinct extends Feature {
     private int id;
     private String canonicalName;
     private String fullName;
@@ -21,7 +23,10 @@ public class Precinct {
     private boolean isGhost;
 
     public Precinct(int id, String canonicalName, String fullName, int parentDistrictId, VotingData votingData,
-            DemographicData demographicData, HashSet<Integer> neighborsId, HashSet<PrecinctError> errors) {
+            DemographicData demographicData, HashSet<Integer> neighborsId, HashSet<PrecinctError> errors,
+            ArrayList<ArrayList<double[]>> shape) {
+        super(shape);
+
         this.id = id;
         this.canonicalName = canonicalName;
         this.fullName = fullName;
@@ -35,9 +40,11 @@ public class Precinct {
 
     private HashMap<Integer, PrecinctError> populateErrorsMap(HashSet<PrecinctError> errors) {
         HashMap<Integer, PrecinctError> errorMap = new HashMap<Integer, PrecinctError>();
+
         for (PrecinctError e : errors) {
             errorMap.put(e.getId(), e);
         }
+
         return errorMap;
     }
 
@@ -95,17 +102,21 @@ public class Precinct {
 
     public HashSet<PrecinctError> getAllError() {
         HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
+
         for (Integer id : precinctErrors.keySet()) {
             errorSet.add(precinctErrors.get(id));
         }
+
         return errorSet;
     }
 
     public void addError(PrecinctError error) {
         int eId = error.getId();
+
         if (this.precinctErrors.containsKey(eId)) {
             this.precinctErrors.remove(eId);
         }
+
         this.precinctErrors.put(eId, error);
     }
 
@@ -122,9 +133,11 @@ public class Precinct {
         str = str + "ParentId : " + this.getParentDistrictId() + "\n";
         str = str + "NeighborsId : " + this.getNeighborsId().toString() + "\n";
         str = str + this.getVotingData().toString() + this.getDemographicData().toString();
+
         for (Integer eId : this.precinctErrors.keySet()) {
             str = str + this.precinctErrors.get(eId).toString() + "\n";
         }
+
         return str;
     }
 }

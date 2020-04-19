@@ -1,17 +1,22 @@
 package com.electiondataquality.restservice.features.congressional_district;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.electiondataquality.restservice.features.Feature;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 
-public class CongressionalDistrict {
+public class CongressionalDistrict extends Feature {
     private String name;
     private int parentStateId;
     private int cdId;
     private HashSet<Integer> childrenPrecincts;
 
-    public CongressionalDistrict(String name, int parentStateId, int cdId, HashSet<Integer> childrenPrecincts) {
+    public CongressionalDistrict(String name, int parentStateId, int cdId, HashSet<Integer> childrenPrecincts,
+            ArrayList<ArrayList<double[]>> shape) {
+        super(shape);
+
         this.name = name;
         this.parentStateId = parentStateId;
         this.cdId = cdId;

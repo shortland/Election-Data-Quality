@@ -2,11 +2,15 @@ package com.electiondataquality.restservice.features;
 
 import java.util.ArrayList;
 
-public class Feature {
+public abstract class Feature {
     private ArrayList<ArrayList<double[]>> shape;
 
     public Feature() {
         this.shape = new ArrayList<ArrayList<double[]>>();
+    }
+
+    public Feature(ArrayList<ArrayList<double[]>> shape) {
+        this.shape = shape;
     }
 
     public ArrayList<ArrayList<double[]>> getShape() {
