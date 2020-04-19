@@ -1,5 +1,6 @@
 import geopandas
 import sys
+import pandas
 
 # This script takes precinct data and state shape outline and determines Ghost Precincts. After running this script
 # you will have single polygons all with a new State_ID and the notes field saying 'Ghosts'. This script will not
@@ -25,11 +26,11 @@ if __name__ == '__main__':
     # has been modified to find that ID Number.
     precinctTXT = open(statePrecinctDataFileName, mode="rt")
     tempData = precinctTXT.read()
-    stateID = ""
+    stateID = "55"
     if tempData.find("STATE_ID") == -1:
         id = tempData[tempData.find("\"GEOID\": \"")+10:tempData.find("\"GEOID\": \"")+12]
-        stateID = id
-        tempData = tempData.replace(", \"GEOID\":", ", \"STATE_ID\": "+str(id)+", \"GEOID\":")
+        stateID = str(id)
+        tempData = tempData.replace(", \"GEOID\":", ", \"STATE_ID\": "+stateID+", \"GEOID\":")
     precinctTXT.close()
 
     precinctTXT = open(statePrecinctDataFileName, mode="wt")
@@ -62,21 +63,41 @@ if __name__ == '__main__':
     for index, ghost in ghosts.iterrows():
         CNTY_FIPS = '999'
         COUSUBFP = '99999'
-        precinctID = str(index).zfill(4)
-        ghost.__setattr__("GEOID", str(stateID)+CNTY_FIPS+COUSUBFP+precinctID)
-        ghost.__setattr__("CNTY_FIPS", CNTY_FIPS)
-        ghost.__setattr__("CNTY_NAME", None)
-        ghost.__setattr__("COUSUBFP", COUSUBFP)
-        ghost.__setattr__("MCD_FIPS", str(stateID)+CNTY_FIPS+COUSUBFP)
-        ghost.__setattr__("MCD_NAME", None)
-        ghost.__setattr__("WARD_FIPS", str(stateID)+CNTY_FIPS+COUSUBFP+precinctID)
-        ghost.__setattr__("WARDID", precinctID)
+        precinctID = str(index[1]).zfill(4)
+        ghosts.loc[index, "GEOID"] = str(stateID)+CNTY_FIPS+COUSUBFP+precinctID
+        ghosts.loc[index, "CNTY_FIPS"] = CNTY_FIPS
+        ghosts.loc[index, "CNTY_NAME"] = None
+        ghosts.loc[index, "COUSUBFP"] = COUSUBFP
+        ghosts.loc[index, "MCD_FIPS"] = str(stateID)+CNTY_FIPS+COUSUBFP
+        ghosts.loc[index, "MCD_NAME"] = None
+        ghosts.loc[index, "WARD_FIPS"] = str(stateID)+CNTY_FIPS+COUSUBFP+precinctID
+        ghosts.loc[index, "WARDID"] = precinctID
 
+
+    # Drop junk columns from State data Merger
+    ghosts = ghosts.drop(columns="ALAND")
+    ghosts = ghosts.drop(columns="AWATER")
+    ghosts = ghosts.drop(columns="DIVISION")
+    ghosts = ghosts.drop(columns="FUNCSTAT")
+    ghosts = ghosts.drop(columns="GEOID_1")
+    ghosts = ghosts.drop(columns="GEOID_2")
+    ghosts = ghosts.drop(columns="INTPTLAT")
+    ghosts = ghosts.drop(columns="INTPTLON")
+    ghosts = ghosts.drop(columns="LSAD")
+    ghosts = ghosts.drop(columns="MTFCC")
+    ghosts = ghosts.drop(columns="NAME")
+    ghosts = ghosts.drop(columns="REGION")
+    ghosts = ghosts.drop(columns="STATEFP")
+    ghosts = ghosts.drop(columns="STATENS")
+    ghosts = ghosts.drop(columns="STUSPS")
 
     ghosts.__setattr__(attr='NOTES', val='Ghosts')
 
-    ghosts.append(precinctGDF)
-
+    # ghosts = ghosts.reset_index(drop=True)
+    #
+    # finalGDF = precinctGDF.append(ghosts, ignore_index=True)
+    #
+    # finalGDF.to_file(outputFileName, driver='GeoJSON')
     ghosts.to_file(outputFileName, driver='GeoJSON')
 
 
