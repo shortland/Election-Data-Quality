@@ -16,7 +16,7 @@ public class ServerManager {
         this.precinctManager = new PrecinctManager();
         this.cdManager = new CongDistrictManager();
         this.stateManager = new StateManager();
-        this.commentManager = new CommentManager();
+        this.commentManager = new CommentManagerg();
     }
 
     public ServerManager(PrecinctManager pm, CongDistrictManager cdm, StateManager sm, CommentManager cm) {
