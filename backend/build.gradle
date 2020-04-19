@@ -14,9 +14,12 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+	
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 test {
