@@ -37,9 +37,9 @@ public class Precinct {
         this.precinctErrors = this.populateErrorsMap(errors);
     }
 
-    private HashMap<Integer, PrecinctError> populateErrorsMap(HashSet<PrecinctError> errors){
+    private HashMap<Integer, PrecinctError> populateErrorsMap(HashSet<PrecinctError> errors) {
         HashMap<Integer, PrecinctError> errorMap = new HashMap<Integer, PrecinctError>();
-        for (PrecinctError e : errors){
+        for (PrecinctError e : errors) {
             errorMap.put(e.getId(), e);
         }
         return errorMap;
@@ -61,15 +61,15 @@ public class Precinct {
         return this.fullName;
     }
 
-    public HashSet<Integer> getNeighborsId(){
+    public HashSet<Integer> getNeighborsId() {
         return this.neighborsId;
     }
 
-    public boolean addNeighbor(int neighborId){
+    public boolean addNeighbor(int neighborId) {
         return this.neighborsId.add(neighborId);
     }
-    
-    public boolean deleteNeighbor(int neighborId){
+
+    public boolean deleteNeighbor(int neighborId) {
         return this.neighborsId.remove(neighborId);
     }
 
@@ -77,7 +77,7 @@ public class Precinct {
         return this.votingData;
     }
 
-    public void setVotingData(VotingData votingData){
+    public void setVotingData(VotingData votingData) {
         this.votingData = votingData;
     }
 
@@ -85,50 +85,49 @@ public class Precinct {
         return this.demographicData;
     }
 
-    public void setDemographicData(DemographicData demographicData){
+    public void setDemographicData(DemographicData demographicData) {
         this.demographicData = demographicData;
     }
 
-    public boolean isGhost(){
+    public boolean isGhost() {
         return this.isGhost;
     }
 
-    public void setGhost(boolean isGhost){
+    public void setGhost(boolean isGhost) {
         this.isGhost = isGhost;
     }
 
-    public HashSet<PrecinctError> getAllError(){
+    public HashSet<PrecinctError> getAllError() {
         HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
-        for(Integer id : precinctErrors.keySet()){
+        for (Integer id : precinctErrors.keySet()) {
             errorSet.add(precinctErrors.get(id));
         }
         return errorSet;
     }
 
-    public void addError(PrecinctError error){
+    public void addError(PrecinctError error) {
         int eId = error.getId();
-        if(this.precinctErrors.containsKey(eId)){
+        if (this.precinctErrors.containsKey(eId)) {
             this.precinctErrors.remove(eId);
         }
         this.precinctErrors.put(eId, error);
     }
 
-    public void deleteError(int errorId){
-        if(this.precinctErrors.containsKey(errorId)){
+    public void deleteError(int errorId) {
+        if (this.precinctErrors.containsKey(errorId)) {
             this.precinctErrors.remove(errorId);
         }
     }
-
 
     public String toString() {
         String str = "";
         str = str + "PrecinctId : " + this.getId() + "\n";
         str = str + "Name : " + this.getFullName() + " (" + this.getCanonicalName() + ")\n";
         str = str + "ParentId : " + this.getParentDistrictId() + "\n";
-        str = str + "NeighborsId : " + this.getNeighborsId().toString()+ "\n";
+        str = str + "NeighborsId : " + this.getNeighborsId().toString() + "\n";
         str = str + this.getVotingData().toString() + this.getDemographicData().toString();
-        for (Integer eId : this.precinctErrors.keySet()){
-            str = str + this.precinctErrors.get(eId).toString()+"\n";
+        for (Integer eId : this.precinctErrors.keySet()) {
+            str = str + this.precinctErrors.get(eId).toString() + "\n";
         }
         return str;
     }
@@ -143,78 +142,78 @@ public class Precinct {
         arrER[2] = e2;
         VotingData vd = new VotingData(arrER);
 
-        //TEST: static mergeVotinData()
-        //VotingData vd2 = new VotingData(arrER);
-        //System.out.println(VotingData.mergeVotingData(vd,vd2).toString());
+        // TEST: static mergeVotinData()
+        // VotingData vd2 = new VotingData(arrER);
+        // System.out.println(VotingData.mergeVotingData(vd,vd2).toString());
 
         DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
 
-        //TEST: static mergeDemographicData()
-        //DemographicData dd2 = new DemographicData(100, 100, 100, 100, 100);
-        //System.out.println(DemographicData.mergeDemographicData(dd,dd2).toString());
+        // TEST: static mergeDemographicData()
+        // DemographicData dd2 = new DemographicData(100, 100, 100, 100, 100);
+        // System.out.println(DemographicData.mergeDemographicData(dd,dd2).toString());
 
-        // Test for setterMethod 
+        // Test for setterMethod
         vd.getElectionData(ELECTIONS.PRES2016).setVotes(PARTIES.REPUBLICAN, 300);
         dd.setDemographic(RACE.ASIAN, 400);
 
-        //create neighbor IDs
+        // create neighbor IDs
         HashSet<Integer> neighbor = new HashSet<Integer>();
-        for (int i = 1 ; i < 5 ; i++){
+        for (int i = 1; i < 5; i++) {
             neighbor.add(i);
         }
 
         // create Errors
-        String[] arrstr = {"cool", "intersting","no","voting"};
+        String[] arrstr = { "cool", "intersting", "no", "voting" };
         HashSet<Comment> comments = new HashSet<Comment>();
-        for (int i = 1 ; i<5 ; i++){
-            Comment c = new Comment(i,arrstr[i-1]);
+        for (int i = 1; i < 5; i++) {
+            Comment c = new Comment(i, arrstr[i - 1]);
             comments.add(c);
         }
-        PrecinctError er = new PrecinctError(ERROR_TYPE.NO_VOTERS,1,"has no voter", false, comments);
+        PrecinctError er = new PrecinctError(ERROR_TYPE.NO_VOTERS, 1, "has no voter", false, comments);
         PrecinctError er1 = new PrecinctError(ERROR_TYPE.GHOST, 2, "is ghost", false, comments);
         HashSet<PrecinctError> errors = new HashSet<PrecinctError>();
         errors.add(er);
         errors.add(er1);
 
-        Precinct p = new Precinct(10409, "NP", "NewPrecinct", 10, vd, dd,neighbor,errors);
-        //System.out.println(p.toString());
+        Precinct p = new Precinct(10409, "NP", "NewPrecinct", 10, vd, dd, neighbor, errors);
+        // System.out.println(p.toString());
         p.addNeighbor(10);
         p.deleteNeighbor(2);
-        PrecinctError newError = new PrecinctError(ERROR_TYPE.NO_DEMOGRAPHICS,3,"has no demo", false, comments);
+        PrecinctError newError = new PrecinctError(ERROR_TYPE.NO_DEMOGRAPHICS, 3, "has no demo", false, comments);
         p.addError(newError);
         p.deleteError(2);
-        //System.out.println(p.toString());
+        System.out.println(p.toString());
 
-        //TEST: precicntManager
-        Precinct p1 = new Precinct(10222, "P1", "p1Precicnt", 10, vd, dd, neighbor,errors);
+        // TEST: precicntManager
+        Precinct p1 = new Precinct(10222, "P1", "p1Precicnt", 10, vd, dd, neighbor, errors);
         HashSet<Precinct> precinctSet = new HashSet<Precinct>();
         precinctSet.add(p);
         precinctSet.add(p1);
         PrecinctManager pm = new PrecinctManager(precinctSet);
-        //pm.updatePrecinct(10222,p);
-        //System.out.println(pm.toString());
+        // pm.updatePrecinct(10222,p);
+        // System.out.println(pm.toString());
 
-        //TEST: CongDistrictManager
-            //TEST: congressionalDistirct
+        // TEST: CongDistrictManager
+        // TEST: congressionalDistirct
         HashSet<Integer> precincts = new HashSet<Integer>();
         precincts.add(201);
         precincts.add(333);
-        CongressionalDistrict cd = new CongressionalDistrict("NEWCD",1,10,precincts);
-        CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 1, 11 , precincts);
+        CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 1, 10, precincts);
+        CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 1, 11, precincts);
         HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
         cdSet.add(cd);
         cdSet.add(cd1);
         CongDistrictManager cdmanager = new CongDistrictManager(cdSet);
-        //System.out.println(cdmanager.toString());
+        // System.out.println(cdmanager.toString());
 
-        //TEST: stateManager
-        State s = new State(10,"NewYork","NY",precincts,precincts);
-        //System.out.println(s.toString());
-        State s1 = new State(11,"Utah","UT",precincts,precincts);
+        // TEST: stateManager
+        State s = new State(10, "NewYork", "NY", precincts, precincts);
+        // System.out.println(s.toString());
+        State s1 = new State(11, "Utah", "UT", precincts, precincts);
         HashSet<State> stateSet = new HashSet<State>();
         stateSet.add(s);
         stateSet.add(s1);
         StateManager sm = new StateManager(stateSet);
-        //System.out.println(sm.toString());
+        // System.out.println(sm.toString());
     }
 }
