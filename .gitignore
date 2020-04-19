@@ -24,3 +24,13 @@ frontend/yarn-error.log*
 
 # ide settings
 /.vscode
+
+# backend ignore gradle files - changes
+backend/.project
+backend/.settings/org.eclipse.buildship.core.prefs
+
+# backend ignore gradle new files
+backend/.classpath
+backend/.gradle
+backend/bin/
+backend/build/
