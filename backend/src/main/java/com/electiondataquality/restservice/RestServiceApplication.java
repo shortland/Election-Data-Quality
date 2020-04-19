@@ -1,8 +1,7 @@
-package com.example.restservice;
+package com.electiondataquality.restservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 
 @SpringBootApplication
 public class RestServiceApplication {
