@@ -14,8 +14,8 @@ public class StateController {
     /**
      * Get the shape data for all of the states
      */
-    @GetMapping("/shapeOfStates")
-    public ArrayList<State> getShapeOfStates() {
+    @GetMapping("/allStates")
+    public ArrayList<State> getAllStates() {
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
 
         return stateManager.getAllStates();
