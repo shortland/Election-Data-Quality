@@ -1,0 +1,15 @@
+[Unit]
+Description=ElectionDataUpgraderService
+After=network.target
+
+[Service]
+WorkingDirectory=/home/ilankleiman
+User=ilankleiman
+Group=users
+Type=simple
+ExecStart=/home/ilankleiman/ElectionDataQualityUpgrader
+RestartSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
