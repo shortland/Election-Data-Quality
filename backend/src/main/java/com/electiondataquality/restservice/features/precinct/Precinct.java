@@ -24,18 +24,42 @@ public class Precinct extends Feature {
     private HashMap<Integer, PrecinctError> precinctErrors;
     private boolean isGhost;
 
-    // public static Precinct mergePrecinct(Precinct p1, Precinct p2) {
-    // int id = p1.getId();
-    // String cName = p1.getCanonicalName();
-    // String fullName = p1.getFullName();
-    // int parentId = p1.getParentDistrictId();
-    // HashSet<Integer> neighborsId = p1.getNeighborsId();
-    // VotingData vd = p1.getVotingData();
-    // DemographicData dd = p1.getDemographicData();
-    // HashMap<Integer, PrecinctError> errors = p1.getPrecinctErrors();
-    // Precinct result = new Precinct();
-    // return result;
-    // }
+    // TODO: figure out mergeing Polygon
+    public static Precinct mergePrecinct(Precinct p1, Precinct p2) {
+        int id = p1.getId();
+        String cName = p1.getCanonicalName();
+        String fullName = p1.getFullName();
+        int parentId = p1.getParentDistrictId();
+        VotingData vd = VotingData.mergeVotingData(p1.getVotingData(), p2.getVotingData());
+        DemographicData dd = DemographicData.mergeDemographicData(p1.getDemographicData(), p2.getDemographicData());
+
+        HashSet<Integer> neighborsId1 = p1.getNeighborsId();
+        HashSet<Integer> neighborsId2 = p2.getNeighborsId();
+        HashSet<Integer> mergedNeighborsId = new HashSet<Integer>();
+        for (int neighborId : neighborsId1) {
+            if (!mergedNeighborsId.contains(neighborId)) {
+                mergedNeighborsId.add(neighborId);
+            }
+        }
+        for (int neighborId : neighborsId2) {
+            if (!mergedNeighborsId.contains(neighborId)) {
+                mergedNeighborsId.add(neighborId);
+            }
+        }
+
+        HashMap<Integer, PrecinctError> errors1 = p1.getPrecinctErrors();
+        HashMap<Integer, PrecinctError> errors2 = p2.getPrecinctErrors();
+        HashSet<PrecinctError> mergedErrorSet = new HashSet<PrecinctError>();
+        for (int errorId : errors1.keySet()) {
+            mergedErrorSet.add(errors1.get(errorId));
+        }
+        for (int errorId : errors2.keySet()) {
+            mergedErrorSet.add(errors2.get(errorId));
+        }
+
+        Precinct result = new Precinct(id, cName, fullName, parentId, vd, dd, mergedNeighborsId, mergedErrorSet, null);
+        return result;
+    }
 
     public static Precinct copyPrecinct(Precinct p) {
         Precinct ans = new Precinct(p.getId(), p.getCanonicalName(), p.getFullName(), p.getParentDistrictId(),
@@ -116,12 +140,20 @@ public class Precinct extends Feature {
         this.neighborsId = neighborsId;
     }
 
-    public boolean addNeighbor(int neighborId) {
-        return this.neighborsId.add(neighborId);
+    // create neighborsId if it was null
+    public void addNeighbor(int neighborId) {
+        if (this.neighborsId != null) {
+            this.neighborsId.add(neighborId);
+        } else {
+            this.neighborsId = new HashSet<Integer>();
+            this.neighborsId.add(neighborId);
+        }
     }
 
-    public boolean deleteNeighbor(int neighborId) {
-        return this.neighborsId.remove(neighborId);
+    public void deleteNeighbor(int neighborId) {
+        if (this.neighborsId != null) {
+            this.neighborsId.remove(neighborId);
+        }
     }
 
     public VotingData getVotingData() {

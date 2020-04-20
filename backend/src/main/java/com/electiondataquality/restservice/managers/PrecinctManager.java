@@ -69,6 +69,16 @@ public class PrecinctManager {
         this.addPrecinct(newPrecinct);
     }
 
+    public int getLargestPrecinctId() {
+        int maxKey = 0;
+        for (int currKey : this.precinctMap.keySet()) {
+            if (maxKey < currKey) {
+                maxKey = currKey;
+            }
+        }
+        return maxKey;
+    }
+
     public void setGhost(int precinctId, boolean isGhost) {
         if (this.precinctMap.containsKey(precinctId)) {
             this.precinctMap.get(precinctId).setGhost(isGhost);
