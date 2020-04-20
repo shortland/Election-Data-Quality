@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.managers.StateManager;
 import com.electiondataquality.restservice.managers.CongressionalManager;
-import com.electiondataquality.restservice.features.state.State;
 import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
-import com.electiondataquality.restservice.features.county.County;
+
+import com.electiondataquality.restservice.features.state.State;
 
 @RestController
 public class CongDistrictController {
@@ -24,15 +24,18 @@ public class CongDistrictController {
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
         HashSet<Integer> congDistrictIds = stateManager.getAllDistricts(stateId);
-
         ArrayList<CongressionalDistrict> cdList = new ArrayList<>();
-        // for (Integer cdId : congDistrictIds) {
-        // CongressionalDistrict cd = cdManager.getCongDistrict(cdId.intValue());
-        // if (cd != null) {
-        // cdList.add(cd);
-        // }
-        // }
+
+        if (congDistrictIds != null) {
+            for (Integer cdId : congDistrictIds) {
+                CongressionalDistrict cd = cdManager.getCongDistrict(cdId.intValue());
+                if (cd != null) {
+                    cdList.add(cd);
+                }
+            }
+        }
 
         return cdList;
     }
+
 }
