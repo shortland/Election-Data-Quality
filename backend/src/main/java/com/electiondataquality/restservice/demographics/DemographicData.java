@@ -3,6 +3,7 @@ package com.electiondataquality.restservice.demographics;
 import java.util.EnumMap;
 
 import com.electiondataquality.restservice.demographics.enums.RACE;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class DemographicData {
     private EnumMap<RACE, Integer> demographicByRace;
@@ -37,8 +38,13 @@ public class DemographicData {
         return total;
     }
 
+    @JsonIgnore
     public int getTotal() {
         return this.total;
+    }
+
+    public EnumMap<RACE, Integer> getDemographicByRace() {
+        return this.demographicByRace;
     }
 
     public int getDemogaphic(RACE race) {

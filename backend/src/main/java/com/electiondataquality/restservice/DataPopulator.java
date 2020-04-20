@@ -1,6 +1,7 @@
 package com.electiondataquality.restservice;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.HashSet;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -118,9 +119,11 @@ public class DataPopulator {
 
         Precinct p = new Precinct(10409, "P1", "Precinct1", 10, vd, dd, neighborId, errors, null);
         Precinct p1 = new Precinct(10410, "P2", "Precinct2", 10, vd, dd1, neighborId1, errors1, null);
+        Precinct p2 = new Precinct(10411, "P3", "Precinct3", 10, null, null, null, errors1, null);
         HashSet<Precinct> precinctSet = new HashSet<Precinct>();
         precinctSet.add(p);
         precinctSet.add(p1);
+        precinctSet.add(p2);
         this.serverManager.getPrecinctManager().populate(precinctSet);
     }
 }

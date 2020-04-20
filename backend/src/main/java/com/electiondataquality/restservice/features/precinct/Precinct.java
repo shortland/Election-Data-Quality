@@ -7,6 +7,7 @@ import com.electiondataquality.restservice.features.Feature;
 import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.electiondataquality.restservice.geometry.MultiPolygon;
 
 // @Entity
@@ -21,6 +22,25 @@ public class Precinct extends Feature {
     private HashSet<Integer> neighborsId;
     private HashMap<Integer, PrecinctError> precinctErrors;
     private boolean isGhost;
+
+    // public static Precinct mergePrecinct(Precinct p1, Precinct p2) {
+    // int id = p1.getId();
+    // String cName = p1.getCanonicalName();
+    // String fullName = p1.getFullName();
+    // int parentId = p1.getParentDistrictId();
+    // HashSet<Integer> neighborsId = p1.getNeighborsId();
+    // VotingData vd = p1.getVotingData();
+    // DemographicData dd = p1.getDemographicData();
+    // HashMap<Integer, PrecinctError> errors = p1.getPrecinctErrors();
+    // Precinct result = new Precinct();
+    // return result;
+    // }
+
+    public static Precinct copyPrecinct(Precinct p) {
+        Precinct ans = new Precinct(p.getId(), p.getCanonicalName(), p.getFullName(), p.getParentDistrictId(),
+                p.getVotingData(), p.getDemographicData(), p.getNeighborsId(), p.getAllError(), p.getMultiPolygon());
+        return ans;
+    }
 
     public Precinct(int id, String canonicalName, String fullName, int parentDistrictId, VotingData votingData,
             DemographicData demographicData, HashSet<Integer> neighborsId, HashSet<PrecinctError> errors,
@@ -54,20 +74,45 @@ public class Precinct extends Feature {
         return this.id;
     }
 
+    // for update info
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getParentDistrictId() {
         return this.parentDistrictId;
+    }
+
+    // for update info
+    public void setParentDistrictId(int id) {
+        this.parentDistrictId = id;
     }
 
     public String getCanonicalName() {
         return this.canonicalName;
     }
 
+    // for update info
+    public void setCanonocalName(String cname) {
+        this.canonicalName = cname;
+    }
+
     public String getFullName() {
         return this.fullName;
     }
 
+    // for update info
+    public void setFullName(String fullname) {
+        this.fullName = fullname;
+    }
+
     public HashSet<Integer> getNeighborsId() {
         return this.neighborsId;
+    }
+
+    // for update info
+    public void setNeighborsId(HashSet<Integer> neighborsId) {
+        this.neighborsId = neighborsId;
     }
 
     public boolean addNeighbor(int neighborId) {
@@ -82,14 +127,16 @@ public class Precinct extends Feature {
         return this.votingData;
     }
 
+    // for update info
     public void setVotingData(VotingData votingData) {
         this.votingData = votingData;
     }
 
-    // public DemographicData getDemographicData() {
-    // return this.demographicData;
-    // }
+    public DemographicData getDemographicData() {
+        return this.demographicData;
+    }
 
+    // for update info
     public void setDemographicData(DemographicData demographicData) {
         this.demographicData = demographicData;
     }
@@ -102,13 +149,22 @@ public class Precinct extends Feature {
         this.isGhost = isGhost;
     }
 
-    // public HashSet<PrecinctError> getAllError() {
-    // HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
-    // for (Integer id : precinctErrors.keySet()) {
-    // errorSet.add(precinctErrors.get(id));
-    // }
-    // return errorSet;
-    // }
+    @JsonIgnore
+    public HashSet<PrecinctError> getAllError() {
+        HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
+        for (Integer id : precinctErrors.keySet()) {
+            errorSet.add(precinctErrors.get(id));
+        }
+        return errorSet;
+    }
+
+    public HashMap<Integer, PrecinctError> getPrecinctErrors() {
+        return this.precinctErrors;
+    }
+
+    public void setPrecinctErrors(HashMap<Integer, PrecinctError> precinctErrors) {
+        this.precinctErrors = precinctErrors;
+    }
 
     public void addError(PrecinctError error) {
         int eId = error.getId();
@@ -140,5 +196,32 @@ public class Precinct extends Feature {
         }
 
         return str;
+    }
+
+    public void updatePrecinct(Precinct info) {
+        int infoId = info.getId();
+        String infoCName = info.getCanonicalName();
+        String infoFullName = info.getFullName();
+        int infoParentId = info.getParentDistrictId();
+        HashSet<Integer> infoNeighborsId = info.getNeighborsId();
+        VotingData infoVD = info.getVotingData();
+        DemographicData infoDD = info.getDemographicData();
+        HashMap<Integer, PrecinctError> infoErrors = info.getPrecinctErrors();
+        if (infoId != 0)
+            this.setId(infoId);
+        if (infoCName != null)
+            this.setCanonocalName(infoCName);
+        if (infoFullName != null)
+            this.setFullName(infoFullName);
+        if (infoParentId != 0)
+            this.setParentDistrictId(infoParentId);
+        if (infoNeighborsId != null)
+            this.setNeighborsId(infoNeighborsId);
+        if (infoVD != null)
+            this.setVotingData(infoVD);
+        if (infoDD != null)
+            this.setDemographicData(infoDD);
+        if (infoErrors != null)
+            this.setPrecinctErrors(infoErrors);
     }
 }

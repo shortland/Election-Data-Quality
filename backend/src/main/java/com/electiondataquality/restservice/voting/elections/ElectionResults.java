@@ -4,6 +4,7 @@ import java.util.EnumMap;
 
 import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.electiondataquality.restservice.voting.elections.enums.PARTIES;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ElectionResults {
     private EnumMap<PARTIES, Integer> resultsByParty;
@@ -63,6 +64,16 @@ public class ElectionResults {
         return this.majorityParty;
     }
 
+    public EnumMap<PARTIES, Integer> getResultsByParty() {
+        return this.resultsByParty;
+    }
+
+    @JsonIgnore
+    public ELECTIONS getElection() {
+        return election;
+    }
+
+    @JsonIgnore
     public int getTotalVoters() {
         return this.totalVoters;
     }
@@ -82,10 +93,6 @@ public class ElectionResults {
         } else {
             return 0.0;
         }
-    }
-
-    public ELECTIONS getElection() {
-        return election;
     }
 
     public void setVotes(PARTIES parties, int newVotes) {

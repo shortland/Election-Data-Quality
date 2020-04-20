@@ -3,11 +3,11 @@ package com.electiondataquality.restservice.voting;
 import java.util.EnumMap;
 
 import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
 
 public class VotingData {
     private EnumMap<ELECTIONS, ElectionResults> electionData;
-    private int precinctId;
 
     // static methods
 
@@ -46,6 +46,7 @@ public class VotingData {
         }
     }
 
+    @JsonIgnore
     public ELECTIONS[] getAllElections() {
         ELECTIONS[] allElections = new ELECTIONS[this.electionData.size()];
         int counter = 0;
@@ -54,6 +55,10 @@ public class VotingData {
             counter += 1;
         }
         return allElections;
+    }
+
+    public EnumMap<ELECTIONS, ElectionResults> getElectionData() {
+        return this.electionData;
     }
 
     public ElectionResults getElectionData(ELECTIONS e) {

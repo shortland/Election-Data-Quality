@@ -7,10 +7,12 @@ import com.electiondataquality.restservice.features.precinct.Precinct;
 
 public class PrecinctManager {
     private HashMap<Integer, Precinct> precinctMap;
+    private HashMap<Integer, Precinct> originalPrecinctMap;
 
     // Deafult constructor
     public PrecinctManager() {
         this.precinctMap = new HashMap<Integer, Precinct>();
+        this.originalPrecinctMap = new HashMap<Integer, Precinct>();
     }
 
     public PrecinctManager(HashSet<Precinct> precincts) {
@@ -18,13 +20,18 @@ public class PrecinctManager {
         for (Precinct p : precincts) {
             this.precinctMap.put(p.getId(), p);
         }
+        for (Precinct p : precincts) {
+            this.originalPrecinctMap.put(p.getId(), p);
+        }
     }
 
     // NOTE: this clears the map and populate the map with the precicntSet
     public void populate(HashSet<Precinct> precicntSet) {
         this.precinctMap.clear();
+        this.originalPrecinctMap.clear();
         for (Precinct p : precicntSet) {
             this.precinctMap.put(p.getId(), p);
+            this.originalPrecinctMap.put(p.getId(), Precinct.copyPrecinct(p));
         }
     }
 
@@ -32,7 +39,6 @@ public class PrecinctManager {
         if (this.precinctMap.containsKey(precinctId)) {
             return this.precinctMap.get(precinctId);
         } else {
-            System.out.println("precinct is null");
             return null;
         }
     }
@@ -46,6 +52,14 @@ public class PrecinctManager {
     public void deletePrecinct(int precinctId) {
         if (this.precinctMap.containsKey(precinctId)) {
             this.precinctMap.remove(precinctId);
+        }
+    }
+
+    public Precinct getOriginalPrecinct(int precinctId) {
+        if (this.originalPrecinctMap.containsKey(precinctId)) {
+            return this.originalPrecinctMap.get(precinctId);
+        } else {
+            return null;
         }
     }
 

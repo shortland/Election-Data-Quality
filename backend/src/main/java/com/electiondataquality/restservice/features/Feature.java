@@ -7,6 +7,7 @@ import com.electiondataquality.restservice.geometry.Polygon;
 
 public abstract class Feature {
     private ArrayList<ArrayList<ArrayList<double[]>>> shape;
+    private boolean isMultiPolygon = false;
 
     public Feature() {
         this.shape = new ArrayList<ArrayList<ArrayList<double[]>>>();
@@ -22,6 +23,7 @@ public abstract class Feature {
     public Feature(MultiPolygon multiPolygon) {
         if (multiPolygon != null) {
             this.shape = multiPolygon.coordinates;
+            this.isMultiPolygon = true;
         }
     }
 
@@ -36,6 +38,17 @@ public abstract class Feature {
 
     public ArrayList<ArrayList<ArrayList<double[]>>> getShape() {
         return this.shape;
+    }
+
+    public boolean isMultiPolygon() {
+        return this.isMultiPolygon;
+    }
+
+    public Polygon getPolygon() {
+        if (!isMultiPolygon)
+            return new Polygon(shape.get(0));
+        else
+            return null;
     }
 
     public MultiPolygon getMultiPolygon() {
