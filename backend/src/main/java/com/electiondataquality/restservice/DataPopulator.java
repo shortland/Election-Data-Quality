@@ -10,6 +10,8 @@ import com.electiondataquality.restservice.voting.elections.ElectionResults;
 import com.electiondataquality.restservice.voting.elections.enums.*;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.demographics.DemographicData;
+import com.electiondataquality.restservice.comments.Comment;
+import com.electiondataquality.restservice.features.precinct.error.*;
 
 public class DataPopulator {
     private ServerManager serverManager;
@@ -50,6 +52,7 @@ public class DataPopulator {
     }
 
     public void populatePrecinct() {
+        // create VotingData
         ElectionResults[] arrER = new ElectionResults[3];
         ElectionResults e = new ElectionResults(100, 200, 50, 50, ELECTIONS.PRES2016);
         ElectionResults e1 = new ElectionResults(400, 600, 500, 510, ELECTIONS.CONG2016);
@@ -58,15 +61,32 @@ public class DataPopulator {
         arrER[1] = e1;
         arrER[2] = e2;
         VotingData vd = new VotingData(arrER);
+
+        // Create DemographicData
         DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
         DemographicData dd1 = new DemographicData(300, 200, 300, 400, 200);
         HashSet<Integer> neighborId = new HashSet<Integer>();
         neighborId.add(10410);
         HashSet<Integer> neighborId1 = new HashSet<Integer>();
         neighborId1.add(10409);
+        neighborId1.add(20000);
 
-        Precinct p = new Precinct(10409, "P1", "Precinct1", 10, vd, dd, neighborId, null, null);
-        Precinct p1 = new Precinct(10410, "P2", "Precinct2", 10, vd, dd1, neighborId1, null, null);
+        // Create Error
+        String[] arrstr = { "cool", "intersting", "no", "voting" };
+        HashSet<Comment> comments = new HashSet<Comment>();
+        for (int i = 1; i < 5; i++) {
+            Comment c = new Comment(i, arrstr[i - 1]);
+            comments.add(c);
+        }
+        PrecinctError er = new PrecinctError(ERROR_TYPE.NO_VOTERS, 1, "has no voter", false, comments);
+        PrecinctError er1 = new PrecinctError(ERROR_TYPE.GHOST, 2, "is ghost", false, comments);
+        HashSet<PrecinctError> errors = new HashSet<PrecinctError>();
+        errors.add(er);
+        HashSet<PrecinctError> errors1 = new HashSet<PrecinctError>();
+        errors1.add(er1);
+
+        Precinct p = new Precinct(10409, "P1", "Precinct1", 10, vd, dd, neighborId, errors, null);
+        Precinct p1 = new Precinct(10410, "P2", "Precinct2", 10, vd, dd1, neighborId1, errors1, null);
         HashSet<Precinct> precinctSet = new HashSet<Precinct>();
         precinctSet.add(p);
         precinctSet.add(p1);
