@@ -1,4 +1,4 @@
-package com.electiondataquality.restservice.features;
+package com.electiondataquality.features;
 
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;

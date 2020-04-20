@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.managers.StateManager;
-import com.electiondataquality.restservice.features.state.State;
+import com.electiondataquality.features.state.State;
 
 @RestController
 public class StateController {

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
 
-import com.electiondataquality.restservice.features.state.State;
+import com.electiondataquality.features.state.State;
 
 public class StateManager {
     private HashMap<Integer, State> stateMap;

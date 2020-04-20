@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.managers.StateManager;
 import com.electiondataquality.restservice.managers.CongressionalManager;
-import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
+import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 
 @RestController
 public class CongDistrictController {

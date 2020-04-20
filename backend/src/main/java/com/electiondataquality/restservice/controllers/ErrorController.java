@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.managers.PrecinctManager;
-import com.electiondataquality.restservice.features.precinct.Precinct;
+import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
 

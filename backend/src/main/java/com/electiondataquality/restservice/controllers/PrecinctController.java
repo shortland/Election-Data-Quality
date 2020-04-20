@@ -13,7 +13,7 @@ import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.managers.PrecinctManager;
 import com.electiondataquality.restservice.voting.VotingData;
-import com.electiondataquality.restservice.features.precinct.Precinct;
+import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
