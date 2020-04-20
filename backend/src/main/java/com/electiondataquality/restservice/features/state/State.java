@@ -1,6 +1,5 @@
 package com.electiondataquality.restservice.features.state;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 // import javax.persistence.Entity;
 // import javax.persistence.GeneratedValue;

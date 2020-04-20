@@ -7,4 +7,8 @@ public class ErrorGen {
     public static ErrorJ create(String error) {
         return new ErrorJ(error);
     }
+
+    public static ErrorJ ok() {
+        return new ErrorJ("");
+    }
 }
