@@ -2,13 +2,8 @@ package com.electiondataquality.restservice.controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,7 +12,6 @@ import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.managers.PrecinctManager;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.features.precinct.Precinct;
-import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.geometry.MultiPolygon;
 import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;

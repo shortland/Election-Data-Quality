@@ -194,6 +194,10 @@ public class Precinct extends Feature {
         return this.precinctErrors;
     }
 
+    public PrecinctError getPrecinctError(int errorId) {
+        return this.precinctErrors.get(errorId);
+    }
+
     public void setPrecinctErrors(HashMap<Integer, PrecinctError> precinctErrors) {
         this.precinctErrors = precinctErrors;
     }
