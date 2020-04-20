@@ -1,7 +1,6 @@
 package com.electiondataquality.restservice;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.HashSet;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -23,26 +22,6 @@ public class DataPopulator {
     public DataPopulator(ServerManager serverManager) {
         this.serverManager = serverManager;
     }
-
-    // public void populateStates() {
-    // /**
-    // * POPULATE STATES
-    // */
-    // HashSet<Integer> congressionalIdWI = new HashSet<Integer>();
-    // congressionalIdWI.add(11);
-    // congressionalIdWI.add(12);
-    // State a = new State(36, "New York", "NY", null, null, new MultiPolygon());
-    // State b = new State(49, "Utah", "UT", null, null, new MultiPolygon());
-    // State c = new State(55, "Wisconsin", "WI", null, congressionalIdWI, new
-    // MultiPolygon());
-
-    // HashSet<State> stateSet = new HashSet<State>();
-    // stateSet.add(a);
-    // stateSet.add(b);
-    // stateSet.add(c);
-
-    // this.serverManager.getStateManager().populate(stateSet);
-    // }
 
     public void populateStates() {
         StateDao dao = new StateDao();

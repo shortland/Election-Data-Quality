@@ -39,9 +39,9 @@ public class StateResultSetExtractor implements ResultSetExtractor<Object> {
                 new Polygon(new ArrayList<ArrayList<double[]>>()).toMultiPolygon());
     }
 
-    class Properties {
-        private String LSAD;
-        private String NAME;
-        private double ALAND;
-    }
+    // class Properties {
+    // private String LSAD;
+    // private String NAME;
+    // private double ALAND;
+    // }
 }

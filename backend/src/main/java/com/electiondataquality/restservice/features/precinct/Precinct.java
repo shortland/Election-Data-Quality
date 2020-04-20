@@ -8,7 +8,6 @@ import com.electiondataquality.restservice.features.Feature;
 import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
-import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.restservice.geometry.MultiPolygon;
 
 // @Entity

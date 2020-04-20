@@ -2,12 +2,8 @@ package com.electiondataquality.restservice.controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +15,6 @@ import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.managers.PrecinctManager;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.features.precinct.Precinct;
-import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.geometry.MultiPolygon;
 import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
@@ -32,9 +27,11 @@ public class PrecinctController {
         HashMap<String, Object> result = new HashMap<String, Object>();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
+
         if (target != null) {
             result.put("id", target.getId());
             result.put("shape", target.getShape());
+
             return result;
         } else {
             return null;
@@ -47,14 +44,17 @@ public class PrecinctController {
             @RequestParam(value = "precinctIdList") int[] precinctIds) {
         ArrayList<HashMap<Integer, Object>> pList = new ArrayList<HashMap<Integer, Object>>();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
+
         for (int i = 0; i < precinctIds.length; i++) {
             Precinct target = precinctManager.getPrecicnt(precinctIds[i]);
+
             if (target != null) {
                 HashMap<Integer, Object> shapeMap = new HashMap<Integer, Object>();
                 shapeMap.put(precinctIds[i], target.getShape());
                 pList.add(shapeMap);
             }
         }
+
         return pList;
     }
 
@@ -64,6 +64,7 @@ public class PrecinctController {
         HashMap<String, Object> result = new HashMap<String, Object>();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
+
         if (target != null) {
             result.put("id", target.getId());
             result.put("canonicalName", target.getCanonicalName());
@@ -74,6 +75,7 @@ public class PrecinctController {
             result.put("demographicData", target.getDemographicData());
             result.put("precinctErrors", target.getPrecinctErrors());
             result.put("isGhost", target.getIsGhost());
+
             return result;
         } else {
             return null;
@@ -86,6 +88,7 @@ public class PrecinctController {
         HashMap<String, Object> result = new HashMap<String, Object>();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getOriginalPrecinct(precinctId);
+
         if (target != null) {
             result.put("id", target.getId());
             result.put("canonicalName", target.getCanonicalName());
@@ -96,9 +99,11 @@ public class PrecinctController {
             result.put("demographicData", target.getDemographicData());
             result.put("precinctErrors", target.getPrecinctErrors());
             result.put("isGhost", target.getIsGhost());
+
             return result;
         } else {
             System.out.println("nullllll");
+
             return null;
         }
     }
@@ -109,9 +114,11 @@ public class PrecinctController {
         HashMap<String, Object> result = new HashMap<String, Object>();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getOriginalPrecinct(precinctId);
+
         if (target != null) {
             result.put("id", target.getId());
             result.put("shape", target.getShape());
+
             return result;
         } else {
             return null;
@@ -132,6 +139,7 @@ public class PrecinctController {
                 pList.add(shapeMap);
             }
         }
+
         return pList;
     }
 
@@ -145,10 +153,10 @@ public class PrecinctController {
             for (Integer id : target.getNeighborsId()) {
                 neighbors.add(id);
             }
-
         } else {
-            // return error;
+            // return ErrorGen.create("unable to get neighbors of precinct");
         }
+
         return neighbors;
     }
 
@@ -159,9 +167,11 @@ public class PrecinctController {
             @RequestParam(value = "shape") ArrayList<ArrayList<ArrayList<double[]>>> shape) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct targetPrecinct = precinctManager.getPrecicnt(precinctId);
+
         if (targetPrecinct != null) {
             targetPrecinct.setShape(new MultiPolygon(shape));
-            return ErrorGen.create("");
+
+            return ErrorGen.ok();
         } else {
             return ErrorGen.create("unable to get precinct");
         }
@@ -173,7 +183,8 @@ public class PrecinctController {
     public ErrorJ deletePrecinct(@RequestParam(value = "precinctId") int precinctId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         precinctManager.deletePrecinct(precinctId);
-        return ErrorGen.create("");
+
+        return ErrorGen.ok();
     }
 
     // TESTED
@@ -183,14 +194,17 @@ public class PrecinctController {
             @RequestParam(value = "isGhost") boolean isGhost) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
+
         if (target != null) {
             target.setGhost(isGhost);
-            return ErrorGen.create("");
+
+            return ErrorGen.ok();
         } else {
             return ErrorGen.create("unable to get precinct");
         }
     }
 
+    // TESTED
     @RequestMapping(value = "/updatePrecinctInfo", method = RequestMethod.PUT)
     public ErrorJ updatePrecinctInfo(@RequestParam(value = "precinctId") int precinctId, @RequestBody Precinct info) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -198,6 +212,7 @@ public class PrecinctController {
 
         if (target != null) {
             target.updatePrecinct(info);
+
             return ErrorGen.ok();
         } else {
             return ErrorGen.create("unable to find target precinct by id");
@@ -210,11 +225,12 @@ public class PrecinctController {
             @RequestParam(value = "votingData") VotingData vd) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
+
         if (target != null) {
             target.setVotingData(vd);
-            return ErrorGen.create("");
+
+            return ErrorGen.ok();
         } else {
-            // return error;
             return ErrorGen.create("unable to get precinct");
         }
     }
@@ -225,11 +241,12 @@ public class PrecinctController {
             @RequestParam(value = "demographicData") DemographicData vd) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
+
         if (target != null) {
             target.setDemographicData(vd);
-            return ErrorGen.create("");
+
+            return ErrorGen.ok();
         } else {
-            // return error;
             return ErrorGen.create("unable to get precinct");
         }
     }
@@ -242,10 +259,12 @@ public class PrecinctController {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target1 = precinctManager.getPrecicnt(p1);
         Precinct target2 = precinctManager.getPrecicnt(p2);
+
         if (target1 != null && target2 != null) {
             target1.addNeighbor(p2);
             target2.addNeighbor(p1);
-            return ErrorGen.create("");
+
+            return ErrorGen.ok();
         } else {
             if (target1 == null) {
                 return ErrorGen.create("unable to get precinct1");
@@ -264,10 +283,12 @@ public class PrecinctController {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target1 = precinctManager.getPrecicnt(p1);
         Precinct target2 = precinctManager.getPrecicnt(p2);
+
         if (target1 != null && target2 != null) {
             target1.deleteNeighbor(p2);
             target2.deleteNeighbor(p1);
-            return ErrorGen.create("");
+
+            return ErrorGen.ok();
         } else {
             if (target1 == null) {
                 return ErrorGen.create("unable to get precinct1");
@@ -284,7 +305,8 @@ public class PrecinctController {
         int newId = precinctManager.getLargestPrecinctId() + 1;
         Precinct newPrecinct = new Precinct(newId, "", "", 0, null, null, null, null, mp);
         precinctManager.addPrecinct(newPrecinct);
-        return ErrorGen.create("");
+
+        return ErrorGen.ok();
     }
 
     // TESTED
@@ -299,7 +321,8 @@ public class PrecinctController {
         Precinct mergedPrecinct = Precinct.mergePrecinct(precint1, precint2);
         precinctManager.deletePrecinct(precinctId2);
         precinctManager.updatePrecinct(precinctId1, mergedPrecinct);
-        return ErrorGen.create("");
+
+        return ErrorGen.ok();
     }
 
     // TODO: wait for script
