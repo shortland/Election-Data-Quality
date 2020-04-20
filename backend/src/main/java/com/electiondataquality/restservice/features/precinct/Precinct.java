@@ -35,7 +35,9 @@ public class Precinct extends Feature {
         this.demographicData = demographicData;
         this.isGhost = false;
         this.neighborsId = neighborsId;
-        this.precinctErrors = this.populateErrorsMap(errors);
+        if (errors != null) {
+            this.precinctErrors = this.populateErrorsMap(errors);
+        }
     }
 
     private HashMap<Integer, PrecinctError> populateErrorsMap(HashSet<PrecinctError> errors) {
@@ -84,9 +86,9 @@ public class Precinct extends Feature {
         this.votingData = votingData;
     }
 
-    public DemographicData getDemographicData() {
-        return this.demographicData;
-    }
+    // public DemographicData getDemographicData() {
+    // return this.demographicData;
+    // }
 
     public void setDemographicData(DemographicData demographicData) {
         this.demographicData = demographicData;
@@ -100,15 +102,13 @@ public class Precinct extends Feature {
         this.isGhost = isGhost;
     }
 
-    public HashSet<PrecinctError> getAllError() {
-        HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
-
-        for (Integer id : precinctErrors.keySet()) {
-            errorSet.add(precinctErrors.get(id));
-        }
-
-        return errorSet;
-    }
+    // public HashSet<PrecinctError> getAllError() {
+    // HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
+    // for (Integer id : precinctErrors.keySet()) {
+    // errorSet.add(precinctErrors.get(id));
+    // }
+    // return errorSet;
+    // }
 
     public void addError(PrecinctError error) {
         int eId = error.getId();
@@ -132,7 +132,8 @@ public class Precinct extends Feature {
         str = str + "Name : " + this.getFullName() + " (" + this.getCanonicalName() + ")\n";
         str = str + "ParentId : " + this.getParentDistrictId() + "\n";
         str = str + "NeighborsId : " + this.getNeighborsId().toString() + "\n";
-        str = str + this.getVotingData().toString() + this.getDemographicData().toString();
+        // str = str + this.getVotingData().toString() +
+        // this.getDemographicData().toString();
 
         for (Integer eId : this.precinctErrors.keySet()) {
             str = str + this.precinctErrors.get(eId).toString() + "\n";

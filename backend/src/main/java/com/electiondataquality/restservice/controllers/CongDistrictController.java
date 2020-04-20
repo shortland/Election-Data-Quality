@@ -11,8 +11,6 @@ import com.electiondataquality.restservice.managers.StateManager;
 import com.electiondataquality.restservice.managers.CongressionalManager;
 import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
 
-import com.electiondataquality.restservice.features.state.State;
-
 @RestController
 public class CongDistrictController {
 

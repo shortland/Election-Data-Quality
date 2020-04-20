@@ -93,7 +93,8 @@ public class RestServiceApplication {
         DataPopulator populator = new DataPopulator(RestServiceApplication.serverManager);
         populator.populateStates();
         populator.populateStates2();
-        System.exit(-1);
+        populator.populateCongressional();
+        populator.populatePrecinct();
 
         /**
          * Run the rest API
