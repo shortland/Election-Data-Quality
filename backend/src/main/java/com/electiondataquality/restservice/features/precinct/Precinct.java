@@ -94,7 +94,7 @@ public class Precinct extends Feature {
         this.demographicData = demographicData;
     }
 
-    public boolean isGhost() {
+    public boolean getIsGhost() {
         return this.isGhost;
     }
 
@@ -132,8 +132,8 @@ public class Precinct extends Feature {
         str = str + "Name : " + this.getFullName() + " (" + this.getCanonicalName() + ")\n";
         str = str + "ParentId : " + this.getParentDistrictId() + "\n";
         str = str + "NeighborsId : " + this.getNeighborsId().toString() + "\n";
-        // str = str + this.getVotingData().toString() +
-        // this.getDemographicData().toString();
+        str = str + this.votingData.toString();
+        str = str + this.demographicData.toString();
 
         for (Integer eId : this.precinctErrors.keySet()) {
             str = str + this.precinctErrors.get(eId).toString() + "\n";

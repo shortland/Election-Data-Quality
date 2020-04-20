@@ -37,6 +37,10 @@ public class DemographicData {
         return total;
     }
 
+    public int getTotal() {
+        return this.total;
+    }
+
     public int getDemogaphic(RACE race) {
         if (this.demographicByRace.containsKey(race)) {
             return this.demographicByRace.get(race);
