@@ -1,6 +1,7 @@
 package com.electiondataquality.restservice.features;
 
 import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.electiondataquality.restservice.geometry.MultiPolygon;
 import com.electiondataquality.restservice.geometry.Polygon;
@@ -87,6 +88,7 @@ public abstract class Feature {
         return this.isMultiPolygon;
     }
 
+    @JsonIgnore
     public Polygon getPolygon() {
         if (!isMultiPolygon)
             return new Polygon(shape.get(0));
@@ -94,6 +96,7 @@ public abstract class Feature {
             return null;
     }
 
+    @JsonIgnore
     public MultiPolygon getMultiPolygon() {
         return new MultiPolygon(shape);
     }
