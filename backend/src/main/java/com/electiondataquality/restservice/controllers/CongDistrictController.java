@@ -24,13 +24,14 @@ public class CongDistrictController {
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
         HashSet<Integer> congDistrictIds = stateManager.getAllDistricts(stateId);
-        ArrayList<CongressionalDistrict> cdList = new ArrayList<CongressionalDistrict>();
-        for (Integer cdId : congDistrictIds) {
-            CongressionalDistrict cd = cdManager.getCongDistrict(cdId.intValue());
-            if (cd != null) {
-                cdList.add(cd);
-            }
-        }
+
+        ArrayList<CongressionalDistrict> cdList = new ArrayList<>();
+        // for (Integer cdId : congDistrictIds) {
+        // CongressionalDistrict cd = cdManager.getCongDistrict(cdId.intValue());
+        // if (cd != null) {
+        // cdList.add(cd);
+        // }
+        // }
 
         return cdList;
     }
