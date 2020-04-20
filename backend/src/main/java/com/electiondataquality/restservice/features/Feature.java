@@ -28,10 +28,10 @@ public abstract class Feature {
         }
     }
 
-    public void setShape(Polygon polygon) {
-        this.shape = new ArrayList<ArrayList<ArrayList<double[]>>>();
-        this.shape.add(polygon.coordinates);
-    }
+    // public void setShape(Polygon polygon) {
+    // this.shape = new ArrayList<ArrayList<ArrayList<double[]>>>();
+    // this.shape.add(polygon.coordinates);
+    // }
 
     public void setShape(MultiPolygon multiPolygon) {
         this.shape = multiPolygon.coordinates;

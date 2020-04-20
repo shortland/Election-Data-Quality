@@ -8,6 +8,7 @@ import com.electiondataquality.restservice.features.Feature;
 import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
+import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.restservice.geometry.MultiPolygon;
 
 // @Entity
@@ -207,6 +208,7 @@ public class Precinct extends Feature {
         VotingData infoVD = info.getVotingData();
         DemographicData infoDD = info.getDemographicData();
         HashMap<Integer, PrecinctError> infoErrors = info.getPrecinctErrors();
+
         if (infoId != 0)
             this.setId(infoId);
         if (infoCName != null)
@@ -223,5 +225,7 @@ public class Precinct extends Feature {
             this.setDemographicData(infoDD);
         if (infoErrors != null)
             this.setPrecinctErrors(infoErrors);
+
+        return;
     }
 }

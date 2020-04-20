@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -177,15 +179,16 @@ public class PrecinctController {
         }
     }
 
-    @PutMapping(value = "/updatePrecinctInfo", consumes = "application/json", produces = "application/json")
+    @RequestMapping(value = "/updatePrecinctInfo", method = RequestMethod.PUT)
     public ErrorJ updatePrecinctInfo(@RequestParam(value = "precinctId") int precinctId, @RequestBody Precinct info) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
+
         if (target != null) {
             target.updatePrecinct(info);
-            return ErrorGen.create("");
+            return ErrorGen.ok();
         } else {
-            return ErrorGen.create("unable to update precinct");
+            return ErrorGen.create("unable to find target precinct by id");
         }
     }
 

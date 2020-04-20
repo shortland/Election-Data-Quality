@@ -10,7 +10,7 @@ public class ErrorJ {
     private String messageString;
 
     public ErrorJ(String error) {
-        this.errorString = String.format("%s\n", error);
+        this.errorString = String.format("%s", error);
     }
 
     @JsonIgnore
@@ -29,13 +29,13 @@ public class ErrorJ {
     /**
      * Method is used by jax/spring serialization to create the Json error object.
      */
-    public HashMap<String, String> getErrorJson() {
+    public HashMap<String, String> getResponse() {
         HashMap<String, String> errorSet = new HashMap<String, String>();
 
-        if (errorString == null || errorString.equals("")) {
+        if (errorString == null || errorString.length() == 0) {
             errorSet.put("status", "ok");
 
-            if (messageString != null || messageString.equals("")) {
+            if (messageString != null && messageString.length() > 0) {
                 errorSet.put("message", this.messageString);
             }
 
