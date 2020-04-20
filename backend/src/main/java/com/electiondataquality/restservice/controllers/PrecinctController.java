@@ -153,42 +153,45 @@ public class PrecinctController {
     // TODO: Change return type to ControllerError
     // TODO: Find out how to pass in the shape value
     @GetMapping("/shapesOfPrecinct")
-    public void updateShapeOfPrecicnt(@RequestParam(value = "precinctId") int precinctId,
+    public ErrorJ updateShapeOfPrecicnt(@RequestParam(value = "precinctId") int precinctId,
             @RequestParam(value = "shape") ArrayList<ArrayList<ArrayList<double[]>>> shape) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct targetPrecinct = precinctManager.getPrecicnt(precinctId);
         if (targetPrecinct != null) {
             targetPrecinct.setShape(new MultiPolygon(shape));
+            return ErrorGen.create("");
         } else {
-            // return Error
+            return ErrorGen.create("unable to get precinct");
         }
     }
 
     // TESTED
     // TODO: Change return type to ControllerError
     @GetMapping("/deletePrecinct")
-    public void deletePrecinct(@RequestParam(value = "precinctId") int precinctId) {
+    public ErrorJ deletePrecinct(@RequestParam(value = "precinctId") int precinctId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         precinctManager.deletePrecinct(precinctId);
+        return ErrorGen.create("");
     }
 
     // TESTED
     // TODO: Return ControllerError
     @GetMapping("/defineGhostPrecinct")
-    public void setGhost(@RequestParam(value = "precinctId") int precinctId,
+    public ErrorJ setGhost(@RequestParam(value = "precinctId") int precinctId,
             @RequestParam(value = "isGhost") boolean isGhost) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
         if (target != null) {
             target.setGhost(isGhost);
+            return ErrorGen.create("");
         } else {
-            // return error
+            return ErrorGen.create("unable to get precinct");
         }
     }
 
     // TODO: Return ControllerError
     @GetMapping("/updatePrecinctInfo")
-    public void updatePrecinctInfo(@RequestParam(value = "precinctId") int precinctId,
+    public ErrorJ updatePrecinctInfo(@RequestParam(value = "precinctId") int precinctId,
             @RequestParam(value = "precinctInfo") Precinct info) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
@@ -202,34 +205,38 @@ public class PrecinctController {
 
     // TODO: Return ControllerError
     @GetMapping("/updateVotingData")
-    public void updateVotingData(@RequestParam(value = "precinctId") int precinctId,
+    public ErrorJ updateVotingData(@RequestParam(value = "precinctId") int precinctId,
             @RequestParam(value = "votingData") VotingData vd) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
         if (target != null) {
             target.setVotingData(vd);
+            return ErrorGen.create("");
         } else {
             // return error;
+            return ErrorGen.create("unable to get precinct");
         }
     }
 
     // TODO: Return ControllerError
     @GetMapping("/updateDemographicData")
-    public void updateDemographicData(@RequestParam(value = "precinctId") int precinctId,
+    public ErrorJ updateDemographicData(@RequestParam(value = "precinctId") int precinctId,
             @RequestParam(value = "demographicData") DemographicData vd) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
         if (target != null) {
             target.setDemographicData(vd);
+            return ErrorGen.create("");
         } else {
             // return error;
+            return ErrorGen.create("unable to get precinct");
         }
     }
 
     // TESTED
     // TODO: Return ControllerError
     @GetMapping("/addPrecinctNeighbor")
-    public void addPrecinctAsNeighbor(@RequestParam(value = "precinctId1") int p1,
+    public ErrorJ addPrecinctAsNeighbor(@RequestParam(value = "precinctId1") int p1,
             @RequestParam(value = "precinctId2") int p2) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target1 = precinctManager.getPrecicnt(p1);
@@ -237,15 +244,21 @@ public class PrecinctController {
         if (target1 != null && target2 != null) {
             target1.addNeighbor(p2);
             target2.addNeighbor(p1);
+            return ErrorGen.create("");
         } else {
-            // return error;
+            if (target1 == null) {
+                return ErrorGen.create("unable to get precinct1");
+            } else {
+                return ErrorGen.create("unable to get precinct2");
+            }
+
         }
     }
 
     // TESTED
     // TODO: Return ControllerError
     @GetMapping("/deletePrecinctNeighbor")
-    public void deletePrecinctAsNeighbor(@RequestParam(value = "precinctId1") int p1,
+    public ErrorJ deletePrecinctAsNeighbor(@RequestParam(value = "precinctId1") int p1,
             @RequestParam(value = "precinctId2") int p2) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target1 = precinctManager.getPrecicnt(p1);
@@ -253,25 +266,31 @@ public class PrecinctController {
         if (target1 != null && target2 != null) {
             target1.deleteNeighbor(p2);
             target2.deleteNeighbor(p1);
+            return ErrorGen.create("");
         } else {
-            // return error;
+            if (target1 == null) {
+                return ErrorGen.create("unable to get precinct1");
+            } else {
+                return ErrorGen.create("unable to get precinct2");
+            }
         }
     }
 
     // TODO: Return ControllerError
     @GetMapping("/createNewPrecinct")
-    public void createNewPrecinct(@RequestParam(value = "shape") MultiPolygon mp) {
+    public ErrorJ createNewPrecinct(@RequestParam(value = "shape") MultiPolygon mp) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         int newId = precinctManager.getLargestPrecinctId() + 1;
         Precinct newPrecinct = new Precinct(newId, "", "", 0, null, null, null, null, mp);
         precinctManager.addPrecinct(newPrecinct);
+        return ErrorGen.create("");
     }
 
     // TESTED
     // TODO: Return ControllerError
     // TODO: Have to merge polygon also
     @GetMapping("/mergePrecinct")
-    public void mergePrecincts(@RequestParam(value = "precinctId1") int precinctId1,
+    public ErrorJ mergePrecincts(@RequestParam(value = "precinctId1") int precinctId1,
             @RequestParam(value = "precinctId2") int precinctId2) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct precint1 = precinctManager.getPrecicnt(precinctId1);
@@ -279,6 +298,7 @@ public class PrecinctController {
         Precinct mergedPrecinct = Precinct.mergePrecinct(precint1, precint2);
         precinctManager.deletePrecinct(precinctId2);
         precinctManager.updatePrecinct(precinctId1, mergedPrecinct);
+        return ErrorGen.create("");
     }
 
     // TODO: wait for script
