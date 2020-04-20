@@ -1,10 +1,14 @@
 package com.electiondataquality.restservice;
 
+import java.util.List;
 import java.util.HashSet;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import com.electiondataquality.restservice.features.state.State;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
+import com.electiondataquality.restservice.managers.CongressionalManager;
+import com.electiondataquality.restservice.dao.state.StateDao;
 import com.electiondataquality.restservice.features.precinct.Precinct;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
 import com.electiondataquality.restservice.voting.elections.enums.*;
@@ -37,6 +41,29 @@ public class DataPopulator {
         stateSet.add(c);
 
         this.serverManager.getStateManager().populate(stateSet);
+    }
+
+    public void populateStates2() {
+        StateDao dao = new StateDao();
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+        /**
+         * Configure datasource
+         */
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl(
+                "jdbc:mysql://45.55.121.121:3306/jerryman?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
+        dataSource.setUsername("jerryman");
+        dataSource.setPassword("JerryManderingIsBad123!");
+        dao.setDataSource(dataSource);
+
+        /**
+         * Get all the states
+         */
+        List<Object> states = dao.selectAll();
+        for (Object state : states) {
+            System.out.printf("State is: %s", state.toString());
+        }
     }
 
     public void populateCongressional() {

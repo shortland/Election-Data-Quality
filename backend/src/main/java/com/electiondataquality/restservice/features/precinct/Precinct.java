@@ -86,9 +86,9 @@ public class Precinct extends Feature {
         this.votingData = votingData;
     }
 
-    public DemographicData getDemographicData() {
-        return this.demographicData;
-    }
+    // public DemographicData getDemographicData() {
+    // return this.demographicData;
+    // }
 
     public void setDemographicData(DemographicData demographicData) {
         this.demographicData = demographicData;
@@ -102,15 +102,13 @@ public class Precinct extends Feature {
         this.isGhost = isGhost;
     }
 
-    public HashSet<PrecinctError> getAllError() {
-        HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
-
-        for (Integer id : precinctErrors.keySet()) {
-            errorSet.add(precinctErrors.get(id));
-        }
-
-        return errorSet;
-    }
+    // public HashSet<PrecinctError> getAllError() {
+    // HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
+    // for (Integer id : precinctErrors.keySet()) {
+    // errorSet.add(precinctErrors.get(id));
+    // }
+    // return errorSet;
+    // }
 
     public void addError(PrecinctError error) {
         int eId = error.getId();

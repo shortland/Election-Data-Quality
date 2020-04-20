@@ -2,12 +2,20 @@ package com.electiondataquality.restservice.features.state;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+// import javax.persistence.Entity;
+// import javax.persistence.GeneratedValue;
+// import javax.persistence.GenerationType;
+// import javax.persistence.Id;
 
 import com.electiondataquality.restservice.features.Feature;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 
+// @Entity
 public class State extends Feature {
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // private Long id;
     private int stateId;
     private String stateName;
     private String stateAbreviation;
@@ -83,9 +91,13 @@ public class State extends Feature {
         return null;
     }
 
+    @Override
     public String toString() {
+        // String str = this.stateName + "(" + this.stateAbreviation + ")\nID : " +
+        // Integer.toString(this.stateId) + "\n";
+        // str = str + "Counties : " + this.counties.toString() + "\nDistricts : " +
+        // this.districts.toString();
         String str = this.stateName + "(" + this.stateAbreviation + ")\nID : " + Integer.toString(this.stateId) + "\n";
-        str = str + "Counties : " + this.counties.toString() + "\nDistricts : " + this.districts.toString();
         return str;
     }
 }

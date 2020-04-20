@@ -24,6 +24,7 @@ frontend/yarn-error.log*
 
 # ide settings
 /.vscode
+.idea/
 
 # backend ignore gradle files - changes
 backend/.project
