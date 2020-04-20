@@ -191,15 +191,8 @@ public class PrecinctController {
         }
     }
 
-<<<<<<< HEAD
     @RequestMapping(value = "/updatePrecinctInfo", method = RequestMethod.PUT)
     public ErrorJ updatePrecinctInfo(@RequestParam(value = "precinctId") int precinctId, @RequestBody Precinct info) {
-=======
-    // TODO: Return ControllerError
-    @GetMapping("/updatePrecinctInfo")
-    public ErrorJ updatePrecinctInfo(@RequestParam(value = "precinctId") int precinctId,
-            @RequestParam(value = "precinctInfo") Precinct info) {
->>>>>>> 85edccfac828a31781550c86cfd75e4b71eb389d
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
 
