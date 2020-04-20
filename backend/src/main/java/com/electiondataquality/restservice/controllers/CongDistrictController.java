@@ -25,8 +25,8 @@ public class CongDistrictController {
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
         HashSet<Integer> congDistrictIds = stateManager.getAllDistricts(stateId);
         ArrayList<CongressionalDistrict> cdList = new ArrayList<CongressionalDistrict>();
-        for (int cdId : congDistrictIds) {
-            CongressionalDistrict cd = cdManager.getCongDistrict(cdId);
+        for (Integer cdId : congDistrictIds) {
+            CongressionalDistrict cd = cdManager.getCongDistrict(cdId.intValue());
             if (cd != null) {
                 cdList.add(cd);
             }
