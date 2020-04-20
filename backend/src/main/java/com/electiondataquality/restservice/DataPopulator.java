@@ -31,11 +31,13 @@ public class DataPopulator {
     }
 
     public void populateCongressional() {
-        CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 1, 10, null, null);
-        CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 1, 11, null, null);
+        CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null, null);
+        CongressionalDistrict cd2 = new CongressionalDistrict("CD2", 55, 11, null, null);
+        CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 55, 12, null, null);
         HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
         cdSet.add(cd);
         cdSet.add(cd1);
+        cdSet.add(cd2);
 
         this.serverManager.getCongressionalManager().populate(cdSet);
     }
