@@ -1,9 +1,9 @@
 package com.electiondataquality.restservice.features.congressional_district;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.electiondataquality.restservice.features.Feature;
+import com.electiondataquality.restservice.geometry.MultiPolygon;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 
@@ -14,8 +14,8 @@ public class CongressionalDistrict extends Feature {
     private HashSet<Integer> childrenPrecincts;
 
     public CongressionalDistrict(String name, int parentStateId, int cdId, HashSet<Integer> childrenPrecincts,
-            ArrayList<ArrayList<double[]>> shape) {
-        super(shape);
+            MultiPolygon multiPolygon) {
+        super(multiPolygon);
 
         this.name = name;
         this.parentStateId = parentStateId;

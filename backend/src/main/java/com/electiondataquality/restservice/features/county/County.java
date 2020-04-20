@@ -1,16 +1,15 @@
 package com.electiondataquality.restservice.features.county;
 
-import java.util.ArrayList;
-
 import com.electiondataquality.restservice.features.Feature;
+import com.electiondataquality.restservice.geometry.MultiPolygon;
 
 public class County extends Feature {
     private String countyName;
     private int parentStateId;
     private int countyId;
 
-    public County(String countyName, int parentStateId, int countyId, ArrayList<ArrayList<double[]>> shape) {
-        super(shape);
+    public County(String countyName, int parentStateId, int countyId, MultiPolygon multiPolygon) {
+        super(multiPolygon);
 
         this.countyName = countyName;
         this.parentStateId = parentStateId;

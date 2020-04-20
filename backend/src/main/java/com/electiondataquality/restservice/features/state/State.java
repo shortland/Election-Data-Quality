@@ -10,6 +10,8 @@ import java.util.HashSet;
 import com.electiondataquality.restservice.features.Feature;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
+import com.electiondataquality.restservice.geometry.MultiPolygon;
+import com.electiondataquality.restservice.geometry.Polygon;
 
 // @Entity
 public class State extends Feature {
@@ -23,7 +25,18 @@ public class State extends Feature {
     private HashSet<Integer> districts;
 
     public State(int stateId, String stateName, String stateAbreviation, HashSet<Integer> counties,
-            HashSet<Integer> districts, ArrayList<ArrayList<double[]>> shape) {
+            HashSet<Integer> districts, Polygon shape) {
+        super(shape);
+
+        this.stateId = stateId;
+        this.stateName = stateName;
+        this.stateAbreviation = stateAbreviation;
+        this.counties = counties;
+        this.districts = districts;
+    }
+
+    public State(int stateId, String stateName, String stateAbreviation, HashSet<Integer> counties,
+            HashSet<Integer> districts, MultiPolygon shape) {
         super(shape);
 
         this.stateId = stateId;

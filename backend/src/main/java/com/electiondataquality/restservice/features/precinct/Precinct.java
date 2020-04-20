@@ -1,6 +1,5 @@
 package com.electiondataquality.restservice.features.precinct;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -8,6 +7,7 @@ import com.electiondataquality.restservice.features.Feature;
 import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
+import com.electiondataquality.restservice.geometry.MultiPolygon;
 
 // @Entity
 // @Table(name = "PRECINTS")
@@ -24,8 +24,8 @@ public class Precinct extends Feature {
 
     public Precinct(int id, String canonicalName, String fullName, int parentDistrictId, VotingData votingData,
             DemographicData demographicData, HashSet<Integer> neighborsId, HashSet<PrecinctError> errors,
-            ArrayList<ArrayList<double[]>> shape) {
-        super(shape);
+            MultiPolygon multiPolygon) {
+        super(multiPolygon);
 
         this.id = id;
         this.canonicalName = canonicalName;

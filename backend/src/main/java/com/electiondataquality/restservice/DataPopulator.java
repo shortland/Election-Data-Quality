@@ -14,6 +14,7 @@ import com.electiondataquality.restservice.voting.elections.ElectionResults;
 import com.electiondataquality.restservice.voting.elections.enums.*;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.demographics.DemographicData;
+import com.electiondataquality.restservice.geometry.MultiPolygon;
 
 public class DataPopulator {
     private ServerManager serverManager;
@@ -22,26 +23,27 @@ public class DataPopulator {
         this.serverManager = serverManager;
     }
 
+    // public void populateStates() {
+    // /**
+    // * POPULATE STATES
+    // */
+    // HashSet<Integer> congressionalIdWI = new HashSet<Integer>();
+    // congressionalIdWI.add(11);
+    // congressionalIdWI.add(12);
+    // State a = new State(36, "New York", "NY", null, null, new MultiPolygon());
+    // State b = new State(49, "Utah", "UT", null, null, new MultiPolygon());
+    // State c = new State(55, "Wisconsin", "WI", null, congressionalIdWI, new
+    // MultiPolygon());
+
+    // HashSet<State> stateSet = new HashSet<State>();
+    // stateSet.add(a);
+    // stateSet.add(b);
+    // stateSet.add(c);
+
+    // this.serverManager.getStateManager().populate(stateSet);
+    // }
+
     public void populateStates() {
-        /**
-         * POPULATE STATES
-         */
-        HashSet<Integer> congressionalIdWI = new HashSet<Integer>();
-        congressionalIdWI.add(11);
-        congressionalIdWI.add(12);
-        State a = new State(36, "New York", "NY", null, null, null);
-        State b = new State(49, "Utah", "UT", null, null, null);
-        State c = new State(55, "Wisconsin", "WI", null, congressionalIdWI, null);
-
-        HashSet<State> stateSet = new HashSet<State>();
-        stateSet.add(a);
-        stateSet.add(b);
-        stateSet.add(c);
-
-        this.serverManager.getStateManager().populate(stateSet);
-    }
-
-    public void populateStates2() {
         StateDao dao = new StateDao();
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
@@ -59,9 +61,13 @@ public class DataPopulator {
          * Get all the states
          */
         List<Object> states = dao.selectAll();
+        HashSet<State> stateSet = new HashSet<State>();
         for (Object state : states) {
+            stateSet.add((State) state);
             System.out.printf("State is: %s", state.toString());
         }
+
+        this.serverManager.getStateManager().populate(stateSet);
     }
 
     public void populateCongressional() {

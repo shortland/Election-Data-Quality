@@ -5,7 +5,6 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.electiondataquality.restservice.dao.state.mapper.StateRowMapper;
-import com.electiondataquality.restservice.features.state.State;
 
 public class StateDao {
     private DataSource dataSource;

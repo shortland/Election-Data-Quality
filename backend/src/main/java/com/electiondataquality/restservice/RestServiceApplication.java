@@ -92,7 +92,6 @@ public class RestServiceApplication {
          */
         DataPopulator populator = new DataPopulator(RestServiceApplication.serverManager);
         populator.populateStates();
-        populator.populateStates2();
         populator.populateCongressional();
         populator.populatePrecinct();
 
