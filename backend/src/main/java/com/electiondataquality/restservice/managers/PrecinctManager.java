@@ -32,6 +32,7 @@ public class PrecinctManager {
         if (this.precinctMap.containsKey(precinctId)) {
             return this.precinctMap.get(precinctId);
         } else {
+            System.out.println("precinct is null");
             return null;
         }
     }

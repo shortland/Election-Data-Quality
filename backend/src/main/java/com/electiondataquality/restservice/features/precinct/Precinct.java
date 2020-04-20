@@ -35,7 +35,9 @@ public class Precinct extends Feature {
         this.demographicData = demographicData;
         this.isGhost = false;
         this.neighborsId = neighborsId;
-        this.precinctErrors = this.populateErrorsMap(errors);
+        if (errors != null) {
+            this.precinctErrors = this.populateErrorsMap(errors);
+        }
     }
 
     private HashMap<Integer, PrecinctError> populateErrorsMap(HashSet<PrecinctError> errors) {

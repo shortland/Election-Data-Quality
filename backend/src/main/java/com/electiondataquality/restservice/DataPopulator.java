@@ -5,7 +5,11 @@ import java.util.HashSet;
 import com.electiondataquality.restservice.features.state.State;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
-import com.electiondataquality.restservice.managers.CongressionalManager;
+import com.electiondataquality.restservice.features.precinct.Precinct;
+import com.electiondataquality.restservice.voting.elections.ElectionResults;
+import com.electiondataquality.restservice.voting.elections.enums.*;
+import com.electiondataquality.restservice.voting.VotingData;
+import com.electiondataquality.restservice.demographics.DemographicData;
 
 public class DataPopulator {
     private ServerManager serverManager;
@@ -18,9 +22,12 @@ public class DataPopulator {
         /**
          * POPULATE STATES
          */
+        HashSet<Integer> congressionalIdWI = new HashSet<Integer>();
+        congressionalIdWI.add(11);
+        congressionalIdWI.add(12);
         State a = new State(36, "New York", "NY", null, null, null);
         State b = new State(49, "Utah", "UT", null, null, null);
-        State c = new State(55, "Wisconsin", "WI", null, null, null);
+        State c = new State(55, "Wisconsin", "WI", null, congressionalIdWI, null);
 
         HashSet<State> stateSet = new HashSet<State>();
         stateSet.add(a);
@@ -40,6 +47,30 @@ public class DataPopulator {
         cdSet.add(cd2);
 
         this.serverManager.getCongressionalManager().populate(cdSet);
+    }
+
+    public void populatePrecinct() {
+        ElectionResults[] arrER = new ElectionResults[3];
+        ElectionResults e = new ElectionResults(100, 200, 50, 50, ELECTIONS.PRES2016);
+        ElectionResults e1 = new ElectionResults(400, 600, 500, 510, ELECTIONS.CONG2016);
+        ElectionResults e2 = new ElectionResults(200, 230, 120, 150, ELECTIONS.CONG2018);
+        arrER[0] = e;
+        arrER[1] = e1;
+        arrER[2] = e2;
+        VotingData vd = new VotingData(arrER);
+        DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
+        DemographicData dd1 = new DemographicData(300, 200, 300, 400, 200);
+        HashSet<Integer> neighborId = new HashSet<Integer>();
+        neighborId.add(10410);
+        HashSet<Integer> neighborId1 = new HashSet<Integer>();
+        neighborId1.add(10409);
+
+        Precinct p = new Precinct(10409, "P1", "Precinct1", 10, vd, dd, neighborId, null, null);
+        Precinct p1 = new Precinct(10410, "P2", "Precinct2", 10, vd, dd1, neighborId1, null, null);
+        HashSet<Precinct> precinctSet = new HashSet<Precinct>();
+        precinctSet.add(p);
+        precinctSet.add(p1);
+        this.serverManager.getPrecinctManager().populate(precinctSet);
     }
 }
 
