@@ -1,10 +1,10 @@
-package com.electiondataquality.restservice.dao.state;
+package com.electiondataquality.dao.state;
 
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.electiondataquality.restservice.dao.state.mapper.StateRowMapper;
+import com.electiondataquality.dao.state.mapper.StateRowMapper;
 
 public class StateDao {
     private DataSource dataSource;

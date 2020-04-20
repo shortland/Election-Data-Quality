@@ -1,7 +1,7 @@
 package com.electiondataquality.restservice.features.county;
 
 import com.electiondataquality.restservice.features.Feature;
-import com.electiondataquality.restservice.geometry.MultiPolygon;
+import com.electiondataquality.geometry.MultiPolygon;
 
 public class County extends Feature {
     private String countyName;

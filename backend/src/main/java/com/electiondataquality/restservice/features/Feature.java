@@ -3,8 +3,8 @@ package com.electiondataquality.restservice.features;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import com.electiondataquality.restservice.geometry.MultiPolygon;
-import com.electiondataquality.restservice.geometry.Polygon;
+import com.electiondataquality.geometry.MultiPolygon;
+import com.electiondataquality.geometry.Polygon;
 
 public abstract class Feature {
     private ArrayList<ArrayList<ArrayList<double[]>>> shape;

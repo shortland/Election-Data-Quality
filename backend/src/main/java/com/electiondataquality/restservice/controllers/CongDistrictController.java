@@ -18,7 +18,7 @@ public class CongDistrictController {
      * Get the shape data for all of the states
      */
     @GetMapping("/congressionalDistrictsForState")
-    public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam(value = "stateId") int stateId) {
+    public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam int stateId) {
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
         HashSet<Integer> congDistrictIds = stateManager.getAllDistricts(stateId);

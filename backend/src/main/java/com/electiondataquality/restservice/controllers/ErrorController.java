@@ -13,8 +13,7 @@ import com.electiondataquality.types.errors.ErrorJ;
 @RestController
 public class ErrorController {
     @GetMapping("/correctError")
-    public ErrorJ setErrorAsCorrected(@RequestParam(value = "precinctId") int precinctId,
-            @RequestParam(value = "errorId") int errorId) {
+    public ErrorJ setErrorAsCorrected(@RequestParam int precinctId, @RequestParam int errorId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
         if (target != null) {

@@ -1,4 +1,4 @@
-package com.electiondataquality.restservice.dao.state.mapper;
+package com.electiondataquality.dao.state.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
