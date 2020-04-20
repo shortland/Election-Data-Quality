@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.electiondataquality.restservice.features.Feature;
 import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
+import com.electiondataquality.restservice.comments.Comment;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.geometry.MultiPolygon;
@@ -88,6 +89,10 @@ public class Precinct extends Feature {
         HashMap<Integer, PrecinctError> errorMap = new HashMap<Integer, PrecinctError>();
 
         for (PrecinctError e : errors) {
+            HashSet<Comment> commentSet = e.getComments();
+            for (Comment c : commentSet) {
+                c.setParentPrecinctId(this.id);
+            }
             errorMap.put(e.getId(), e);
         }
 

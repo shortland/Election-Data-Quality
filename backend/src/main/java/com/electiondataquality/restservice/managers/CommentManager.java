@@ -41,4 +41,39 @@ public class CommentManager {
         }
         return result;
     }
+
+    public Comment getComment(int commentId) {
+        if (this.commentMap.containsKey(commentId)) {
+            return this.commentMap.get(commentId);
+        } else {
+            return null;
+        }
+    }
+
+    // returns [parentErrorId, parentPrecinctId]
+    public int[] deleteComment(int commentId) {
+        if (this.commentMap.containsKey(commentId)) {
+            Comment target = this.commentMap.get(commentId);
+            commentMap.remove(commentId);
+            int[] ids = new int[2];
+            ids[0] = target.getParentErrorId();
+            ids[1] = target.getParentPrecinctId();
+            return ids;
+        } else {
+            return null;
+        }
+    }
+
+    public void addComment(Comment c) {
+        if (!this.commentMap.containsKey(c.getId())) {
+            this.commentMap.put(c.getId(), c);
+        }
+    }
+
+    public void updateComment(int commentId, Comment c) {
+        if (this.commentMap.containsKey(commentId)) {
+            this.commentMap.remove(commentId);
+            this.commentMap.put(c.getId(), c);
+        }
+    }
 }
