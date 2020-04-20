@@ -4,6 +4,8 @@ import java.util.HashSet;
 
 import com.electiondataquality.restservice.features.state.State;
 import com.electiondataquality.restservice.managers.ServerManager;
+import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
+import com.electiondataquality.restservice.managers.CongressionalManager;
 
 public class DataPopulator {
     private ServerManager serverManager;
@@ -26,6 +28,16 @@ public class DataPopulator {
         stateSet.add(c);
 
         this.serverManager.getStateManager().populate(stateSet);
+    }
+
+    public void populateCongressional() {
+        CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 1, 10, null, null);
+        CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 1, 11, null, null);
+        HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
+        cdSet.add(cd);
+        cdSet.add(cd1);
+
+        this.serverManager.getCongressionalManager().populate(cdSet);
     }
 }
 
