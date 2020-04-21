@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.comments.Comment;
-import com.electiondataquality.restservice.features.precinct.Precinct;
-import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
+import com.electiondataquality.features.precinct.Precinct;
+import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.managers.CommentManager;
 import com.electiondataquality.restservice.managers.PrecinctManager;
 import com.electiondataquality.types.errors.ErrorGen;
