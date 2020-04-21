@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.comments.Comment;
@@ -15,6 +16,7 @@ import com.electiondataquality.restservice.managers.PrecinctManager;
 import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
 
+@RestController
 public class CommentController {
     @RequestMapping(value = "/createComment", method = RequestMethod.POST)
     public ErrorJ createComment(@RequestBody String commentText, @RequestParam int precinctId,
