@@ -51,16 +51,9 @@ public class CommentManager {
     }
 
     // returns [parentErrorId, parentPrecinctId]
-    public int[] deleteComment(int commentId) {
+    public void deleteComment(int commentId) {
         if (this.commentMap.containsKey(commentId)) {
-            Comment target = this.commentMap.get(commentId);
             commentMap.remove(commentId);
-            int[] ids = new int[2];
-            ids[0] = target.getParentErrorId();
-            ids[1] = target.getParentPrecinctId();
-            return ids;
-        } else {
-            return null;
         }
     }
 
@@ -75,5 +68,16 @@ public class CommentManager {
             this.commentMap.remove(commentId);
             this.commentMap.put(c.getId(), c);
         }
+    }
+
+    public int getLargestId() {
+        int max = 0;
+        for (int id : this.commentMap.keySet()) {
+            int cur = this.commentMap.get(id).getId();
+            if (cur > max) {
+                max = cur;
+            }
+        }
+        return max;
     }
 }
