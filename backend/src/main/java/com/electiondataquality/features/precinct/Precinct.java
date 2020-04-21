@@ -25,6 +25,7 @@ public class Precinct extends Feature {
     private boolean isGhost;
 
     // TODO: figure out mergeing Polygon
+    // TODO: error needs more than just merging thee sets
     public static Precinct mergePrecinct(Precinct p1, Precinct p2) {
         int id = p1.getId();
         String cName = p1.getCanonicalName();
@@ -51,9 +52,11 @@ public class Precinct extends Feature {
         HashMap<Integer, PrecinctError> errors2 = p2.getPrecinctErrors();
         HashSet<PrecinctError> mergedErrorSet = new HashSet<PrecinctError>();
         for (int errorId : errors1.keySet()) {
+            errors1.get(errorId).setParentPrecinctId(id);
             mergedErrorSet.add(errors1.get(errorId));
         }
         for (int errorId : errors2.keySet()) {
+            errors2.get(errorId).setParentPrecinctId(id);
             mergedErrorSet.add(errors2.get(errorId));
         }
 
