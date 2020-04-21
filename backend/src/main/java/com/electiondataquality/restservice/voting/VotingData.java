@@ -38,6 +38,10 @@ public class VotingData {
         return mergedVD;
     }
 
+    public VotingData() {
+        this.electionData = new EnumMap<ELECTIONS, ElectionResults>(ELECTIONS.class);
+    }
+
     public VotingData(ElectionResults[] arrE) {
         this.electionData = new EnumMap<ELECTIONS, ElectionResults>(ELECTIONS.class);
         for (int i = 0; i < arrE.length; i++) {
@@ -73,6 +77,7 @@ public class VotingData {
         if (this.electionData.containsKey(e)) {
             this.electionData.remove(e);
         }
+        er.setElection(e);
         this.electionData.put(e, er);
     }
 

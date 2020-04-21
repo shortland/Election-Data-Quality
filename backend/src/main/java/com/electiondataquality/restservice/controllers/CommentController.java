@@ -18,6 +18,7 @@ import com.electiondataquality.types.errors.ErrorJ;
 
 @RestController
 public class CommentController {
+    // TESTED
     @RequestMapping(value = "/createComment", method = RequestMethod.POST)
     public ErrorJ createComment(@RequestBody String commentText, @RequestParam int precinctId,
             @RequestParam int errorId) {
@@ -43,7 +44,8 @@ public class CommentController {
 
     }
 
-    @RequestMapping(value = "/updateComment", method = RequestMethod.PUT)
+    // TESTED
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ErrorJ updateComment(@RequestBody String commentText, @RequestParam int commentId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         Comment target = commentManager.getComment(commentId);
@@ -55,6 +57,7 @@ public class CommentController {
         }
     }
 
+    // TESTED
     @RequestMapping(value = "/deleteComment", method = RequestMethod.DELETE)
     public ErrorJ deleteComment(@RequestParam int commentId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
@@ -68,6 +71,7 @@ public class CommentController {
                 PrecinctError parentError = parentPrecinct.getPrecinctError(parentErrorId);
                 if (parentError != null) {
                     parentError.deleteComment(commentId);
+                    commentManager.deleteComment(commentId);
                 } else {
                     return ErrorGen.create("unable to get parent error");
                 }
@@ -80,8 +84,9 @@ public class CommentController {
         }
     }
 
+    // TESTED
     @RequestMapping(value = "/commentByError", method = RequestMethod.GET)
-    public ArrayList<Comment> getAllCommentsOfError(@RequestParam int precinctID, @RequestParam int errorId) {
+    public ArrayList<Comment> getAllCommentsOfError(@RequestParam int precinctId, @RequestParam int errorId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         ArrayList<Comment> comments = new ArrayList<Comment>(commentManager.getCommentsByError(errorId));
         return comments;

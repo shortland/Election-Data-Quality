@@ -13,6 +13,7 @@ import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.managers.PrecinctManager;
 import com.electiondataquality.restservice.voting.VotingData;
+import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.types.errors.ErrorGen;
@@ -217,27 +218,32 @@ public class PrecinctController {
         }
     }
 
+    // TESTED: '{"electionData": {"PRES2016": {"resultsByParty": {"REPUBLICAN":
+    // 0,"DEMOCRAT": 50,"LIBRATARIAN": 0,"OTHER": 50},"majorityParty":
+    // "OTHER","election": "PRES2016"}}}'
     // TODO: Return ControllerError
     @GetMapping("/updateVotingData")
-    public ErrorJ updateVotingData(@RequestParam int precinctId, @RequestParam VotingData votingData) {
+    public ErrorJ updateVotingData(@RequestParam int precinctId, @RequestBody VotingData votingData) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
-
+        System.out.println(votingData);
         if (target != null) {
             target.setVotingData(votingData);
-
             return ErrorGen.ok();
         } else {
             return ErrorGen.create("unable to get precinct");
         }
     }
 
+    // TESTED: '{"demographicByRace": {"ASIAN": 100,"BLACK":100,"HISPANIC":
+    // 100,"OTHER": 100,"WHITE": 100}}'
     // TODO: Return ControllerError
     @GetMapping("/updateDemographicData")
-    public ErrorJ updateDemographicData(@RequestParam int precinctId, @RequestParam DemographicData demographicData) {
+    public ErrorJ updateDemographicData(@RequestParam int precinctId, @RequestBody DemographicData demographicData) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
-
+        demographicData.calculateTotal();
+        System.out.println(demographicData.toString());
         if (target != null) {
             target.setDemographicData(demographicData);
 

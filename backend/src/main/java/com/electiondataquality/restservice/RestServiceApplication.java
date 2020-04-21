@@ -54,6 +54,6 @@ public class RestServiceApplication implements CommandLineRunner {
         DataPopulator populator = new DataPopulator(RestServiceApplication.serverManager, databaseConfig);
         populator.populateStates();
         populator.populateCongressional();
-        populator.populatePrecinct();
+        populator.populatePrecinctAndComments();
     }
 }

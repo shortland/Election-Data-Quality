@@ -28,6 +28,10 @@ public class ElectionResults {
         }
     }
 
+    public ElectionResults() {
+        System.out.println("con");
+    }
+
     public ElectionResults(int rVotes, int dVotes, int lVotes, int others, ELECTIONS election) {
         this.resultsByParty = new EnumMap<PARTIES, Integer>(PARTIES.class);
         this.resultsByParty.put(PARTIES.REPUBLICAN, rVotes);
@@ -35,16 +39,16 @@ public class ElectionResults {
         this.resultsByParty.put(PARTIES.LIBRATARIAN, lVotes);
         this.resultsByParty.put(PARTIES.OTHER, others);
         this.majorityParty = this.findMajorityParty();
-        this.totalVoters = rVotes + dVotes + lVotes + others;
+        this.calculateTotalVoters();
         this.election = election;
     }
 
-    private int calculateTotalVoters() {
+    public void calculateTotalVoters() {
         int total = 0;
         for (PARTIES p : this.resultsByParty.keySet()) {
             total += resultsByParty.get(p);
         }
-        return total;
+        this.totalVoters = total;
     }
 
     public PARTIES findMajorityParty() {
@@ -68,9 +72,12 @@ public class ElectionResults {
         return this.resultsByParty;
     }
 
-    @JsonIgnore
     public ELECTIONS getElection() {
         return election;
+    }
+
+    public void setElection(ELECTIONS election) {
+        this.election = election;
     }
 
     @JsonIgnore
@@ -100,7 +107,7 @@ public class ElectionResults {
             this.resultsByParty.remove(parties);
         }
         this.resultsByParty.put(parties, newVotes);
-        this.totalVoters = this.calculateTotalVoters();
+        this.calculateTotalVoters();
         this.majorityParty = this.findMajorityParty();
     }
 

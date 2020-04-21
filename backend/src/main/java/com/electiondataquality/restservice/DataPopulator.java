@@ -67,7 +67,7 @@ public class DataPopulator {
         this.serverManager.getCongressionalManager().populate(cdSet);
     }
 
-    public void populatePrecinct() {
+    public void populatePrecinctAndComments() {
         // create VotingData
         ElectionResults[] arrER = new ElectionResults[3];
         ElectionResults e = new ElectionResults(100, 200, 50, 50, ELECTIONS.PRES2016);
@@ -108,7 +108,20 @@ public class DataPopulator {
         precinctSet.add(p);
         precinctSet.add(p1);
         precinctSet.add(p2);
+
         this.serverManager.getPrecinctManager().populate(precinctSet);
+
+        HashSet<Comment> commentSet = new HashSet<Comment>();
+        for (Precinct currP : precinctSet) {
+            HashSet<PrecinctError> peSet = currP.getAllError();
+            for (PrecinctError pe : peSet) {
+                HashSet<Comment> cSet = pe.getComments();
+                for (Comment c : cSet) {
+                    commentSet.add(c);
+                }
+            }
+        }
+        this.serverManager.getCommentManager().populate(commentSet);
     }
 }
 

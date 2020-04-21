@@ -27,15 +27,15 @@ public class DemographicData {
         this.demographicByRace.put(RACE.HISPANIC, dH);
         this.demographicByRace.put(RACE.OTHER, dO);
         this.demographicByRace.put(RACE.WHITE, dW);
-        this.total = calculateTotal();
+        calculateTotal();
     }
 
-    private int calculateTotal() {
+    public void calculateTotal() {
         int total = 0;
         for (RACE r : this.demographicByRace.keySet()) {
             total += this.demographicByRace.get(r);
         }
-        return total;
+        this.total = total;
     }
 
     @JsonIgnore
@@ -70,7 +70,7 @@ public class DemographicData {
             this.demographicByRace.remove(race);
         }
         this.demographicByRace.put(race, newData);
-        this.total = this.calculateTotal();
+        this.calculateTotal();
     }
 
     public String toString() {
