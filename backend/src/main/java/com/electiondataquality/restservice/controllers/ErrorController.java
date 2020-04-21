@@ -16,10 +16,12 @@ public class ErrorController {
     public ErrorJ setErrorAsCorrected(@RequestParam int precinctId, @RequestParam int errorId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecicnt(precinctId);
+
         if (target != null) {
             if (target.getPrecinctErrors() != null) {
                 target.getPrecinctError(errorId).resolved();
-                return ErrorGen.create("");
+
+                return ErrorGen.ok();
             } else {
                 return ErrorGen.create("there are no errors in this precinct");
             }

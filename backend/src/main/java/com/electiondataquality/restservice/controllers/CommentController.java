@@ -1,11 +1,11 @@
 package com.electiondataquality.restservice.controllers;
 
 import java.util.ArrayList;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.comments.Comment;
@@ -27,14 +27,17 @@ public class CommentController {
         int newId = commentManager.getLargestId() + 1;
         Comment newComment = new Comment(newId, commentText);
         Precinct parentPrecinct = precinctManager.getPrecicnt(precinctId);
+
         if (parentPrecinct != null) {
             PrecinctError parentError = parentPrecinct.getPrecinctError(errorId);
+
             if (parentError != null) {
                 newComment.setParentErrorId(errorId);
                 newComment.setParentPrecinctId(precinctId);
                 parentError.addComment(newComment);
                 commentManager.addComment(newComment);
-                return ErrorGen.create("");
+
+                return ErrorGen.ok();
             } else {
                 return ErrorGen.create("unable to get error");
             }
@@ -49,9 +52,11 @@ public class CommentController {
     public ErrorJ updateComment(@RequestBody String commentText, @RequestParam int commentId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         Comment target = commentManager.getComment(commentId);
+
         if (target != null) {
             target.updateText(commentText);
-            return ErrorGen.create("");
+
+            return ErrorGen.ok();
         } else {
             return ErrorGen.create("unable to update specified comment");
         }
@@ -63,12 +68,15 @@ public class CommentController {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Comment target = commentManager.getComment(commentId);
+
         if (target != null) {
             int parentErrorId = target.getParentErrorId();
             int parentPrecinctId = target.getParentPrecinctId();
             Precinct parentPrecinct = precinctManager.getPrecicnt(parentPrecinctId);
+
             if (parentPrecinct != null) {
                 PrecinctError parentError = parentPrecinct.getPrecinctError(parentErrorId);
+
                 if (parentError != null) {
                     parentError.deleteComment(commentId);
                     commentManager.deleteComment(commentId);
@@ -78,7 +86,8 @@ public class CommentController {
             } else {
                 return ErrorGen.create("unable to get parent precinct");
             }
-            return ErrorGen.create("");
+
+            return ErrorGen.ok();
         } else {
             return ErrorGen.create("unable to delete specified comment");
         }
@@ -89,6 +98,7 @@ public class CommentController {
     public ArrayList<Comment> getAllCommentsOfError(@RequestParam int precinctId, @RequestParam int errorId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         ArrayList<Comment> comments = new ArrayList<Comment>(commentManager.getCommentsByError(errorId));
+
         return comments;
     }
 }

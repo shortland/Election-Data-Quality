@@ -8,13 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.electiondataquality.restservice.config.DatabaseConfig;
 import com.electiondataquality.restservice.managers.ServerManager;
 
-// import java.util.HashSet;
-// import java.util.ArrayList;
-// import com.electiondataquality.restservice.managers.StateManager;
-// import com.electiondataquality.restservice.managers.CongressionalManager;
-// import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
-// import com.electiondataquality.restservice.features.state.State;
-
 @SpringBootApplication
 public class RestServiceApplication implements CommandLineRunner {
 

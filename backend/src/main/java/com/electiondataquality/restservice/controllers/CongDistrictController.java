@@ -27,6 +27,7 @@ public class CongDistrictController {
         if (congDistrictIds != null) {
             for (Integer cdId : congDistrictIds) {
                 CongressionalDistrict cd = cdManager.getCongDistrict(cdId.intValue());
+
                 if (cd != null) {
                     cdList.add(cd);
                 }
