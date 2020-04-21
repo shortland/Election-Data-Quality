@@ -13,6 +13,7 @@ import com.electiondataquality.restservice.voting.elections.enums.*;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.comments.Comment;
+import com.electiondataquality.restservice.config.DatabaseConfig;
 import com.electiondataquality.features.precinct.error.ERROR_TYPE;
 import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.dao.state.StateDao;
@@ -20,8 +21,11 @@ import com.electiondataquality.dao.state.StateDao;
 public class DataPopulator {
     private ServerManager serverManager;
 
-    public DataPopulator(ServerManager serverManager) {
+    private DatabaseConfig databaseConfig;
+
+    public DataPopulator(ServerManager serverManager, DatabaseConfig databaseConfig) {
         this.serverManager = serverManager;
+        this.databaseConfig = databaseConfig;
     }
 
     public void populateStates() {
@@ -31,11 +35,11 @@ public class DataPopulator {
         /**
          * Configure datasource
          */
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl(
-                "jdbc:mysql://45.55.121.121:3306/jerryman?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
-        dataSource.setUsername("jerryman");
-        dataSource.setPassword("JerryManderingIsBad123!");
+        dataSource.setDriverClassName(databaseConfig.getDriver());
+        dataSource.setUrl("jdbc:mysql://" + databaseConfig.getHostname() + ":" + databaseConfig.getPort() + "/"
+                + databaseConfig.getDatabase() + "?" + databaseConfig.getOptions());
+        dataSource.setUsername(databaseConfig.getUsername());
+        dataSource.setPassword(databaseConfig.getPassword());
         dao.setDataSource(dataSource);
 
         /**

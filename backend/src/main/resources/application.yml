@@ -1,2 +1,11 @@
 server:
   port: 1234
+
+database:
+  driver: com.mysql.cj.jdbc.Driver
+  hostname: 45.55.121.121
+  port: 3306
+  options: useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+  database: jerryman
+  username: jerryman
+  password: JerryManderingIsBad123!

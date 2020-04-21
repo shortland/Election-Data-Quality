@@ -1,8 +1,11 @@
 package com.electiondataquality.restservice;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.electiondataquality.restservice.config.DatabaseConfig;
 import com.electiondataquality.restservice.managers.ServerManager;
 
 // import java.util.HashSet;
@@ -13,11 +16,11 @@ import com.electiondataquality.restservice.managers.ServerManager;
 // import com.electiondataquality.restservice.features.state.State;
 
 @SpringBootApplication
-public class RestServiceApplication {
+public class RestServiceApplication implements CommandLineRunner {
 
-    /**
-     * Create the ServerManager object
-     */
+    @Autowired
+    private DatabaseConfig databaseConfig;
+
     public static ServerManager serverManager;
 
     public static void main(String[] args) {
@@ -80,6 +83,15 @@ public class RestServiceApplication {
         RestServiceApplication.serverManager = new ServerManager();
 
         /**
+         * Run the rest API
+         */
+        SpringApplication.run(RestServiceApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) {
+
+        /**
          * TODO:
          * 
          * Populate server memory with data hard-coded & locally stored (file: GeoJSON)
@@ -90,14 +102,9 @@ public class RestServiceApplication {
          * out or whatever) - it could make testing in dev environment easier in some
          * occasions.
          */
-        DataPopulator populator = new DataPopulator(RestServiceApplication.serverManager);
+        DataPopulator populator = new DataPopulator(RestServiceApplication.serverManager, databaseConfig);
         populator.populateStates();
         populator.populateCongressional();
         populator.populatePrecinct();
-
-        /**
-         * Run the rest API
-         */
-        SpringApplication.run(RestServiceApplication.class, args);
     }
 }
