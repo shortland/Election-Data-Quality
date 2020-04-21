@@ -1,11 +1,11 @@
-package com.electiondataquality.restservice.features.congressional_district;
+package com.electiondataquality.features.congressional_district;
 
 import java.util.HashSet;
 
-import com.electiondataquality.restservice.features.Feature;
-import com.electiondataquality.restservice.geometry.MultiPolygon;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
+import com.electiondataquality.geometry.MultiPolygon;
+import com.electiondataquality.features.Feature;
 
 public class CongressionalDistrict extends Feature {
     private String name;

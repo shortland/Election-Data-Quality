@@ -1,4 +1,4 @@
-package com.electiondataquality.restservice.features.precinct.error;
+package com.electiondataquality.features.precinct.error;
 
 import java.util.HashSet;
 

@@ -2,9 +2,9 @@ package com.electiondataquality.restservice.managers;
 
 import java.util.HashSet;
 
-import com.electiondataquality.restservice.features.state.State;
-import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
-import com.electiondataquality.restservice.features.precinct.Precinct;
+import com.electiondataquality.features.state.State;
+import com.electiondataquality.features.congressional_district.CongressionalDistrict;
+import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.restservice.comments.Comment;
 
 public class ServerManager {

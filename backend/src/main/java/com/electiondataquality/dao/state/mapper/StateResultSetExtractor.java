@@ -1,4 +1,4 @@
-package com.electiondataquality.restservice.dao.state.mapper;
+package com.electiondataquality.dao.state.mapper;
 
 import java.util.ArrayList;
 import java.sql.ResultSet;
@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import com.google.gson.Gson;
 
-import com.electiondataquality.restservice.features.state.State;
-import com.electiondataquality.restservice.geometry.GeometryType;
-import com.electiondataquality.restservice.geometry.MultiPolygon;
-import com.electiondataquality.restservice.geometry.Polygon;
+import com.electiondataquality.features.state.State;
+import com.electiondataquality.geometry.GeometryType;
+import com.electiondataquality.geometry.MultiPolygon;
+import com.electiondataquality.geometry.Polygon;
 
 public class StateResultSetExtractor implements ResultSetExtractor<Object> {
     @Override

@@ -1,15 +1,15 @@
-package com.electiondataquality.restservice.features.precinct;
+package com.electiondataquality.features.precinct;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import com.electiondataquality.restservice.features.Feature;
-import com.electiondataquality.restservice.features.precinct.error.PrecinctError;
+import com.electiondataquality.features.Feature;
+import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.comments.Comment;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
-import com.electiondataquality.restservice.geometry.MultiPolygon;
+import com.electiondataquality.geometry.MultiPolygon;
 
 // @Entity
 // @Table(name = "PRECINTS")

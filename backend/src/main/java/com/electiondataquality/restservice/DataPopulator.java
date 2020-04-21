@@ -4,17 +4,18 @@ import java.util.List;
 import java.util.HashSet;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import com.electiondataquality.restservice.features.state.State;
+import com.electiondataquality.features.state.State;
 import com.electiondataquality.restservice.managers.ServerManager;
-import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
-import com.electiondataquality.restservice.dao.state.StateDao;
-import com.electiondataquality.restservice.features.precinct.Precinct;
+import com.electiondataquality.features.congressional_district.CongressionalDistrict;
+import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
 import com.electiondataquality.restservice.voting.elections.enums.*;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.comments.Comment;
-import com.electiondataquality.restservice.features.precinct.error.*;
+import com.electiondataquality.features.precinct.error.ERROR_TYPE;
+import com.electiondataquality.features.precinct.error.PrecinctError;
+import com.electiondataquality.dao.state.StateDao;
 
 public class DataPopulator {
     private ServerManager serverManager;

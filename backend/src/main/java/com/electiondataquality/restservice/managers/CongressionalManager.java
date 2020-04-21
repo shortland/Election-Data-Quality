@@ -3,7 +3,7 @@ package com.electiondataquality.restservice.managers;
 import java.util.HashSet;
 import java.util.HashMap;
 
-import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
+import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 
 public class CongressionalManager {
     private HashMap<Integer, CongressionalDistrict> congressionalDistrictMap;

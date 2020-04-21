@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.managers.StateManager;
 import com.electiondataquality.restservice.managers.CongressionalManager;
-import com.electiondataquality.restservice.features.congressional_district.CongressionalDistrict;
+import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 
 @RestController
 public class CongDistrictController {
@@ -18,7 +18,7 @@ public class CongDistrictController {
      * Get the shape data for all of the states
      */
     @GetMapping("/congressionalDistrictsForState")
-    public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam(value = "stateId") int stateId) {
+    public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam int stateId) {
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
         HashSet<Integer> congDistrictIds = stateManager.getAllDistricts(stateId);
