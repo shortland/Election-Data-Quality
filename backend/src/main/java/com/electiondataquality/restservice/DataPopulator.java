@@ -3,8 +3,16 @@ package com.electiondataquality.restservice;
 import java.util.List;
 import java.util.HashSet;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 
 import com.electiondataquality.features.state.State;
+import com.electiondataquality.jpa.features.state.StateFeature;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.features.precinct.Precinct;
@@ -27,6 +35,40 @@ public class DataPopulator {
         this.serverManager = serverManager;
         this.databaseConfig = databaseConfig;
     }
+
+    // public void populateStates() {
+    // EntityManagerFactory emFactory =
+    // Persistence.createEntityManagerFactory("StateDetails");
+    // EntityManager em = emFactory.createEntityManager();
+
+    // em.getTransaction().begin();
+    // CriteriaBuilder cb = em.getCriteriaBuilder();
+    // CriteriaQuery<StateFeature> cq = cb.createQuery(StateFeature.class);
+
+    // Root<StateFeature> state = cq.from(StateFeature.class);
+
+    // // Not sure what this is meant for yet
+    // cq.select(state.get("stateId"));
+
+    // CriteriaQuery<StateFeature> select = cq.select(state);
+    // TypedQuery<StateFeature> q = em.createQuery(select);
+    // List<StateFeature> list = q.getResultList();
+
+    // System.out.println("stateName");
+    // HashSet<StateFeature> stateSet = new HashSet<>();
+
+    // for (StateFeature s : list) {
+    // stateSet.add(s);
+    // System.out.println(s.getStateName());
+    // }
+
+    // em.getTransaction().commit();
+    // em.close();
+
+    // emFactory.close();
+
+    // // this.serverManager.getStateManager().populate(stateSet);
+    // }
 
     public void populateStates() {
         StateDao dao = new StateDao();
