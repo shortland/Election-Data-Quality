@@ -9,8 +9,11 @@ import com.electiondataquality.features.Feature;
 
 public class CongressionalDistrict extends Feature {
     private String name;
+
     private int parentStateId;
+
     private int cdId;
+
     private HashSet<Integer> childrenPrecincts;
 
     public CongressionalDistrict(String name, int parentStateId, int cdId, HashSet<Integer> childrenPrecincts,
@@ -66,6 +69,7 @@ public class CongressionalDistrict extends Feature {
     public String toString() {
         String str = this.getName() + "\nID : " + Integer.toString(this.getId()) + "\nParent ID : "
                 + Integer.toString(this.getParentId()) + "\nChildren : " + this.getChildrenId().toString();
+
         return str;
     }
 }

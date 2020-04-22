@@ -31,11 +31,9 @@ public class StateManager {
         }
     }
 
-    /**
-     * Get all the states
-     */
     public ArrayList<State> getAllStates() {
         ArrayList<State> allStates = new ArrayList<>();
+
         for (Map.Entry<Integer, State> state : this.stateMap.entrySet()) {
             allStates.add(state.getValue());
         }
@@ -46,25 +44,25 @@ public class StateManager {
     public State getState(int stateId) {
         if (this.stateMap.containsKey(stateId)) {
             return this.stateMap.get(stateId);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public HashSet<Integer> getAllCounties(int stateId) {
         if (this.stateMap.containsKey(stateId)) {
             return this.stateMap.get(stateId).getCountiesId();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public HashSet<Integer> getAllDistricts(int stateId) {
         if (this.stateMap.containsKey(stateId)) {
             return this.stateMap.get(stateId).getDistrictsId();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public String toString() {

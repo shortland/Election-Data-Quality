@@ -13,6 +13,9 @@ public class StateDao {
         dataSource = ds;
     }
 
+    /**
+     * Don't delete this commented out block plz. Useful template
+     */
     // public List<State> select(String firstname, String lastname) {
     // JdbcTemplate select = new JdbcTemplate(dataSource);
     // return select.query("select FIRSTNAME, LASTNAME from PERSON where FIRSTNAME =
@@ -22,6 +25,7 @@ public class StateDao {
 
     public List<Object> selectAll() {
         JdbcTemplate select = new JdbcTemplate(dataSource);
+
         return select.query("SELECT states.*, features.* FROM states, features WHERE states.feature_idn = features.idn",
                 new StateRowMapper());
     }

@@ -7,9 +7,9 @@ import com.electiondataquality.features.precinct.Precinct;
 
 public class PrecinctManager {
     private HashMap<Integer, Precinct> precinctMap;
+
     private HashMap<Integer, Precinct> originalPrecinctMap;
 
-    // Deafult constructor
     public PrecinctManager() {
         this.precinctMap = new HashMap<Integer, Precinct>();
         this.originalPrecinctMap = new HashMap<Integer, Precinct>();
@@ -17,9 +17,11 @@ public class PrecinctManager {
 
     public PrecinctManager(HashSet<Precinct> precincts) {
         this.precinctMap = new HashMap<Integer, Precinct>();
+
         for (Precinct p : precincts) {
             this.precinctMap.put(p.getId(), p);
         }
+
         for (Precinct p : precincts) {
             this.originalPrecinctMap.put(p.getId(), p);
         }
@@ -29,6 +31,7 @@ public class PrecinctManager {
     public void populate(HashSet<Precinct> precicntSet) {
         this.precinctMap.clear();
         this.originalPrecinctMap.clear();
+
         for (Precinct p : precicntSet) {
             this.precinctMap.put(p.getId(), p);
             this.originalPrecinctMap.put(p.getId(), Precinct.copyPrecinct(p));
@@ -38,9 +41,9 @@ public class PrecinctManager {
     public Precinct getPrecicnt(int precinctId) {
         if (this.precinctMap.containsKey(precinctId)) {
             return this.precinctMap.get(precinctId);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public void addPrecinct(Precinct p) {
@@ -58,12 +61,12 @@ public class PrecinctManager {
     public Precinct getOriginalPrecinct(int precinctId) {
         if (this.originalPrecinctMap.containsKey(precinctId)) {
             return this.originalPrecinctMap.get(precinctId);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
-    // DAVID_NOTE: probably don't neead this method
+    // NOTE: probably don't neead this method
     public void updatePrecinct(int oldPrecinctId, Precinct newPrecinct) {
         this.deletePrecinct(oldPrecinctId);
         this.addPrecinct(newPrecinct);
@@ -71,11 +74,13 @@ public class PrecinctManager {
 
     public int getLargestPrecinctId() {
         int maxKey = 0;
+
         for (int currKey : this.precinctMap.keySet()) {
             if (maxKey < currKey) {
                 maxKey = currKey;
             }
         }
+
         return maxKey;
     }
 
@@ -87,6 +92,7 @@ public class PrecinctManager {
 
     public String toString() {
         String str = "";
+
         for (int id : precinctMap.keySet()) {
             str = str + precinctMap.get(id).toString();
         }

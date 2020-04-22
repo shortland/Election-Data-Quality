@@ -8,19 +8,23 @@ import com.electiondataquality.geometry.Polygon;
 
 public abstract class Feature {
     private ArrayList<ArrayList<ArrayList<double[]>>> shape;
+
     private boolean isMultiPolygon = false;
 
     public static boolean CompareShape(Feature f1, Feature f2) {
         ArrayList<ArrayList<ArrayList<double[]>>> shape1 = f1.getShape();
         ArrayList<ArrayList<ArrayList<double[]>>> shape2 = f2.getShape();
+
         if (shape1.size() == shape2.size()) {
             for (int i = 0; i < shape1.size(); i++) {
                 ArrayList<ArrayList<double[]>> secondLayer1 = shape1.get(i);
                 ArrayList<ArrayList<double[]>> secondLayer2 = shape2.get(i);
+
                 if (secondLayer1.size() == secondLayer2.size()) {
                     for (int j = 0; j < secondLayer1.size(); j++) {
                         ArrayList<double[]> thirdLayer1 = secondLayer1.get(j);
                         ArrayList<double[]> thirdLayer2 = secondLayer2.get(j);
+
                         if (thirdLayer1.size() == thirdLayer2.size()) {
                             for (int k = 0; k < thirdLayer1.size(); k++) {
                                 boolean xSame = false;
@@ -29,12 +33,15 @@ public abstract class Feature {
                                 double x2 = thirdLayer2.get(k)[0];
                                 double y1 = thirdLayer1.get(k)[1];
                                 double y2 = thirdLayer2.get(k)[1];
+
                                 if (Double.compare(x1, x2) == 0) {
                                     xSame = true;
                                 }
+
                                 if (Double.compare(y1, y2) == 0) {
                                     ySame = true;
                                 }
+
                                 if (!(xSame || ySame)) {
                                     return false;
                                 }
@@ -47,6 +54,7 @@ public abstract class Feature {
                     return false;
                 }
             }
+
             return true;
         } else {
             return false;
@@ -71,11 +79,6 @@ public abstract class Feature {
         }
     }
 
-    // public void setShape(Polygon polygon) {
-    // this.shape = new ArrayList<ArrayList<ArrayList<double[]>>>();
-    // this.shape.add(polygon.coordinates);
-    // }
-
     public void setShape(MultiPolygon multiPolygon) {
         this.shape = multiPolygon.coordinates;
     }
@@ -90,10 +93,11 @@ public abstract class Feature {
 
     @JsonIgnore
     public Polygon getPolygon() {
-        if (!isMultiPolygon)
+        if (!isMultiPolygon) {
             return new Polygon(shape.get(0));
-        else
-            return null;
+        }
+
+        return null;
     }
 
     @JsonIgnore
@@ -119,6 +123,7 @@ public abstract class Feature {
 
     public String shapeToString() {
         String str = "";
+
         for (int i = 0; i < this.shape.size(); i++) {
             for (int j = 0; j < this.shape.get(i).size(); j++) {
                 for (int k = 0; k < this.shape.get(i).get(j).size(); k++) {

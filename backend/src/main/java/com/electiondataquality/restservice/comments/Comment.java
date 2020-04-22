@@ -6,7 +6,7 @@ public class Comment {
     private int parentErrorId;
     private int parentPrecinctId;
 
-    // TODO TimeStamp
+    // TODO: TimeStamp
     // private Timestamp commentCreated;
 
     public Comment(int id, String text) {
@@ -47,6 +47,7 @@ public class Comment {
     public String toString() {
         String str = Integer.toString(this.getId()) + " (" + Integer.toString(this.getParentErrorId()) + ")" + " : "
                 + this.getText();
+
         return str;
     }
 }

@@ -9,13 +9,12 @@ import com.electiondataquality.restservice.comments.Comment;
 
 public class ServerManager {
     private static StateManager stateManager;
-    private static CongressionalManager congressionalManager;
-    private static PrecinctManager precinctManager;
-    private static CommentManager commentManager;
 
-    /**
-     * Manager Class Constructors
-     */
+    private static CongressionalManager congressionalManager;
+
+    private static PrecinctManager precinctManager;
+
+    private static CommentManager commentManager;
 
     public ServerManager() {
         ServerManager.stateManager = new StateManager();

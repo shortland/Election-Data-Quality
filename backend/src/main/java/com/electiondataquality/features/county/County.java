@@ -5,7 +5,9 @@ import com.electiondataquality.geometry.MultiPolygon;
 
 public class County extends Feature {
     private String countyName;
+
     private int parentStateId;
+
     private int countyId;
 
     public County(String countyName, int parentStateId, int countyId, MultiPolygon multiPolygon) {

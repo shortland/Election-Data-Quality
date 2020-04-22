@@ -15,13 +15,21 @@ import com.electiondataquality.geometry.MultiPolygon;
 // @Table(name = "PRECINTS")
 public class Precinct extends Feature {
     private int id;
+
     private String canonicalName;
+
     private String fullName;
+
     private int parentDistrictId;
+
     private VotingData votingData;
+
     private DemographicData demographicData;
+
     private HashSet<Integer> neighborsId;
+
     private HashMap<Integer, PrecinctError> precinctErrors;
+
     private boolean isGhost;
 
     // TODO: figure out mergeing Polygon
@@ -37,11 +45,13 @@ public class Precinct extends Feature {
         HashSet<Integer> neighborsId1 = p1.getNeighborsId();
         HashSet<Integer> neighborsId2 = p2.getNeighborsId();
         HashSet<Integer> mergedNeighborsId = new HashSet<Integer>();
+
         for (int neighborId : neighborsId1) {
             if (!mergedNeighborsId.contains(neighborId)) {
                 mergedNeighborsId.add(neighborId);
             }
         }
+
         for (int neighborId : neighborsId2) {
             if (!mergedNeighborsId.contains(neighborId)) {
                 mergedNeighborsId.add(neighborId);
@@ -51,22 +61,24 @@ public class Precinct extends Feature {
         HashMap<Integer, PrecinctError> errors1 = p1.getPrecinctErrors();
         HashMap<Integer, PrecinctError> errors2 = p2.getPrecinctErrors();
         HashSet<PrecinctError> mergedErrorSet = new HashSet<PrecinctError>();
+
         for (int errorId : errors1.keySet()) {
             errors1.get(errorId).setParentPrecinctId(id);
             mergedErrorSet.add(errors1.get(errorId));
         }
+
         for (int errorId : errors2.keySet()) {
             errors2.get(errorId).setParentPrecinctId(id);
             mergedErrorSet.add(errors2.get(errorId));
         }
 
-        Precinct result = new Precinct(id, cName, fullName, parentId, vd, dd, mergedNeighborsId, mergedErrorSet, null);
-        return result;
+        return new Precinct(id, cName, fullName, parentId, vd, dd, mergedNeighborsId, mergedErrorSet, null);
     }
 
     public static Precinct copyPrecinct(Precinct p) {
         Precinct ans = new Precinct(p.getId(), p.getCanonicalName(), p.getFullName(), p.getParentDistrictId(),
                 p.getVotingData(), p.getDemographicData(), p.getNeighborsId(), p.getAllError(), p.getMultiPolygon());
+
         return ans;
     }
 
@@ -83,6 +95,7 @@ public class Precinct extends Feature {
         this.demographicData = demographicData;
         this.isGhost = false;
         this.neighborsId = neighborsId;
+
         if (errors != null) {
             this.precinctErrors = this.populateErrorsMap(errors);
         }
@@ -93,9 +106,11 @@ public class Precinct extends Feature {
 
         for (PrecinctError e : errors) {
             HashSet<Comment> commentSet = e.getComments();
+
             for (Comment c : commentSet) {
                 c.setParentPrecinctId(this.id);
             }
+
             errorMap.put(e.getId(), e);
         }
 
@@ -106,7 +121,6 @@ public class Precinct extends Feature {
         return this.id;
     }
 
-    // for update info
     public void setId(int id) {
         this.id = id;
     }
@@ -115,7 +129,6 @@ public class Precinct extends Feature {
         return this.parentDistrictId;
     }
 
-    // for update info
     public void setParentDistrictId(int id) {
         this.parentDistrictId = id;
     }
@@ -124,7 +137,6 @@ public class Precinct extends Feature {
         return this.canonicalName;
     }
 
-    // for update info
     public void setCanonocalName(String cname) {
         this.canonicalName = cname;
     }
@@ -133,7 +145,6 @@ public class Precinct extends Feature {
         return this.fullName;
     }
 
-    // for update info
     public void setFullName(String fullname) {
         this.fullName = fullname;
     }
@@ -142,7 +153,6 @@ public class Precinct extends Feature {
         return this.neighborsId;
     }
 
-    // for update info
     public void setNeighborsId(HashSet<Integer> neighborsId) {
         this.neighborsId = neighborsId;
     }
@@ -167,7 +177,6 @@ public class Precinct extends Feature {
         return this.votingData;
     }
 
-    // for update info
     public void setVotingData(VotingData votingData) {
         this.votingData = votingData;
     }
@@ -176,7 +185,6 @@ public class Precinct extends Feature {
         return this.demographicData;
     }
 
-    // for update info
     public void setDemographicData(DemographicData demographicData) {
         this.demographicData = demographicData;
     }
@@ -192,9 +200,11 @@ public class Precinct extends Feature {
     @JsonIgnore
     public HashSet<PrecinctError> getAllError() {
         HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
+
         for (Integer id : precinctErrors.keySet()) {
             errorSet.add(precinctErrors.get(id));
         }
+
         return errorSet;
     }
 
@@ -228,15 +238,15 @@ public class Precinct extends Feature {
 
     public String toString() {
         String str = "";
-        str = str + "PrecinctId : " + this.getId() + "\n";
-        str = str + "Name : " + this.getFullName() + " (" + this.getCanonicalName() + ")\n";
-        str = str + "ParentId : " + this.getParentDistrictId() + "\n";
-        str = str + "NeighborsId : " + this.getNeighborsId().toString() + "\n";
-        str = str + this.votingData.toString();
-        str = str + this.demographicData.toString();
+        str += "PrecinctId : " + this.getId() + "\n";
+        str += "Name : " + this.getFullName() + " (" + this.getCanonicalName() + ")\n";
+        str += "ParentId : " + this.getParentDistrictId() + "\n";
+        str += "NeighborsId : " + this.getNeighborsId().toString() + "\n";
+        str += this.votingData.toString();
+        str += this.demographicData.toString();
 
         for (Integer eId : this.precinctErrors.keySet()) {
-            str = str + this.precinctErrors.get(eId).toString() + "\n";
+            str += this.precinctErrors.get(eId).toString() + "\n";
         }
 
         return str;
@@ -254,18 +264,25 @@ public class Precinct extends Feature {
 
         if (infoId != 0)
             this.setId(infoId);
+
         if (infoCName != null)
             this.setCanonocalName(infoCName);
+
         if (infoFullName != null)
             this.setFullName(infoFullName);
+
         if (infoParentId != 0)
             this.setParentDistrictId(infoParentId);
+
         if (infoNeighborsId != null)
             this.setNeighborsId(infoNeighborsId);
+
         if (infoVD != null)
             this.setVotingData(infoVD);
+
         if (infoDD != null)
             this.setDemographicData(infoDD);
+
         if (infoErrors != null)
             this.setPrecinctErrors(infoErrors);
 

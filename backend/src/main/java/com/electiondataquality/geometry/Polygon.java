@@ -12,6 +12,7 @@ public class Polygon {
     public MultiPolygon toMultiPolygon() {
         ArrayList<ArrayList<ArrayList<double[]>>> multi = new ArrayList<ArrayList<ArrayList<double[]>>>();
         multi.add(this.coordinates);
+
         return new MultiPolygon(multi);
     }
 }

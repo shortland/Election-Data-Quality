@@ -32,17 +32,17 @@ public class CongressionalManager {
     public CongressionalDistrict getCongDistrict(int cdId) {
         if (this.congressionalDistrictMap.containsKey(cdId)) {
             return this.congressionalDistrictMap.get(cdId);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public HashSet<Integer> getAllChildrenPrecinct(int cdId) {
         if (this.congressionalDistrictMap.containsKey(cdId)) {
             return this.congressionalDistrictMap.get(cdId).getChildrenId();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public String toString() {

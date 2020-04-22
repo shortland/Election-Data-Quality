@@ -15,7 +15,10 @@ import com.electiondataquality.features.congressional_district.CongressionalDist
 public class CongDistrictController {
 
     /**
-     * Get the shape data for all of the states
+     * Get the shape data for all of the states.
+     * 
+     * @param stateId
+     * @return
      */
     @GetMapping("/congressionalDistrictsForState")
     public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam int stateId) {

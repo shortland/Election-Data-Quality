@@ -12,6 +12,14 @@ import com.electiondataquality.types.errors.ErrorJ;
 
 @RestController
 public class ErrorController {
+
+    /**
+     * Mark an error as corrected.
+     * 
+     * @param precinctId
+     * @param errorId
+     * @return
+     */
     @GetMapping("/correctError")
     public ErrorJ setErrorAsCorrected(@RequestParam int precinctId, @RequestParam int errorId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();

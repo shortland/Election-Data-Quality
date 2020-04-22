@@ -14,7 +14,7 @@ import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.comments.Comment;
 import com.electiondataquality.restservice.config.DatabaseConfig;
-import com.electiondataquality.features.precinct.error.ERROR_TYPE;
+import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
 import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.dao.state.StateDao;
 
@@ -47,6 +47,7 @@ public class DataPopulator {
          */
         List<Object> states = dao.selectAll();
         HashSet<State> stateSet = new HashSet<State>();
+
         for (Object state : states) {
             stateSet.add((State) state);
             System.out.printf("State is: %s", state.toString());
@@ -60,6 +61,7 @@ public class DataPopulator {
         CongressionalDistrict cd2 = new CongressionalDistrict("CD2", 55, 11, null, null);
         CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 55, 12, null, null);
         HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
+
         cdSet.add(cd);
         cdSet.add(cd1);
         cdSet.add(cd2);
@@ -73,9 +75,11 @@ public class DataPopulator {
         ElectionResults e = new ElectionResults(100, 200, 50, 50, ELECTIONS.PRES2016);
         ElectionResults e1 = new ElectionResults(400, 600, 500, 510, ELECTIONS.CONG2016);
         ElectionResults e2 = new ElectionResults(200, 230, 120, 150, ELECTIONS.CONG2018);
+
         arrER[0] = e;
         arrER[1] = e1;
         arrER[2] = e2;
+
         VotingData vd = new VotingData(arrER);
 
         // Create DemographicData
@@ -90,10 +94,12 @@ public class DataPopulator {
         // Create Error
         String[] arrstr = { "cool", "intersting", "no", "voting" };
         HashSet<Comment> comments = new HashSet<Comment>();
+
         for (int i = 1; i < 5; i++) {
             Comment c = new Comment(i, arrstr[i - 1]);
             comments.add(c);
         }
+
         PrecinctError er = new PrecinctError(ERROR_TYPE.NO_VOTERS, 1, "has no voter", false, comments);
         PrecinctError er1 = new PrecinctError(ERROR_TYPE.GHOST, 2, "is ghost", false, comments);
         HashSet<PrecinctError> errors = new HashSet<PrecinctError>();
@@ -105,6 +111,7 @@ public class DataPopulator {
         Precinct p1 = new Precinct(10410, "P2", "Precinct2", 10, vd, dd1, neighborId1, errors1, null);
         Precinct p2 = new Precinct(10411, "P3", "Precinct3", 10, null, null, null, errors1, null);
         HashSet<Precinct> precinctSet = new HashSet<Precinct>();
+
         precinctSet.add(p);
         precinctSet.add(p1);
         precinctSet.add(p2);
@@ -114,13 +121,16 @@ public class DataPopulator {
         HashSet<Comment> commentSet = new HashSet<Comment>();
         for (Precinct currP : precinctSet) {
             HashSet<PrecinctError> peSet = currP.getAllError();
+
             for (PrecinctError pe : peSet) {
                 HashSet<Comment> cSet = pe.getComments();
+
                 for (Comment c : cSet) {
                     commentSet.add(c);
                 }
             }
         }
+
         this.serverManager.getCommentManager().populate(commentSet);
     }
 }

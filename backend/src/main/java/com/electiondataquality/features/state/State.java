@@ -17,10 +17,15 @@ public class State extends Feature {
     // @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     // private Long id;
+
     private int stateId;
+
     private String stateName;
+
     private String stateAbreviation;
+
     private HashSet<Integer> counties;
+
     private HashSet<Integer> districts;
 
     public State(int stateId, String stateName, String stateAbreviation, HashSet<Integer> counties,
@@ -105,11 +110,8 @@ public class State extends Feature {
 
     @Override
     public String toString() {
-        // String str = this.stateName + "(" + this.stateAbreviation + ")\nID : " +
-        // Integer.toString(this.stateId) + "\n";
-        // str = str + "Counties : " + this.counties.toString() + "\nDistricts : " +
-        // this.districts.toString();
         String str = this.stateName + "(" + this.stateAbreviation + ")\nID : " + Integer.toString(this.stateId) + "\n";
+
         return str;
     }
 }

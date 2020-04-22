@@ -18,7 +18,17 @@ import com.electiondataquality.types.errors.ErrorJ;
 
 @RestController
 public class CommentController {
-    // TESTED
+
+    /**
+     * Create a comment.
+     * 
+     * NOTE: Tested
+     * 
+     * @param commentText
+     * @param precinctId
+     * @param errorId
+     * @return
+     */
     @RequestMapping(value = "/createComment", method = RequestMethod.POST)
     public ErrorJ createComment(@RequestBody String commentText, @RequestParam int precinctId,
             @RequestParam int errorId) {
@@ -47,8 +57,16 @@ public class CommentController {
 
     }
 
-    // TESTED
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    /**
+     * Update a comment.
+     * 
+     * NOTE: Tested
+     * 
+     * @param commentText
+     * @param commentId
+     * @return
+     */
+    @RequestMapping(value = "/updateComment", method = RequestMethod.PUT)
     public ErrorJ updateComment(@RequestBody String commentText, @RequestParam int commentId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         Comment target = commentManager.getComment(commentId);
@@ -62,7 +80,14 @@ public class CommentController {
         }
     }
 
-    // TESTED
+    /**
+     * Delete a comment.
+     * 
+     * NOTE: Tested
+     * 
+     * @param commentId
+     * @return
+     */
     @RequestMapping(value = "/deleteComment", method = RequestMethod.DELETE)
     public ErrorJ deleteComment(@RequestParam int commentId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
@@ -93,7 +118,15 @@ public class CommentController {
         }
     }
 
-    // TESTED
+    /**
+     * Get comments by the error id.
+     * 
+     * NOTE: Tested
+     * 
+     * @param precinctId
+     * @param errorId
+     * @return
+     */
     @RequestMapping(value = "/commentByError", method = RequestMethod.GET)
     public ArrayList<Comment> getAllCommentsOfError(@RequestParam int precinctId, @RequestParam int errorId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
