@@ -9,7 +9,13 @@
 
 ## Project Description
 
-Frontend is currently being hosted on Github Pages. Backend is hosted on http://67.80.171.107:1234 with a restful api alongside with the relational database on the same host.
+CSE 416 course project.
+
+Frontend: https://shortland.github.io/Election-Data-Quality/
+
+Backend: http://67.80.171.107:1234/
+
+Database: http://45.55.121.121/phpmyadmin/
 
 ### Frontend Install/Build/Run/Deploy
 
