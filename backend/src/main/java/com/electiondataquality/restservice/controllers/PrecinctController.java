@@ -2,6 +2,7 @@ package com.electiondataquality.restservice.controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
+    @CrossOrigin
     @GetMapping("/shapeOfPrecinct")
     public HashMap<String, Object> getShapeOfPrecinct(@RequestParam int precinctId) {
         HashMap<String, Object> result = new HashMap<String, Object>();
@@ -53,6 +55,7 @@ public class PrecinctController {
      * @param precinctIds
      * @return
      */
+    @CrossOrigin
     @GetMapping("/multiplePrecinctShapes")
     public ArrayList<HashMap<Integer, Object>> getMultipleprecincts(
             @RequestParam(value = "precinctIdList") int[] precinctIds) {
@@ -81,6 +84,7 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
+    @CrossOrigin
     @GetMapping("/precinctInfo")
     public HashMap<String, Object> getPrecinctInfo(@RequestParam int precinctId) {
         HashMap<String, Object> result = new HashMap<String, Object>();
@@ -112,6 +116,7 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
+    @CrossOrigin
     @GetMapping("/originalPrecinctInfo")
     public HashMap<String, Object> getOriginalPrecinctInfo(@RequestParam int precinctId) {
         HashMap<String, Object> result = new HashMap<String, Object>();
@@ -143,6 +148,7 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
+    @CrossOrigin
     @GetMapping("/originalPrecinctShape")
     public HashMap<String, Object> getOriginalPrecinctShape(@RequestParam int precinctId) {
         HashMap<String, Object> result = new HashMap<String, Object>();
@@ -167,6 +173,7 @@ public class PrecinctController {
      * @param precinctIds
      * @return
      */
+    @CrossOrigin
     @GetMapping("/originalMultPrecinctShapes")
     public ArrayList<HashMap<Integer, Object>> getMultipleOriginalprecincts(
             @RequestParam(value = "precinctIdList") int[] precinctIds) {
@@ -195,6 +202,7 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
+    @CrossOrigin
     @GetMapping("/neighborsOfPrecinct")
     public ArrayList<Integer> getNeighborsOfPrecinct(@RequestParam int precinctId) {
         ArrayList<Integer> neighbors = new ArrayList<Integer>();
@@ -224,6 +232,7 @@ public class PrecinctController {
      * @param shape
      * @return
      */
+    @CrossOrigin
     @GetMapping("/shapesOfPrecinct")
     public ErrorJ updateShapeOfPrecicnt(@RequestParam int precinctId,
             @RequestParam ArrayList<ArrayList<ArrayList<double[]>>> shape) {
@@ -249,6 +258,7 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
+    @CrossOrigin
     @GetMapping("/deletePrecinct")
     public ErrorJ deletePrecinct(@RequestParam int precinctId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -268,6 +278,7 @@ public class PrecinctController {
      * @param isGhost
      * @return
      */
+    @CrossOrigin
     @GetMapping("/defineGhostPrecinct")
     public ErrorJ setGhost(@RequestParam int precinctId, @RequestParam boolean isGhost) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -291,6 +302,7 @@ public class PrecinctController {
      * @param info
      * @return
      */
+    @CrossOrigin
     @RequestMapping(value = "/updatePrecinctInfo", method = RequestMethod.PUT)
     public ErrorJ updatePrecinctInfo(@RequestParam int precinctId, @RequestBody Precinct info) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -320,6 +332,7 @@ public class PrecinctController {
      * @param votingData
      * @return
      */
+    @CrossOrigin
     @GetMapping("/updateVotingData")
     public ErrorJ updateVotingData(@RequestParam int precinctId, @RequestBody VotingData votingData) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -348,6 +361,7 @@ public class PrecinctController {
      * @param demographicData
      * @return
      */
+    @CrossOrigin
     @GetMapping("/updateDemographicData")
     public ErrorJ updateDemographicData(@RequestParam int precinctId, @RequestBody DemographicData demographicData) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -376,6 +390,7 @@ public class PrecinctController {
      * @param precinctId2
      * @return
      */
+    @CrossOrigin
     @GetMapping("/addPrecinctNeighbor")
     public ErrorJ addPrecinctAsNeighbor(@RequestParam int precinctId1, @RequestParam int precinctId2) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -408,6 +423,7 @@ public class PrecinctController {
      * @param precinctId2
      * @return
      */
+    @CrossOrigin
     @GetMapping("/deletePrecinctNeighbor")
     public ErrorJ deletePrecinctAsNeighbor(@RequestParam int precinctId1, @RequestParam int precinctId2) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -436,6 +452,7 @@ public class PrecinctController {
      * @param mp
      * @return
      */
+    @CrossOrigin
     @GetMapping("/createNewPrecinct")
     public ErrorJ createNewPrecinct(@RequestParam MultiPolygon mp) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -460,6 +477,7 @@ public class PrecinctController {
      * @param precinctId2
      * @return
      */
+    @CrossOrigin
     @GetMapping("/mergePrecinct")
     public ErrorJ mergePrecincts(@RequestParam int precinctId1, @RequestParam int precinctId2) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
