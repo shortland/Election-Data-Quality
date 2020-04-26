@@ -233,9 +233,8 @@ export default class App extends Component {
                     FeatureCollection["features"].push(feature);
                 }
                 console.log(FeatureCollection);
-                let geoJson = JSON.stringify(FeatureCollection);
                 this.setState({
-                    stateData: geoJson
+                    stateData: FeatureCollection
                 })
                 //GEO JSON STATE FORMAT FOR MAPBOX
                 //{"type": "FeatureCollection", "features": []
