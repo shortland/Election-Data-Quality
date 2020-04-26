@@ -2,20 +2,18 @@
 
 ## Project Members
 
-- David Lin
-- Ilan Kleiman
-- Reed Gantz
-- Samuel Hoffmann
+- David Lin [@DavidLSC](https://github.com/DavidLSC)
+- Ilan Kleiman [@shortland](https://github.com/shortland)
+- Reed Gantz [@reedm121](https://github.com/reedm121)
+- Samuel Hoffmann [@SamuelHHoffmann](https://github.com/SamuelHHoffmann)
 
 ## Project Description
 
-CSE 416 course project.
+CSE 416 course project. The goal of the project is to provide users with an easily understandable visual representation of different elections' voting data in a comprehensive and unified manner.
 
-Frontend: https://shortland.github.io/Election-Data-Quality/
+There is currently no mainstream reference in gathering and visualizing election data in the U.S. at the detailed level of a precinct/election ward. The hopeful goal of this project is to provide something that can be the start of exactly that.
 
-Backend: http://67.80.171.107:1234/
-
-Database: http://45.55.121.121/phpmyadmin/
+Live site: https://shortland.github.io/Election-Data-Quality/
 
 ### Frontend Install/Build/Run/Deploy
 
@@ -80,17 +78,17 @@ WantedBy=multi-user.target
 
 ### Frontend
 
-Javascript stuff is cool. React and Bootstrap probably
+Developed in Javascript with React and Bootstrap.
 
 [react-mapbox-gl](https://uber.github.io/react-map-gl/docs)
 
 ### Backend
 
-Java backend seems whatever.
+Developed in Java with SpringBoot.
 
 ### Database
 
-Using our own dedicated database.
+MySQL Server.
 
 #### Database Login
 
@@ -190,7 +188,7 @@ County FIPS Codes:
 
 Must visit each individual NYS county's website to get the results of its precincts.
 
-- [Albany County](#)
+<!-- - [Albany County](#)
 
 - [Allegany County](#)
 
@@ -318,4 +316,4 @@ Must visit each individual NYS county's website to get the results of its precin
 
 Other Data:
 
-- [State Parks](https://gis.ny.gov/gisdata/inventories/details.cfm?DSID=430)
+- [State Parks](https://gis.ny.gov/gisdata/inventories/details.cfm?DSID=430) -->
