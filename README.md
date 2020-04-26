@@ -1,12 +1,5 @@
 # Election Data Quality
 
-## Project Members
-
-- David Lin [@DavidLSC](https://github.com/DavidLSC)
-- Ilan Kleiman [@shortland](https://github.com/shortland)
-- Reed Gantz [@reedm121](https://github.com/reedm121)
-- Samuel Hoffmann [@SamuelHHoffmann](https://github.com/SamuelHHoffmann)
-
 ## Project Description
 
 CSE 416 course project. The goal of the project is to provide users with an easily understandable visual representation of different elections' voting data in a comprehensive and unified manner.
@@ -14,6 +7,19 @@ CSE 416 course project. The goal of the project is to provide users with an easi
 There is currently no mainstream reference in gathering and visualizing election data in the U.S. at the detailed level of a precinct/election ward. The hopeful goal of this project is to provide something that can be the start of exactly that.
 
 Live site: https://shortland.github.io/Election-Data-Quality/
+
+### Project Members
+
+- David Lin [@DavidLSC](https://github.com/DavidLSC)
+- Ilan Kleiman [@shortland](https://github.com/shortland)
+- Reed Gantz [@reedm121](https://github.com/reedm121)
+- Samuel Hoffmann [@SamuelHHoffmann](https://github.com/SamuelHHoffmann)
+
+## Frontend
+
+Developed in Javascript with React and Bootstrap.
+
+[react-mapbox-gl](https://uber.github.io/react-map-gl/docs)
 
 ### Frontend Install/Build/Run/Deploy
 
@@ -30,6 +36,10 @@ After cloning the directory and entering the `frontend` directory, follow the be
 #### Deploy Project to GitHub-Pages
 
 `$ yarn run deploy`
+
+## Backend
+
+Developed in Java with SpringBoot.
 
 ### Backend Install/Build/Run/Deploy
 
@@ -70,27 +80,11 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-### States
-
-- Wisconsin
-- Utah
-- New York
-
-### Frontend
-
-Developed in Javascript with React and Bootstrap.
-
-[react-mapbox-gl](https://uber.github.io/react-map-gl/docs)
-
-### Backend
-
-Developed in Java with SpringBoot.
-
-### Database
+## Database
 
 MySQL Server.
 
-#### Database Login
+### Database Login
 
 Web Interface: [Login](http://45.55.121.121/phpmyadmin)
 
@@ -99,6 +93,14 @@ Username: jerryman
 Password: JerryManderingIsBad123!
 IP Address: 45.55.121.121:3306
 ```
+
+## States
+
+Sample State Data
+
+- Wisconsin
+- Utah
+- New York
 
 ## Data Sources
 
