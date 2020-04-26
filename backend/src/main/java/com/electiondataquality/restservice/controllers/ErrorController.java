@@ -1,5 +1,6 @@
 package com.electiondataquality.restservice.controllers;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,7 @@ public class ErrorController {
      * @param errorId
      * @return
      */
+    @CrossOrigin
     @GetMapping("/correctError")
     public ErrorJ setErrorAsCorrected(@RequestParam int precinctId, @RequestParam int errorId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
