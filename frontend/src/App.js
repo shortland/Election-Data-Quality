@@ -207,6 +207,42 @@ export default class App extends Component {
     };
 
     componentDidMount() {
+        //NOTE: new added code should get move to somewhere else
+        fetch("http://67.80.171.107:1234/allStates")
+            .then((res) => {
+                return res.json();
+            })
+            .then((result) => {
+                console.log(result)
+                let FeatureCollection = {
+                    type: "FeatureCollection",
+                    features: []
+                };
+                for (let i in result) {
+                    let feature = {
+                        type: "Feature",
+                        properties: {
+                            name: result[i].name,
+                            amount_counties: result[i].countiesId ? result[i].countiesId.length : 0
+                        },
+                        geometry: {
+                            type: "MultiPolygon",
+                            coordinates: result[i].shape
+                        }
+                    };
+                    FeatureCollection["features"].push(feature);
+                }
+                console.log(FeatureCollection);
+                let geoJson = JSON.stringify(FeatureCollection);
+                this.setState({
+                    stateData: geoJson
+                })
+                //GEO JSON STATE FORMAT FOR MAPBOX
+                //{"type": "FeatureCollection", "features": []
+                //{"type" : "Feature", "properties" : {"name":"NewYork", "amount_counties" : 0}, 
+                //"geometry": {"type": "MultiPolygon", "coordinates" : []}}
+            })
+
         /**
          * State data
          */
@@ -214,9 +250,10 @@ export default class App extends Component {
             STATES_TOOLTIP_DATA,
             (error, response) => {
                 if (!error) {
-                    this.setState({
-                        stateData: response,
-                    });
+                    console.log(response)
+                    // this.setState({
+                    //     stateData: response,
+                    // });
                 }
             }
         );
