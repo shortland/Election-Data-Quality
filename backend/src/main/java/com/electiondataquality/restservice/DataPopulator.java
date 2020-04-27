@@ -6,8 +6,11 @@ import javax.persistence.Persistence;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import com.electiondataquality.jpa.managers.CDEntityManager;
 import com.electiondataquality.jpa.managers.StateEntityManager;
+import com.electiondataquality.jpa.objects.CDFeature;
 import com.electiondataquality.jpa.objects.StateFeature;
+import com.electiondataquality.jpa.tables.CongressionalDistrictTable;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.features.precinct.Precinct;
@@ -49,15 +52,31 @@ public class DataPopulator {
 
     public void populateCongressional() {
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("congressionalDetails");
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("CongressionalTable");
+        CDEntityManager cdEm = new CDEntityManager(emf);
+
+        HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
+        List<CDFeature> allCDFeatures = cdEm.findAllCDFeature();
+        for (CDFeature cdFeature : allCDFeatures) {
+            CongressionalDistrict congressionalDistrict = new CongressionalDistrict(cdFeature);
+            System.out.println(congressionalDistrict);
+            cdSet.add(congressionalDistrict);
+        }
+
+        this.serverManager.getCongressionalManager().populate(cdSet);
+        cdEm.cleanup(true);
+
+        // EntityManager em = emf.createEntityManager();
+        // em.getTransaction().begin();
+
         // CongressionalDistrictTable cdt = em.find(CongressionalDistrictTable.class,
-        // 1);
-        System.out.println("cdt");
-        em.getTransaction().commit();
-        em.close();
-        emf.close();
+        // 36005);
+        // cdt.childrenStrToArray();
+
+        // System.out.println(cdt);
+        // em.getTransaction().commit();
+        // em.close();
+        // emf.close();
         // OLD
         // CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null,
         // null);
