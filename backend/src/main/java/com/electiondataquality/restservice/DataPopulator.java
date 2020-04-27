@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import com.electiondataquality.features.state.State;
 import com.electiondataquality.jpa.features.state.StateFeature;
+import com.electiondataquality.jpa.tables.CongressionalDistrictTable;
 import com.electiondataquality.jpa.tables.FeatureTable;
 import com.electiondataquality.jpa.tables.StateTable;
 import com.electiondataquality.restservice.managers.ServerManager;
@@ -109,16 +110,30 @@ public class DataPopulator {
     // }
 
     public void populateCongressional() {
-        CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null, null);
-        CongressionalDistrict cd2 = new CongressionalDistrict("CD2", 55, 11, null, null);
-        CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 55, 12, null, null);
-        HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
 
-        cdSet.add(cd);
-        cdSet.add(cd1);
-        cdSet.add(cd2);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("congressionalDetails");
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        // CongressionalDistrictTable cdt = em.find(CongressionalDistrictTable.class,
+        // 1);
+        System.out.println("cdt");
+        em.getTransaction().commit();
+        em.close();
+        emf.close();
+        // OLD
+        // CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null,
+        // null);
+        // CongressionalDistrict cd2 = new CongressionalDistrict("CD2", 55, 11, null,
+        // null);
+        // CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 55, 12, null,
+        // null);
+        // HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
 
-        this.serverManager.getCongressionalManager().populate(cdSet);
+        // cdSet.add(cd);
+        // cdSet.add(cd1);
+        // cdSet.add(cd2);
+
+        // this.serverManager.getCongressionalManager().populate(cdSet);
     }
 
     public void populatePrecinctAndComments() {
