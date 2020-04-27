@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.electiondataquality.dao.state.mapper.StateRowMapper;
 
 public class StateDao {
+
     private DataSource dataSource;
 
     public void setDataSource(DataSource ds) {
@@ -29,5 +30,4 @@ public class StateDao {
         return select.query("SELECT states.*, features.* FROM states, features WHERE states.feature_idn = features.idn",
                 new StateRowMapper());
     }
-
 }

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import com.electiondataquality.restservice.comments.Comment;
 
 public class CommentManager {
+
     private HashMap<Integer, Comment> commentMap;
 
     public CommentManager() {

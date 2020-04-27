@@ -9,6 +9,7 @@ import com.electiondataquality.jpa.objects.StateFeature;
 import com.electiondataquality.jpa.tables.StateTable;
 
 public class StateEntityManager {
+
     private EntityManagerFactory factory;
 
     public EntityManager manager;

@@ -6,6 +6,7 @@ import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
 import com.electiondataquality.restservice.comments.Comment;
 
 public class PrecinctError {
+
     private ERROR_TYPE errorType;
 
     private int errorId;

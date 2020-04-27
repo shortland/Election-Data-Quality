@@ -1,9 +1,13 @@
 package com.electiondataquality.restservice.comments;
 
 public class Comment {
+
     private int commentId;
+
     private String commentText;
+
     private int parentErrorId;
+
     private int parentPrecinctId;
 
     // TODO: TimeStamp

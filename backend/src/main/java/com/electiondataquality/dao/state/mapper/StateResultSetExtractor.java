@@ -12,6 +12,7 @@ import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.geometry.Polygon;
 
 public class StateResultSetExtractor implements ResultSetExtractor<Object> {
+
     @Override
     public Object extractData(ResultSet rs) throws SQLException {
         Gson gson = new Gson();

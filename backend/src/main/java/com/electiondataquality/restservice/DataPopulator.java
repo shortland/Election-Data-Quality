@@ -21,6 +21,7 @@ import com.electiondataquality.features.state.State;
 import com.electiondataquality.features.precinct.error.PrecinctError;
 
 public class DataPopulator {
+
     private ServerManager serverManager;
 
     private DatabaseConfig databaseConfig;
@@ -39,36 +40,10 @@ public class DataPopulator {
         for (StateFeature stateFeature : allStateFeatures) {
             State stateObj = new State(stateFeature);
             stateSet.add(stateObj);
-            System.out.println(stateObj);
         }
 
-        // int featureId = st.getFeatureId();
-        // FeatureTable feature = em.find(FeatureTable.class, featureId);
-        // st.setStateFeature(feature);
-
-        // CriteriaBuilder cb = em.getCriteriaBuilder();
-        // CriteriaQuery<StateFeature> cq = cb.createQuery(StateFeature.class);
-
-        // Root<StateFeature> state = cq.from(StateFeature.class);
-
-        // // Not sure what this is meant for yet
-        // cq.select(state.get("stateId"));
-
-        // CriteriaQuery<StateFeature> select = cq.select(state);
-        // TypedQuery<StateFeature> q = em.createQuery(select);
-        // List<StateFeature> list = q.getResultList();
-
-        // System.out.println("stateName");
-        // HashSet<StateFeature> stateSet = new HashSet<>();
-
-        // for (StateFeature s : list) {
-        // stateSet.add(s);
-        // System.out.println(s.getStateName());
-        // }
-
-        stateTableEm.cleanup(true);
-
         this.serverManager.getStateManager().populate(stateSet);
+        stateTableEm.cleanup(true);
     }
 
     public void populateCongressional() {

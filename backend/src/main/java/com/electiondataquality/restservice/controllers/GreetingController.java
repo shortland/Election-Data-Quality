@@ -10,6 +10,7 @@ import com.electiondataquality.restservice.index.Greeting;
 
 @RestController
 public class GreetingController {
+
     private static final String template = "Hello, %s! Please specify an endpoint.";
 
     private final AtomicLong counter = new AtomicLong();
