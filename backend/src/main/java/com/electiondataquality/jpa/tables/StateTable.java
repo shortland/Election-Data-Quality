@@ -2,6 +2,7 @@ package com.electiondataquality.jpa.tables;
 
 import java.io.Serializable;
 import javax.persistence.Id;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Inheritance;
@@ -15,11 +16,8 @@ public class StateTable implements Serializable {
 
     @Id
     private int stateId;
-
     private int featureId;
-
     private String stateName;
-
     private String stateAbv;
 
     public StateTable(int stateId, int featureId, String stateName, String stateAbv) {
