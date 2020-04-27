@@ -7,9 +7,12 @@ import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.geometry.Polygon;
 
 public abstract class Feature {
-    private ArrayList<ArrayList<ArrayList<double[]>>> shape;
+    public String rawGeometry;
 
-    private boolean isMultiPolygon = false;
+    public ArrayList<ArrayList<ArrayList<double[]>>> shape;
+
+    @JsonIgnore
+    public boolean isMultiPolygon = false;
 
     public static boolean CompareShape(Feature f1, Feature f2) {
         ArrayList<ArrayList<ArrayList<double[]>>> shape1 = f1.getShape();

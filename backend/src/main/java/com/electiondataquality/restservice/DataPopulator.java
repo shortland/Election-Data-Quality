@@ -2,30 +2,23 @@ package com.electiondataquality.restservice;
 
 import java.util.List;
 import java.util.HashSet;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceUnit;
-import javax.persistence.TypedQuery;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 
-import com.electiondataquality.features.state.State;
-import com.electiondataquality.jpa.features.state.StateFeature;
+import com.electiondataquality.jpa.managers.StateEntityManager;
+import com.electiondataquality.jpa.objects.StateFeature;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
-import com.electiondataquality.restservice.voting.elections.enums.*;
+import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.comments.Comment;
 import com.electiondataquality.restservice.config.DatabaseConfig;
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
+import com.electiondataquality.features.state.State;
 import com.electiondataquality.features.precinct.error.PrecinctError;
-import com.electiondataquality.dao.state.StateDao;
 
 public class DataPopulator {
     private ServerManager serverManager;
@@ -38,10 +31,20 @@ public class DataPopulator {
     }
 
     public void populateStates() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("stateDetails");
-        EntityManager em = emf.createEntityManager();
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("StateTable");
+        StateEntityManager stateTableEm = new StateEntityManager(emFactory);
 
-        em.getTransaction().begin();
+        HashSet<State> stateSet = new HashSet<>();
+        List<StateFeature> allStateFeatures = stateTableEm.findAllStateFeatures();
+        for (StateFeature stateFeature : allStateFeatures) {
+            State stateObj = new State(stateFeature);
+            stateSet.add(stateObj);
+            System.out.println(stateObj);
+        }
+
+        // int featureId = st.getFeatureId();
+        // FeatureTable feature = em.find(FeatureTable.class, featureId);
+        // st.setStateFeature(feature);
 
         // CriteriaBuilder cb = em.getCriteriaBuilder();
         // CriteriaQuery<StateFeature> cq = cb.createQuery(StateFeature.class);
@@ -63,42 +66,10 @@ public class DataPopulator {
         // System.out.println(s.getStateName());
         // }
 
-        em.getTransaction().commit();
-        em.close();
+        stateTableEm.cleanup(true);
 
-        emf.close();
-
-        // this.serverManager.getStateManager().populate(stateSet);
+        this.serverManager.getStateManager().populate(stateSet);
     }
-
-    // public void populateStates() {
-    // StateDao dao = new StateDao();
-    // DriverManagerDataSource dataSource = new DriverManagerDataSource();
-
-    // /**
-    // * Configure datasource
-    // */
-    // dataSource.setDriverClassName(databaseConfig.getDriver());
-    // dataSource.setUrl("jdbc:mysql://" + databaseConfig.getHostname() + ":" +
-    // databaseConfig.getPort() + "/"
-    // + databaseConfig.getDatabase() + "?" + databaseConfig.getOptions());
-    // dataSource.setUsername(databaseConfig.getUsername());
-    // dataSource.setPassword(databaseConfig.getPassword());
-    // dao.setDataSource(dataSource);
-
-    // /**
-    // * Get all the states
-    // */
-    // List<Object> states = dao.selectAll();
-    // HashSet<State> stateSet = new HashSet<State>();
-
-    // for (Object state : states) {
-    // stateSet.add((State) state);
-    // System.out.printf("State is: %s", state.toString());
-    // }
-
-    // this.serverManager.getStateManager().populate(stateSet);
-    // }
 
     public void populateCongressional() {
         CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null, null);
