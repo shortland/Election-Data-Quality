@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.HashSet;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.TypedQuery;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -36,67 +37,68 @@ public class DataPopulator {
         this.databaseConfig = databaseConfig;
     }
 
-    // public void populateStates() {
-    // EntityManagerFactory emFactory =
-    // Persistence.createEntityManagerFactory("StateDetails");
-    // EntityManager em = emFactory.createEntityManager();
-
-    // em.getTransaction().begin();
-    // CriteriaBuilder cb = em.getCriteriaBuilder();
-    // CriteriaQuery<StateFeature> cq = cb.createQuery(StateFeature.class);
-
-    // Root<StateFeature> state = cq.from(StateFeature.class);
-
-    // // Not sure what this is meant for yet
-    // cq.select(state.get("stateId"));
-
-    // CriteriaQuery<StateFeature> select = cq.select(state);
-    // TypedQuery<StateFeature> q = em.createQuery(select);
-    // List<StateFeature> list = q.getResultList();
-
-    // System.out.println("stateName");
-    // HashSet<StateFeature> stateSet = new HashSet<>();
-
-    // for (StateFeature s : list) {
-    // stateSet.add(s);
-    // System.out.println(s.getStateName());
-    // }
-
-    // em.getTransaction().commit();
-    // em.close();
-
-    // emFactory.close();
-
-    // // this.serverManager.getStateManager().populate(stateSet);
-    // }
-
     public void populateStates() {
-        StateDao dao = new StateDao();
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("stateDetails");
+        EntityManager em = emf.createEntityManager();
 
-        /**
-         * Configure datasource
-         */
-        dataSource.setDriverClassName(databaseConfig.getDriver());
-        dataSource.setUrl("jdbc:mysql://" + databaseConfig.getHostname() + ":" + databaseConfig.getPort() + "/"
-                + databaseConfig.getDatabase() + "?" + databaseConfig.getOptions());
-        dataSource.setUsername(databaseConfig.getUsername());
-        dataSource.setPassword(databaseConfig.getPassword());
-        dao.setDataSource(dataSource);
+        em.getTransaction().begin();
 
-        /**
-         * Get all the states
-         */
-        List<Object> states = dao.selectAll();
-        HashSet<State> stateSet = new HashSet<State>();
+        // CriteriaBuilder cb = em.getCriteriaBuilder();
+        // CriteriaQuery<StateFeature> cq = cb.createQuery(StateFeature.class);
 
-        for (Object state : states) {
-            stateSet.add((State) state);
-            System.out.printf("State is: %s", state.toString());
-        }
+        // Root<StateFeature> state = cq.from(StateFeature.class);
 
-        this.serverManager.getStateManager().populate(stateSet);
+        // // Not sure what this is meant for yet
+        // cq.select(state.get("stateId"));
+
+        // CriteriaQuery<StateFeature> select = cq.select(state);
+        // TypedQuery<StateFeature> q = em.createQuery(select);
+        // List<StateFeature> list = q.getResultList();
+
+        // System.out.println("stateName");
+        // HashSet<StateFeature> stateSet = new HashSet<>();
+
+        // for (StateFeature s : list) {
+        // stateSet.add(s);
+        // System.out.println(s.getStateName());
+        // }
+
+        em.getTransaction().commit();
+        em.close();
+
+        emf.close();
+
+        // this.serverManager.getStateManager().populate(stateSet);
     }
+
+    // public void populateStates() {
+    // StateDao dao = new StateDao();
+    // DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+    // /**
+    // * Configure datasource
+    // */
+    // dataSource.setDriverClassName(databaseConfig.getDriver());
+    // dataSource.setUrl("jdbc:mysql://" + databaseConfig.getHostname() + ":" +
+    // databaseConfig.getPort() + "/"
+    // + databaseConfig.getDatabase() + "?" + databaseConfig.getOptions());
+    // dataSource.setUsername(databaseConfig.getUsername());
+    // dataSource.setPassword(databaseConfig.getPassword());
+    // dao.setDataSource(dataSource);
+
+    // /**
+    // * Get all the states
+    // */
+    // List<Object> states = dao.selectAll();
+    // HashSet<State> stateSet = new HashSet<State>();
+
+    // for (Object state : states) {
+    // stateSet.add((State) state);
+    // System.out.printf("State is: %s", state.toString());
+    // }
+
+    // this.serverManager.getStateManager().populate(stateSet);
+    // }
 
     public void populateCongressional() {
         CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null, null);

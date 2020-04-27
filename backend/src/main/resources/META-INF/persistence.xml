@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence 
+xmlns = "http://xmlns.jcp.org/xml/ns/persistence"
+xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+          http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+          version = "2.2">
+    <persistence-unit name="stateDetails" transaction-type="RESOURCE_LOCAL">  
+        <description>stateTables</description>
+
+        <class>com.electiondataquality.jpa.tables.StateTable</class>  
+        <class>com.electiondataquality.jpa.features.StateFeature</class>
+
+        <properties>  
+            <property name ="hibernate.dialect" value = "org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>  
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://45.55.121.121:3306/jerryman?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC"/>  
+            <property name="javax.persistence.jdbc.user" value="jerryman"/>  
+            <property name="javax.persistence.jdbc.password" value="JerryManderingIsBad123!"/>  
+        </properties>  
+    </persistence-unit>  
+</persistence>  
