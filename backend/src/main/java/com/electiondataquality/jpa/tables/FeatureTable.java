@@ -1,21 +1,14 @@
 package com.electiondataquality.jpa.tables;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.OverridesAttribute;
-
-import com.electiondataquality.features.Feature;
-
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
 @Entity
 @Table(name = "features")
-public class FeatureTable implements Serializable {
+public class FeatureTable {
+
     @Id
     @Column(name = "idn")
     private int featureId;
@@ -24,7 +17,6 @@ public class FeatureTable implements Serializable {
     private String geometry;
 
     public FeatureTable() {
-
     }
 
     public FeatureTable(int featureId, String geometry) {

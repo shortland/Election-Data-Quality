@@ -5,14 +5,15 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import com.electiondataquality.jpa.objects.StateFeature;
 import com.electiondataquality.jpa.tables.StateTable;
 
-public class StateTableEntityManager {
+public class StateEntityManager {
     private EntityManagerFactory factory;
 
     public EntityManager manager;
 
-    public StateTableEntityManager(EntityManagerFactory factory) {
+    public StateEntityManager(EntityManagerFactory factory) {
         this.factory = factory;
         this.manager = factory.createEntityManager();
 
@@ -45,7 +46,7 @@ public class StateTableEntityManager {
         }
     }
 
-    public List<StateTable> findAll() {
+    public List<StateTable> findAllStates() {
         List<StateTable> results = manager.createQuery("Select a from StateTable a", StateTable.class).getResultList();
 
         return results;
@@ -56,5 +57,12 @@ public class StateTableEntityManager {
                 .getSingleResult();
 
         return Optional.of(result);
+    }
+
+    public List<StateFeature> findAllStateFeatures() {
+        List<StateFeature> results = manager.createQuery("Select a from StateFeature a", StateFeature.class)
+                .getResultList();
+
+        return results;
     }
 }

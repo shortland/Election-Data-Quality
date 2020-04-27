@@ -11,6 +11,7 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
 
         <class>com.electiondataquality.jpa.tables.StateTable</class>  
         <class>com.electiondataquality.jpa.tables.FeatureTable</class>
+        <class>com.electiondataquality.jpa.objects.StateFeature</class>
 
         <properties>  
             <property name ="hibernate.dialect" value = "org.hibernate.dialect.MySQL5Dialect"/>

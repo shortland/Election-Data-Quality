@@ -1,13 +1,17 @@
-package com.electiondataquality.jpa.tables;
+package com.electiondataquality.jpa.objects;
 
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.electiondataquality.jpa.tables.FeatureTable;
 
 @Entity
 @Table(name = "states")
-public class StateTable {
+public class StateFeature {
 
     @Id
     @Column(name = "state_idn")
@@ -19,17 +23,18 @@ public class StateTable {
     @Column(name = "state_abv")
     private String stateAbv;
 
-    @Column(name = "feature_idn")
-    private int featureId;
+    @OneToOne
+    @JoinColumn(name = "feature_idn")
+    private FeatureTable feature;
 
-    public StateTable() {
+    public StateFeature() {
     }
 
-    public StateTable(int stateId, int featureId, String stateName, String stateAbv) {
+    public StateFeature(int stateId, String stateName, String stateAbv) {
         this.stateId = stateId;
-        this.featureId = featureId;
         this.stateName = stateName;
         this.stateAbv = stateAbv;
+        this.feature = null;
     }
 
     public int getStateId() {
@@ -38,14 +43,6 @@ public class StateTable {
 
     public void setStateId(int stateId) {
         this.stateId = stateId;
-    }
-
-    public int getFeatureId() {
-        return featureId;
-    }
-
-    public void setFeatureId(int featureId) {
-        this.featureId = featureId;
     }
 
     public String getStateName() {
@@ -64,8 +61,17 @@ public class StateTable {
         this.stateAbv = stateAbv;
     }
 
+    public FeatureTable getFeature() {
+        return this.feature;
+    }
+
+    public void setFeature(FeatureTable feature) {
+        this.feature = feature;
+    }
+
     @Override
     public String toString() {
-        return "States [stateAbv=" + stateAbv + ",stateId=" + stateId + ", stateName=" + stateName + "]";
+        return "States [stateAbv=" + stateAbv + ",stateId=" + stateId + ",stateName=" + stateName + "]\n"
+                + this.feature.toString();
     }
 }
