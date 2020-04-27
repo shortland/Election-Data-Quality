@@ -2,37 +2,34 @@ package com.electiondataquality.jpa.tables;
 
 import java.io.Serializable;
 import javax.persistence.Id;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
 @Entity
 @Table(name = "states")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class StateTable implements Serializable {
-    private static final long serialVersionUID = -2891400626495806670L;
-
     @Id
+    @Column(name = "state_idn")
     private int stateId;
 
+    @Column(name = "feature_idn")
     private int featureId;
 
+    @Column(name = "state_name")
     private String stateName;
 
+    @Column(name = "state_abv")
     private String stateAbv;
 
-    public StateTable(int stateId, int featureId, String stateName, String stateAbv) {
-        super();
+    public StateTable() {
+    }
 
+    public StateTable(int stateId, int featureId, String stateName, String stateAbv) {
         this.stateId = stateId;
         this.featureId = featureId;
         this.stateName = stateName;
         this.stateAbv = stateAbv;
-    }
-
-    public StateTable() {
-        super();
     }
 
     public int getStateId() {
