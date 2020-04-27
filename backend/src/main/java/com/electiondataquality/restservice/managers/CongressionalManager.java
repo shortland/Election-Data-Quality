@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 
 public class CongressionalManager {
+
     private HashMap<Integer, CongressionalDistrict> congressionalDistrictMap;
 
     public CongressionalManager() {

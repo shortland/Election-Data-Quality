@@ -8,6 +8,7 @@ import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.features.Feature;
 
 public class CongressionalDistrict extends Feature {
+
     private String name;
 
     private int parentStateId;

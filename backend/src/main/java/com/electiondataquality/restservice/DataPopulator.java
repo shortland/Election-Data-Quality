@@ -22,6 +22,7 @@ import com.electiondataquality.features.state.State;
 import com.electiondataquality.features.precinct.error.PrecinctError;
 
 public class DataPopulator {
+
     private ServerManager serverManager;
 
     private DatabaseConfig databaseConfig;
@@ -40,12 +41,10 @@ public class DataPopulator {
         for (StateFeature stateFeature : allStateFeatures) {
             State stateObj = new State(stateFeature);
             stateSet.add(stateObj);
-            System.out.println(stateObj);
         }
 
-        stateTableEm.cleanup(true);
-
         this.serverManager.getStateManager().populate(stateSet);
+        stateTableEm.cleanup(true);
     }
 
     public void populateCongressional() {

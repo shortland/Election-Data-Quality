@@ -6,7 +6,9 @@ import com.electiondataquality.restservice.demographics.enums.RACE;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class DemographicData {
+
     private EnumMap<RACE, Integer> demographicByRace;
+
     private int total;
 
     public static DemographicData mergeDemographicData(DemographicData dd1, DemographicData dd2) {

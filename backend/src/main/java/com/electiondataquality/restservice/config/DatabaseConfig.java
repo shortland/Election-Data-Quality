@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("database")
 public class DatabaseConfig {
+
     private String driver;
 
     private String hostname;

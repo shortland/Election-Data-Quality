@@ -7,6 +7,7 @@ import com.electiondataquality.restservice.voting.elections.enums.PARTIES;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ElectionResults {
+
     private EnumMap<PARTIES, Integer> resultsByParty;
 
     private PARTIES majorityParty;

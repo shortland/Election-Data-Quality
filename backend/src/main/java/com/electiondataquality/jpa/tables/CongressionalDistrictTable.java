@@ -1,7 +1,6 @@
 package com.electiondataquality.jpa.tables;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +12,8 @@ import javax.persistence.OneToOne;
 
 @Entity
 @Table(name = "congressional_districts")
-public class CongressionalDistrictTable implements Serializable {
+public class CongressionalDistrictTable {
+  
     @Id
     @Column(name = "fips_code")
     private int cdId;

@@ -11,9 +11,8 @@ import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.geometry.MultiPolygon;
 
-// @Entity
-// @Table(name = "PRECINTS")
 public class Precinct extends Feature {
+
     private int id;
 
     private String canonicalName;

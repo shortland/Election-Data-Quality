@@ -7,6 +7,7 @@ import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.geometry.Polygon;
 
 public abstract class Feature {
+
     public String rawGeometry;
 
     public ArrayList<ArrayList<ArrayList<double[]>>> shape;
