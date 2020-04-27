@@ -1,6 +1,7 @@
 package com.electiondataquality.restservice;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.HashSet;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.persistence.Persistence;
@@ -14,6 +15,8 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import com.electiondataquality.features.state.State;
 import com.electiondataquality.jpa.features.state.StateFeature;
+import com.electiondataquality.jpa.managers.StateTableEntityManager;
+import com.electiondataquality.jpa.tables.StateTable;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.features.precinct.Precinct;
@@ -38,10 +41,16 @@ public class DataPopulator {
     }
 
     public void populateStates() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("stateDetails");
-        EntityManager em = emf.createEntityManager();
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("StateTable");
+        StateTableEntityManager stateTableEm = new StateTableEntityManager(emFactory);
 
-        em.getTransaction().begin();
+        // Optional<StateTable> oSt = stateTableEm.findById(36);
+        // System.out.println(oSt.get());
+
+        List<StateTable> allStates = stateTableEm.findAll();
+        for (StateTable state : allStates) {
+            System.out.println(state);
+        }
 
         // CriteriaBuilder cb = em.getCriteriaBuilder();
         // CriteriaQuery<StateFeature> cq = cb.createQuery(StateFeature.class);
@@ -63,10 +72,7 @@ public class DataPopulator {
         // System.out.println(s.getStateName());
         // }
 
-        em.getTransaction().commit();
-        em.close();
-
-        emf.close();
+        stateTableEm.cleanup(true);
 
         // this.serverManager.getStateManager().populate(stateSet);
     }
