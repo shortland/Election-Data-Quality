@@ -2,13 +2,13 @@ package com.electiondataquality.features;
 
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.electiondataquality.geometry.Geometry;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.geometry.Polygon;
 
 public abstract class Feature {
 
-    public String rawGeometry;
+    public Geometry geometry;
 
     public ArrayList<ArrayList<ArrayList<double[]>>> shape;
 

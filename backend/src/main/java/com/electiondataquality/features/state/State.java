@@ -7,6 +7,7 @@ import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.geometry.Polygon;
+import com.electiondataquality.geometry.util.RawGeometryToShape;
 import com.electiondataquality.jpa.objects.StateFeature;
 
 public class State extends Feature {
@@ -25,10 +26,7 @@ public class State extends Feature {
         this.stateId = stateFeature.getStateId();
         this.stateName = stateFeature.getStateName();
         this.stateAbreviation = stateFeature.getStateAbv();
-
-        this.rawGeometry = stateFeature.getFeature().getGeometry();
-        // TODO:
-        // this.shape = stateFeature.getFeature().getGeometry()
+        this.geometry = RawGeometryToShape.convertRawToGeometry(stateFeature.getFeature().getGeometry());
     }
 
     public State(int stateId, String stateName, String stateAbreviation, HashSet<Integer> counties,
@@ -113,9 +111,7 @@ public class State extends Feature {
 
     @Override
     public String toString() {
-        String str = this.stateName + "(" + this.stateAbreviation + ")\nID: " + Integer.toString(this.stateId) + "\n"
-                + "Shape: " + this.shapeToString() + "\nRawGeo: " + this.rawGeometry + "\n";
-
-        return str;
+        return this.stateName + "(" + this.stateAbreviation + ")\nID: " + Integer.toString(this.stateId) + "\n"
+                + "Shape: " + this.shapeToString() + "\nGeometry: " + "TODO" + "\n";
     }
 }
