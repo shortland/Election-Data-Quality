@@ -14,6 +14,8 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import com.electiondataquality.features.state.State;
 import com.electiondataquality.jpa.features.state.StateFeature;
+import com.electiondataquality.jpa.tables.FeatureTable;
+import com.electiondataquality.jpa.tables.StateTable;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.features.precinct.Precinct;
@@ -42,6 +44,12 @@ public class DataPopulator {
         EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
+
+        StateTable st = em.find(StateTable.class, 36);
+        // int featureId = st.getFeatureId();
+        // FeatureTable feature = em.find(FeatureTable.class, featureId);
+        // st.setStateFeature(feature);
+        System.out.println(st);
 
         // CriteriaBuilder cb = em.getCriteriaBuilder();
         // CriteriaQuery<StateFeature> cq = cb.createQuery(StateFeature.class);
