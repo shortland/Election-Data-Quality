@@ -39,7 +39,7 @@ public class PrecinctController {
 
         if (target != null) {
             result.put("id", target.getId());
-            result.put("shape", target.getShape());
+            result.put("geometry", target.geometry);
 
             return result;
         }
