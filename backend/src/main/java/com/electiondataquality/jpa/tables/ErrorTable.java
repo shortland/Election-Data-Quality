@@ -1,7 +1,6 @@
 package com.electiondataquality.jpa.tables;
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,7 +9,7 @@ import javax.persistence.Table;
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "errors")
 public class ErrorTable {
 
     @Id
@@ -20,8 +19,8 @@ public class ErrorTable {
     @Column(name = "feature_idn")
     private int featureId;
 
-    @Column(name = "type")
-    private ERROR_TYPE errorType;
+    // @Column(name = "type")
+    // private ERROR_TYPE errorType;
 
     @Column(name = "text")
     private String text;
@@ -38,11 +37,10 @@ public class ErrorTable {
     public ErrorTable() {
     }
 
-    public ErrorTable(int errorId, int featureId, ERROR_TYPE errorType, String text, Date created, int resolved,
-            int valid) {
+    public ErrorTable(int errorId, int featureId, String text, Date created, int resolved, int valid) {
         this.errorId = errorId;
         this.featureId = featureId;
-        this.errorType = errorType;
+        // this.errorType = errorType;
         this.text = text;
         this.created = created;
         this.resolved = resolved;
@@ -65,13 +63,13 @@ public class ErrorTable {
         this.featureId = featureId;
     }
 
-    public ERROR_TYPE getErrorType() {
-        return errorType;
-    }
+    // public ERROR_TYPE getErrorType() {
+    // return errorType;
+    // }
 
-    public void setErrorType(ERROR_TYPE errorType) {
-        this.errorType = errorType;
-    }
+    // public void setErrorType(ERROR_TYPE errorType) {
+    // this.errorType = errorType;
+    // }
 
     public String getText() {
         return text;
@@ -107,7 +105,7 @@ public class ErrorTable {
 
     @Override
     public String toString() {
-        return "ErrorTable [created=" + created + ", errorId=" + errorId + ", errorType=" + errorType + ", featureId="
-                + featureId + ", resolved=" + resolved + ", text=" + text + ", valid=" + valid + "]";
+        return "ErrorTable [created=" + created + ", errorId=" + errorId + ", errorType=;, featureId=" + featureId
+                + ", resolved=" + resolved + ", text=" + text + ", valid=" + valid + "]";
     }
 }

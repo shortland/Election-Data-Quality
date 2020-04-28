@@ -6,11 +6,13 @@ import javax.persistence.Persistence;
 import javax.persistence.EntityManagerFactory;
 
 import com.electiondataquality.jpa.managers.CDEntityManager;
+import com.electiondataquality.jpa.managers.ErrorEntityManager;
 import com.electiondataquality.jpa.managers.PrecinctEntityManager;
 import com.electiondataquality.jpa.managers.StateEntityManager;
 import com.electiondataquality.jpa.objects.CDFeature;
 import com.electiondataquality.jpa.objects.PrecinctFeature;
 import com.electiondataquality.jpa.objects.StateFeature;
+import com.electiondataquality.jpa.tables.ErrorTable;
 // import com.electiondataquality.jpa.tables.CongressionalDistrictTable;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
@@ -36,7 +38,22 @@ public class DataPopulator {
         this.databaseConfig = databaseConfig;
     }
 
+    public void populateErrors() {
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("ErrorTable");
+        ErrorEntityManager errorTableEm = new ErrorEntityManager(emFactory);
+
+        List<ErrorTable> allErrorTables = errorTableEm.findAllErrors();
+
+        for (ErrorTable errorTable : allErrorTables) {
+            System.out.println(errorTable);
+        }
+
+        // this.serverManager.getStateManager().populate(stateSet);
+        errorTableEm.cleanup(true);
+    }
+
     public void populateStates() {
+        this.populateErrors();
         EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("StateTable");
         StateEntityManager stateTableEm = new StateEntityManager(emFactory);
 
@@ -84,7 +101,7 @@ public class DataPopulator {
         List<PrecinctFeature> allPrecicnt = pem.findAllPrecinctFeature();
 
         for (PrecinctFeature precinctFeature : allPrecicnt) {
-            // System.out.println(precinctFeature);
+            System.out.println(precinctFeature);
             Precinct precinct = new Precinct(precinctFeature);
             precinctSet.add(precinct);
         }

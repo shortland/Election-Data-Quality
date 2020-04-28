@@ -1,9 +1,12 @@
 package com.electiondataquality.jpa.objects;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +17,7 @@ import javax.persistence.Table;
 
 import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.jpa.tables.DemographicTable;
+import com.electiondataquality.jpa.tables.ErrorTable;
 import com.electiondataquality.jpa.tables.ElectionDataTable;
 import com.electiondataquality.jpa.tables.FeatureTable;
 import com.electiondataquality.restservice.demographics.DemographicData;
@@ -46,6 +50,11 @@ public class PrecinctFeature {
     @JoinColumn(name = "feature_idn")
     private FeatureTable feature;
 
+    // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
+    @JoinColumn(name = "feature_idn")
+    private List<ErrorTable> errors;
+
     @OneToOne
     @JoinColumn(name = "precinct_idn")
     private DemographicTable demographic;
@@ -55,7 +64,7 @@ public class PrecinctFeature {
     private Set<ElectionDataTable> electionDataTableSet;
 
     public PrecinctFeature() {
-
+        // this.errors = new;
     }
 
     // TODO: for data to be store back to the database
@@ -77,6 +86,8 @@ public class PrecinctFeature {
     public PrecinctFeature(int id, String fullName) {
         this.id = id;
         this.fullName = fullName;
+
+        // this.errors = new ArrayList<ErrorTable>();
     }
 
     public int getId() {
@@ -166,6 +177,14 @@ public class PrecinctFeature {
         }
     }
 
+    public List<ErrorTable> getErrorTables() {
+        return this.errors;
+    }
+
+    public void setErrorTables(List<ErrorTable> errorTables) {
+        this.errors = errorTables;
+    }
+
     private ElectionResults convertToElectionResult(ElectionDataTable electionDataTable) {
         String election = electionDataTable.getElection();
         if (election.equals("PRES2016")) {
@@ -199,7 +218,8 @@ public class PrecinctFeature {
 
     public String toString() {
         return "Id : " + Integer.toString(this.id) + " Name : " + this.fullName + "Parent ID : " + this.parentDistrictId
-                + "Demographic : " + this.demographic.toString() + "Feature" + this.feature.toString();
+                + " Errors: " + this.errors + "\nDemographic : " + this.demographic.toString() + "Feature : "
+                + this.feature.toString();
     }
 
     // private VotingData votingData;
