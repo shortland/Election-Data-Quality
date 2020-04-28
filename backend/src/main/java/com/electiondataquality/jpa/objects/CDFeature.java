@@ -40,12 +40,12 @@ public class CDFeature {
     public CDFeature() {
     }
 
-    public CDFeature(int cdId, String name) {
-        this.cdId = cdId;
-        this.name = name;
-        this.feature = null;
-        this.childrenStr = "";
-    }
+    // public CDFeature(int cdId, String name) {
+    // this.cdId = cdId;
+    // this.name = name;
+    // this.feature = null;
+    // this.childrenStr = "";
+    // }
 
     public int getId() {
         return this.cdId;

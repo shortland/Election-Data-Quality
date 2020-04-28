@@ -45,6 +45,7 @@ public class CongDistrictController {
         return cdList;
     }
 
+    // NOTE: for testing
     @CrossOrigin
     @GetMapping("/congressionalDistrict")
     public CongressionalDistrict x(@RequestParam int cid) {
