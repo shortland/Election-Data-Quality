@@ -6,9 +6,12 @@ import javax.persistence.Persistence;
 import javax.persistence.EntityManagerFactory;
 
 import com.electiondataquality.jpa.managers.CDEntityManager;
+import com.electiondataquality.jpa.managers.PrecinctEntityManager;
 import com.electiondataquality.jpa.managers.StateEntityManager;
 import com.electiondataquality.jpa.objects.CDFeature;
+import com.electiondataquality.jpa.objects.PrecinctFeature;
 import com.electiondataquality.jpa.objects.StateFeature;
+// import com.electiondataquality.jpa.tables.CongressionalDistrictTable;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.features.precinct.Precinct;
@@ -58,24 +61,11 @@ public class DataPopulator {
         List<CDFeature> allCDFeatures = cdEm.findAllCDFeature();
         for (CDFeature cdFeature : allCDFeatures) {
             CongressionalDistrict congressionalDistrict = new CongressionalDistrict(cdFeature);
-            System.out.println(congressionalDistrict);
             cdSet.add(congressionalDistrict);
         }
 
         this.serverManager.getCongressionalManager().populate(cdSet);
         cdEm.cleanup(true);
-
-        // EntityManager em = emf.createEntityManager();
-        // em.getTransaction().begin();
-
-        // CongressionalDistrictTable cdt = em.find(CongressionalDistrictTable.class,
-        // 36005);
-        // cdt.childrenStrToArray();
-
-        // System.out.println(cdt);
-        // em.getTransaction().commit();
-        // em.close();
-        // emf.close();
         // OLD
         // CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null,
         // null);
@@ -83,78 +73,103 @@ public class DataPopulator {
         // null);
         // CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 55, 12, null,
         // null);
-        // HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
-
-        // cdSet.add(cd);
-        // cdSet.add(cd1);
-        // cdSet.add(cd2);
-
-        // this.serverManager.getCongressionalManager().populate(cdSet);
     }
 
     public void populatePrecinctAndComments() {
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+
+        HashSet<Precinct> precicntSet = new HashSet<Precinct>();
+        List<PrecinctFeature> allPrecicnt = pem.findAllPrecinctFeature();
+        for (PrecinctFeature precinctFeature : allPrecicnt) {
+            System.out.println(precinctFeature);
+            Precinct precinct = new Precinct(precinctFeature);
+            precicntSet.add(precinct);
+        }
+
+        this.serverManager.getPrecinctManager().populate(precicntSet);
+        pem.cleanup(true);
+
+        // EntityManagerFactory emf =
+        // Persistence.createEntityManagerFactory("PrecinctTable");
+        // EntityManager em = emf.createEntityManager();
+        // em.getTransaction().begin();
+        // PrecinctFeature pf = em.find(PrecinctFeature.class, 11790);
+        // System.out.println(pf);
+        // em.getTransaction().commit();
+        // em.close();
+        // emf.close();
         // create VotingData
-        ElectionResults[] arrER = new ElectionResults[3];
-        ElectionResults e = new ElectionResults(100, 200, 50, 50, ELECTIONS.PRES2016);
-        ElectionResults e1 = new ElectionResults(400, 600, 500, 510, ELECTIONS.CONG2016);
-        ElectionResults e2 = new ElectionResults(200, 230, 120, 150, ELECTIONS.CONG2018);
+        // ElectionResults[] arrER = new ElectionResults[3];
+        // ElectionResults e = new ElectionResults(100, 200, 50, 50,
+        // ELECTIONS.PRES2016);
+        // ElectionResults e1 = new ElectionResults(400, 600, 500, 510,
+        // ELECTIONS.CONG2016);
+        // ElectionResults e2 = new ElectionResults(200, 230, 120, 150,
+        // ELECTIONS.CONG2018);
 
-        arrER[0] = e;
-        arrER[1] = e1;
-        arrER[2] = e2;
+        // arrER[0] = e;
+        // arrER[1] = e1;
+        // arrER[2] = e2;
 
-        VotingData vd = new VotingData(arrER);
+        // VotingData vd = new VotingData(arrER);
 
-        // Create DemographicData
-        DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
-        DemographicData dd1 = new DemographicData(300, 200, 300, 400, 200);
-        HashSet<Integer> neighborId = new HashSet<Integer>();
-        neighborId.add(10410);
-        HashSet<Integer> neighborId1 = new HashSet<Integer>();
-        neighborId1.add(10409);
-        neighborId1.add(20000);
+        // // Create DemographicData
+        // DemographicData dd = new DemographicData(200, 200, 300, 300, 200);
+        // DemographicData dd1 = new DemographicData(300, 200, 300, 400, 200);
+        // HashSet<Integer> neighborId = new HashSet<Integer>();
+        // neighborId.add(10410);
+        // HashSet<Integer> neighborId1 = new HashSet<Integer>();
+        // neighborId1.add(10409);
+        // neighborId1.add(20000);
 
-        // Create Error
-        String[] arrstr = { "cool", "intersting", "no", "voting" };
-        HashSet<Comment> comments = new HashSet<Comment>();
+        // // Create Error
+        // String[] arrstr = { "cool", "intersting", "no", "voting" };
+        // HashSet<Comment> comments = new HashSet<Comment>();
 
-        for (int i = 1; i < 5; i++) {
-            Comment c = new Comment(i, arrstr[i - 1]);
-            comments.add(c);
-        }
+        // for (int i = 1; i < 5; i++) {
+        // Comment c = new Comment(i, arrstr[i - 1]);
+        // comments.add(c);
+        // }
 
-        PrecinctError er = new PrecinctError(ERROR_TYPE.NO_VOTERS, 1, "has no voter", false, comments);
-        PrecinctError er1 = new PrecinctError(ERROR_TYPE.GHOST, 2, "is ghost", false, comments);
-        HashSet<PrecinctError> errors = new HashSet<PrecinctError>();
-        errors.add(er);
-        HashSet<PrecinctError> errors1 = new HashSet<PrecinctError>();
-        errors1.add(er1);
+        // PrecinctError er = new PrecinctError(ERROR_TYPE.NO_VOTERS, 1, "has no voter",
+        // false, comments);
+        // PrecinctError er1 = new PrecinctError(ERROR_TYPE.GHOST, 2, "is ghost", false,
+        // comments);
+        // HashSet<PrecinctError> errors = new HashSet<PrecinctError>();
+        // errors.add(er);
+        // HashSet<PrecinctError> errors1 = new HashSet<PrecinctError>();
+        // errors1.add(er1);
 
-        Precinct p = new Precinct(10409, "P1", "Precinct1", 10, vd, dd, neighborId, errors, null);
-        Precinct p1 = new Precinct(10410, "P2", "Precinct2", 10, vd, dd1, neighborId1, errors1, null);
-        Precinct p2 = new Precinct(10411, "P3", "Precinct3", 10, null, null, null, errors1, null);
-        HashSet<Precinct> precinctSet = new HashSet<Precinct>();
+        // Precinct p = new Precinct(10409, "P1", "Precinct1", 10, vd, dd, neighborId,
+        // errors, null);
+        // Precinct p1 = new Precinct(10410, "P2", "Precinct2", 10, vd, dd1,
+        // neighborId1, errors1, null);
+        // Precinct p2 = new Precinct(10411, "P3", "Precinct3", 10, null, null, null,
+        // errors1, null);
+        // HashSet<Precinct> precinctSet = new HashSet<Precinct>();
 
-        precinctSet.add(p);
-        precinctSet.add(p1);
-        precinctSet.add(p2);
+        // precinctSet.add(p);
+        // precinctSet.add(p1);
+        // precinctSet.add(p2);
 
-        this.serverManager.getPrecinctManager().populate(precinctSet);
+        // this.serverManager.getPrecinctManager().populate(precinctSet);
 
-        HashSet<Comment> commentSet = new HashSet<Comment>();
-        for (Precinct currP : precinctSet) {
-            HashSet<PrecinctError> peSet = currP.getAllError();
+        // HashSet<Comment> commentSet = new HashSet<Comment>();
+        // for (Precinct currP : precinctSet) {
+        // HashSet<PrecinctError> peSet = currP.getAllError();
 
-            for (PrecinctError pe : peSet) {
-                HashSet<Comment> cSet = pe.getComments();
+        // for (PrecinctError pe : peSet) {
+        // HashSet<Comment> cSet = pe.getComments();
 
-                for (Comment c : cSet) {
-                    commentSet.add(c);
-                }
-            }
-        }
+        // for (Comment c : cSet) {
+        // commentSet.add(c);
+        // }
+        // }
+        // }
 
-        this.serverManager.getCommentManager().populate(commentSet);
+        // this.serverManager.getCommentManager().populate(commentSet);
     }
 }
 

@@ -6,14 +6,14 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import com.electiondataquality.jpa.objects.CDFeature;
+import com.electiondataquality.jpa.objects.PrecinctFeature;
 
-public class CDEntityManager {
+public class PrecinctEntityManager {
     private EntityManagerFactory emf;
 
     public EntityManager em;
 
-    public CDEntityManager(EntityManagerFactory emf) {
+    public PrecinctEntityManager(EntityManagerFactory emf) {
         this.emf = emf;
         this.em = emf.createEntityManager();
 
@@ -46,15 +46,17 @@ public class CDEntityManager {
         }
     }
 
-    public Optional<CDFeature> findCDFeatureById(int id) {
-        CDFeature result = em.createQuery("Select a from CDFeature a where fips_code = " + id, CDFeature.class)
+    public Optional<PrecinctFeature> findPrecinctFeatureById(int id) {
+        PrecinctFeature result = em
+                .createQuery("Select a from PrecinctFeature a where precinct_idn = " + id, PrecinctFeature.class)
                 .getSingleResult();
 
         return Optional.of(result);
     }
 
-    public List<CDFeature> findAllCDFeature() {
-        List<CDFeature> results = em.createQuery("Select a from CDFeature a", CDFeature.class).getResultList();
+    public List<PrecinctFeature> findAllPrecinctFeature() {
+        List<PrecinctFeature> results = em.createQuery("Select a from PrecinctFeature a", PrecinctFeature.class)
+                .getResultList();
 
         return results;
     }

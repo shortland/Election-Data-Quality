@@ -1,89 +1,97 @@
-package com.electiondataquality.jpa.tables;
+// package com.electiondataquality.jpa.tables;
 
-import java.util.HashSet;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+// import java.io.Serializable;
+// import java.util.HashSet;
 
-@Entity
-@Table(name = "congressional_districts")
-public class CongressionalDistrictTable {
+// import javax.persistence.Column;
+// import javax.persistence.Entity;
+// import javax.persistence.Id;
+// import javax.persistence.Table;
+// import javax.persistence.Transient;
+// import javax.persistence.Inheritance;
+// import javax.persistence.InheritanceType;
+// import javax.persistence.JoinColumn;
+// import javax.persistence.OneToOne;
 
-    @Id
-    @Column(name = "fips_code")
-    private int cdId;
+// @Entity
+// @Table(name = "congressional_districts")
+// public class CongressionalDistrictTable {
 
-    @Column(name = "county_name")
-    private String name;
+// @Id
+// @Column(name = "fips_code")
+// private int cdId;
 
-    @OneToOne
-    @JoinColumn(name = "feature_idn")
-    private FeatureTable feature;
+// @Column(name = "county_name")
+// private String name;
 
-    @Column(name = "parent_state_idn")
-    private int parentStateId;
+// @OneToOne
+// @JoinColumn(name = "feature_idn")
+// private FeatureTable feature;
 
-    @Column(name = "children_precinct_idn")
-    private String childrenStr;
+// @Column(name = "parent_state_idn")
+// private int parentStateId;
 
-    @Transient
-    private HashSet<Integer> childrenPrecinctIds;
+// @Column(name = "children_precinct_idn")
+// private String childrenStr;
 
-    public CongressionalDistrictTable() {
-        this.childrenPrecinctIds = new HashSet<Integer>();
-    }
+// @Transient
+// private HashSet<Integer> childrenPrecinctIds;
 
-    public CongressionalDistrictTable(int cdId, String name) {
-        this.cdId = cdId;
-        this.name = name;
-        this.feature = null;
-        this.childrenStr = "";
-        this.childrenPrecinctIds = new HashSet<Integer>();
-    }
+// public CongressionalDistrictTable() {
+// this.childrenPrecinctIds = new HashSet<Integer>();
+// }
 
-    public int getId() {
-        return this.cdId;
-    }
+// public CongressionalDistrictTable(int cdId, String name) {
+// this.cdId = cdId;
+// this.name = name;
+// this.feature = null;
+// this.childrenStr = "";
+// this.childrenPrecinctIds = new HashSet<Integer>();
+// }
 
-    public void setId(int cdId) {
-        this.cdId = cdId;
-    }
+// public int getId() {
+// return this.cdId;
+// }
 
-    public String getName() {
-        return this.name;
-    }
+// public void setId(int cdId) {
+// this.cdId = cdId;
+// }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+// public String getName() {
+// return this.name;
+// }
 
-    public FeatureTable getFeature() {
-        return this.feature;
-    }
+// public void setName(String name) {
+// this.name = name;
+// }
 
-    public void setFeature(FeatureTable feature) {
-        this.feature = feature;
-    }
+// public FeatureTable getFeature() {
+// return this.feature;
+// }
 
-    public void childrenStrToArray() {
-        String str = this.childrenStr.replaceAll("\\[|]", "");
-        String[] childrens = str.split(",");
+// public void setFeature(FeatureTable feature) {
+// this.feature = feature;
+// }
 
-        for (String idString : childrens) {
-            this.childrenPrecinctIds.add(Integer.parseInt(idString));
-        }
-    }
+// public void childrenStrToArray() {
+// String str = this.childrenStr.replaceAll("\\[|]", "");
+// String[] childrens = str.split(",");
+// for (String idString : childrens) {
+// this.childrenPrecinctIds.add(Integer.parseInt(idString));
+// }
 
-    public String toString() {
-        if (this.feature != null) {
-            return "Id: " + Integer.toString(this.cdId) + ", Name : " + this.name + "Parent Id : " + this.parentStateId
-                    + "Feature : {\n" + this.feature.toString() + "}";
-        } else {
-            return "Id: " + Integer.toString(this.cdId) + ", Name : " + this.name + "Parent Id : " + this.parentStateId;
-        }
-    }
-}
+// System.out.println(this.childrenStr);
+// System.out.println(this.childrenPrecinctIds);
+// }
+
+// public String toString() {
+// if (this.feature != null) {
+// return "Id: " + Integer.toString(this.cdId) + ", Name : " + this.name +
+// "Parent Id : " + this.parentStateId
+// + "Feature : {\n" + this.feature.toString() + "}";
+// } else {
+// return "Id: " + Integer.toString(this.cdId) + ", Name : " + this.name +
+// "Parent Id : " + this.parentStateId;
+// }
+// }
+// }

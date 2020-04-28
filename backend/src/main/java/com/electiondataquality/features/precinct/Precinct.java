@@ -10,6 +10,8 @@ import com.electiondataquality.restservice.comments.Comment;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.geometry.MultiPolygon;
+import com.electiondataquality.geometry.util.RawGeometryToShape;
+import com.electiondataquality.jpa.objects.PrecinctFeature;
 
 public class Precinct extends Feature {
 
@@ -75,10 +77,31 @@ public class Precinct extends Feature {
     }
 
     public static Precinct copyPrecinct(Precinct p) {
+        // Precinct ans = new Precinct(p.getId(), p.getCanonicalName(), p.getFullName(),
+        // p.getParentDistrictId(),
+        // p.getVotingData(), p.getDemographicData(), p.getNeighborsId(),
+        // p.getAllError(), p.getMultiPolygon());
+
+        // TODO: this is for tesiting only
         Precinct ans = new Precinct(p.getId(), p.getCanonicalName(), p.getFullName(), p.getParentDistrictId(),
-                p.getVotingData(), p.getDemographicData(), p.getNeighborsId(), p.getAllError(), p.getMultiPolygon());
+                p.getVotingData(), p.getDemographicData(), p.getNeighborsId(), null, p.getMultiPolygon());
 
         return ans;
+    }
+
+    // constructor for JPA
+    public Precinct(PrecinctFeature precinctFeature) {
+        this.id = precinctFeature.getId();
+        this.fullName = precinctFeature.getFullName();
+        this.parentDistrictId = precinctFeature.getParentDistrictId();
+        this.geometry = RawGeometryToShape.convertRawToGeometry(precinctFeature.getFeature().getGeometry());
+        this.neighborsId = precinctFeature.getNeighborsIdSet();
+
+        // TODO: Need to get these data from other table
+        this.votingData = null;
+        this.demographicData = null;
+        this.canonicalName = "";
+        this.precinctErrors = null;
     }
 
     public Precinct(int id, String canonicalName, String fullName, int parentDistrictId, VotingData votingData,

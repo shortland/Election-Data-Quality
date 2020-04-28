@@ -43,7 +43,6 @@ if __name__ == '__main__':
             noNeighbors.append(precinct.GEOID)
             precinctGDF.at[index, "NEIGHBORS"] = None
 
-
     precinctGDF.to_file(outputFileName, driver='GeoJSON')
 
 
