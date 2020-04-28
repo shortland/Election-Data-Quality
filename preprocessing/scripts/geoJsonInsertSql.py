@@ -23,10 +23,9 @@ def make_insert(inputFile, notes, dbCursor, db):
             # congdFp = area["properties"]["CD116FP"]
             # nameLsad = area["properties"]["NAMELSAD"]
 
-            geoId = int(area["properties"]["GEOID"])
-            print(geoId)
+            geoId = area["properties"]["GEOID"]
 
-            insertQuery = "INSERT IGNORE INTO `features` (`notes`, `geometry`, `properties`, `geo_id`) VALUES (\'%s\', \'%s\', \'%s\', \'%d\');\n" % (
+            insertQuery = "INSERT IGNORE INTO `features` (`notes`, `geometry`, `properties`, `geo_id`) VALUES (\'%s\', \'%s\', \'%s\', \'%s\');\n" % (
                 notes, geomJson, propsJson, geoId)
             dbCursor.execute(insertQuery)
             db.commit()
@@ -47,13 +46,16 @@ def make_insert(inputFile, notes, dbCursor, db):
 
 
 def make_relationship(dbCursor, db):
+    # dbCursor.execute(
+    #     "SELECT geo_id FROM new_congressional_districts WHERE feature_idn = -1")
+
     dbCursor.execute(
-        "SELECT geo_id FROM new_congressional_districts WHERE feature_idn = -1")
+        "SELECT precinct_idn FROM precincts WHERE feature_idn = -1")
     geoIds = dbCursor.fetchall()
 
     for geoId in geoIds:
         dbCursor.execute(
-            "SELECT idn FROM features WHERE geo_id = %d" % (geoId[0]))
+            "SELECT idn FROM features WHERE geo_id = %s" % (geoId[0]))
         featureIdns = dbCursor.fetchall()
 
         for featureIdn in featureIdns:
@@ -63,11 +65,11 @@ def make_relationship(dbCursor, db):
 
             # Query for Precincts
             dbCursor.execute(
-                "UPDATE precints SET feature_idn = %d WHERE precinct_idn = %d" % (featureIdn[0], geoId[0]))
+                "UPDATE precincts SET feature_idn = %s WHERE precinct_idn = %s" % (featureIdn[0], geoId[0]))
             db.commit()
 
             print(dbCursor.rowcount,
-                  "record updated - congressional district linked to feature")
+                  "record updated - precincts linked to feature")
 
 
 if __name__ == "__main__":
@@ -81,6 +83,6 @@ if __name__ == "__main__":
 
     for file in os.listdir("../data/Utah/Utah_Precinct_Data_Split_By_County/"):
         if file.endswith(".GeoJSON"):
-            make_insert(os.path.join(
-                "../data/Utah/Utah_Precinct_Data_Split_By_County/", file), file, dbCursor, db)
+            # make_insert(os.path.join(
+            #     "../data/Utah/Utah_Precinct_Data_Split_By_County/", file), file, dbCursor, db)
             make_relationship(dbCursor, db)
