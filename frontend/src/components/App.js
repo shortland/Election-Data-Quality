@@ -32,7 +32,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { countyDataLayerFillable, countyDataLayerFillableHighlight, countyDataLayerOutline } from '../layers/CountyLayer';
 import { stateLayerFill, stateLayerFillHighlight } from '../layers/StateLayer';
 import { precinctLayerFill, precinctLayerFillHighlight, precinctLayerOutline } from '../layers/PrecinctLayer';
-import { congressionalDataLayerFillable, congressionalLayerFillableHighlight, congressionalLayerOutline } from '../layers/CongressionalLayer';
+import { congressionalLayerFill, congressionalLayerFillHighlight, congressionalLayerOutline } from '../layers/CongressionalLayer';
 
 /**
  * Our components
@@ -48,9 +48,9 @@ import UserModeSelector from './navbar/UserModeSelector';
  * Static data files
  */
 import ERRORS from '../data/errors.json';
-import STATES_TOOLTIP_DATA from '../data/states_tooltip_data.geojson';
-import NY_COUNTY_SHORELINE_DATA from '../data/ny_county_shoreline.geojson';
-import NY_PRECINCT_DATA from '../data/ny_precincts.geojson';
+//import STATES_TOOLTIP_DATA from '../data/states_tooltip_data.geojson';
+//import NY_COUNTY_SHORELINE_DATA from '../data/ny_county_shoreline.geojson';
+//import NY_PRECINCT_DATA from '../data/ny_precincts.geojson';
 import NY_CONGRESSIONAL_DATA from '../data//New_York_Congressional_Districts.GeoJSON';
 // import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 
@@ -73,7 +73,6 @@ export default class App extends Component {
             countyDataOutline: null,
             congressionalDistrictData: null,
             precinctData: null,
-            hoveredFeature: null,
             viewport: {
                 width: "100%",
                 height: window.innerHeight - 56,
@@ -85,19 +84,28 @@ export default class App extends Component {
             selectedFeature: null,
             selectedMode: EditorModes.READ_ONLY,
             selectedFeatureId: null,
+            hoveredFeature: null,
+            filter: null,
             shouldShowPins: false,
             features: {},
             selectedFeatureIndex: null,
             userMode: "View",
-            countyFilter: ['==', 'NAME', ''],
-            precinctFilter: ['==', 'GEOID10', ''],
-            stateFilter: ['==', 'name', ''],
-            congressionalFilter: ['==', 'NAMELSAD', '']
+            //countyFilter: ['==', 'NAME', ''],
+            //precinctFilter: ['==', 'GEOID10', ''],
+            //stateFilter: ['==', 'name', ''],
+            //congressionalFilter: ['==', 'NAMELSAD', '']
         };
 
         this._editorRef = null;
         this.showErrorPins = this.showErrorPins.bind(this);
         this.appData = new AppData();
+
+        this.filters = {
+            countyFilter: ['==', 'NAME', ''],
+            precinctFilter: ['==', 'GEOID10', ''],
+            stateFilter: ['==', 'name', ''],
+            congressionalFilter: ['==', 'NAMELSAD', '']
+        }
     }
 
     /**
@@ -295,6 +303,27 @@ export default class App extends Component {
         }
     }
 
+    getFeatureFilter = (feature) => {
+        if (!feature) {
+            return null;
+        }
+        else if (feature.isState) {
+            return ['==', 'name', feature.properties.name];
+        }
+        else if (feature.isCounty) {
+            return ['==', 'NAME', feature.properties.NAME];
+        }
+        else if (feature.isCongressional) {
+            return ['==', 'NAMELSAD', feature.properties.NAMELSAD];
+        }
+        else if (feature.isPrecinct) {
+            return ['==', 'GEOID10', feature.properties.GEOID10];
+        }
+        else {
+            return null;
+        }
+    }
+
     _onHover = event => {
         const {
             features,
@@ -303,12 +332,8 @@ export default class App extends Component {
 
         if (!event.type || !event.features || event.features.length === 0 || event.features[0].source === "composite") {
             this.setState({
-                stateHovered: null,
-                countyHovered: null,
-                precinctHovered: null,
-                stateFilter: ['==', 'name', ''],
-                countyFilter: ['==', 'NAME', ''],
-                precinctFilter: ['==', 'GEOID10', ''],
+                hoveredFeature: null,
+                filter: null,
             });
             return;
         }
@@ -318,68 +343,86 @@ export default class App extends Component {
             this.setState({ x: x, y: y });
         }
 
-        const stateHovered = features && features.find(f => f.layer.id === 'stateFill');
-        this.setState({ stateHovered: stateHovered });
-        if (stateHovered) {
-            this.setState({ stateFilter: ['==', 'name', stateHovered.properties.name] });
-            return;
-        }
+        if (features) {
+            const stateHovered = features.find(f => f.layer.id === 'stateFill');
+            const countyHovered = features.find(f => f.layer.id === 'countyFill');
+            const congressionalHovered = features.find(f => f.layer.id === 'congressionalFill');
+            const precinctHovered = features.find(f => f.layer.id === 'precinctFill');
 
-        const countyHovered = features && features.find(f => f.layer.id === 'countyFill');
-        this.setState({ countyHovered: countyHovered });
-        if (countyHovered) {
-            this.setState({ countyFilter: ['==', 'NAME', countyHovered.properties.NAME] });
-            return;
-        }
+            const hovered = stateHovered || countyHovered || congressionalHovered || precinctHovered;
 
-        const precinctHovered = features && features.find(f => f.layer.id === 'precinctFill');
-        this.setState({ precinctHovered: precinctHovered });
-        if (precinctHovered) {
-            this.setState({ precinctFilter: ['==', 'GEOID10', precinctHovered.properties.GEOID10] });
-            return;
+            if (stateHovered) { hovered.isState = true; }
+            else if (countyHovered) { hovered.isCounty = true; }
+            else if (congressionalHovered) { hovered.isCongressional = true; }
+            else if (precinctHovered) { hovered.isPrecinct = true; }
+            const filter = this.getFeatureFilter(hovered);
+
+            this.setState({
+                hoveredFeature: hovered,
+                filter: filter
+            });
         }
     }
 
     _renderTooltip() {
-        const { stateHovered, countyHovered, precinctHovered, x, y } = this.state;
+        const { hoveredFeature, x, y } = this.state;
 
-        if (stateHovered) {
-            return (
-                stateHovered && (
-                    <div className="state-tooltip" style={{ left: x, top: y }}>
-                        <h5>{stateHovered.properties.name}</h5>
-                        <div>Counties: {stateHovered.properties.amount_counties}</div>
-                        {/* <br /> */}
-                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
-                    </div>
-                )
-            );
-        }
+        if (hoveredFeature) {
+            if (hoveredFeature.isState) {
+                const stateHovered = hoveredFeature;
+                return (
+                    hoveredFeature && (
+                        <div className="state-tooltip" style={{ left: x, top: y }}>
+                            <h5>{stateHovered.properties.name}</h5>
+                            <div>Counties: {stateHovered.properties.amount_counties}</div>
+                            {/* <br /> */}
+                            {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                        </div>
+                    )
+                );
+            }
 
-        if (countyHovered) {
-            return (
-                countyHovered && (
-                    <div className="state-tooltip" style={{ left: x, top: y }}>
-                        <h5>{countyHovered.properties.NAME} County</h5>
-                        <div>FIPS Code: {countyHovered.properties.FIPS_CODE}</div>
-                        {/* <br /> */}
-                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
-                    </div>
-                )
-            );
-        }
+            if (hoveredFeature.isCounty) {
+                const countyHovered = hoveredFeature;
+                return (
+                    countyHovered && (
+                        <div className="state-tooltip" style={{ left: x, top: y }}>
+                            <h5>{countyHovered.properties.NAME} County</h5>
+                            <div>FIPS Code: {countyHovered.properties.FIPS_CODE}</div>
+                            {/* <br /> */}
+                            {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                        </div>
+                    )
+                );
+            }
 
-        if (precinctHovered) {
-            return (
-                precinctHovered && (
-                    <div className="state-tooltip" style={{ left: x, top: y }}>
-                        <h5>Precinct GEOID: {precinctHovered.properties.GEOID10}</h5>
-                        {/* <div>FIPS Code: {precinctHovered.properties}</div> */}
-                        {/* <br /> */}
-                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
-                    </div>
-                )
-            );
+            if (hoveredFeature.isCongressional) {
+                const congressionalHovered = hoveredFeature;
+                return (
+                    congressionalHovered && (
+                        <div className="state-tooltip" style={{ left: x, top: y }}>
+                            <h5>{congressionalHovered.properties.NAMELSAD}</h5>
+                            <div></div>
+                            {/* <br /> */}
+                            {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                        </div>
+                    )
+                );
+            }
+
+            if (hoveredFeature.isPrecinct) {
+                const precinctHovered = hoveredFeature;
+                return (
+                    precinctHovered && (
+                        <div className="state-tooltip" style={{ left: x, top: y }}>
+                            <h5>Precinct GEOID: {precinctHovered.properties.GEOID10}</h5>
+                            {/* <div>FIPS Code: {precinctHovered.properties}</div> */}
+                            {/* <br /> */}
+                            {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                        </div>
+                    )
+                );
+            }
         }
     }
 
@@ -479,18 +522,15 @@ export default class App extends Component {
         /**
          * State data
          */
-        json(
+        /* json(
             STATES_TOOLTIP_DATA,
             (error, response) => {
                 if (!error) {
                     console.log(response)
-                    // this.setState({
-                    //     stateData: response,
-                    // });
+                    // this.setState({ stateData: response});
                 }
             }
-        );
-
+        ); */
         /**
          * County data outline
          */
@@ -498,37 +538,44 @@ export default class App extends Component {
             NY_COUNTY_SHORELINE_DATA,
             (error, response) => {
                 if (!error) {
-                    this.setState({
-                        countyDataOutline: response,
-                    });
+                    this.setState({countyDataOutline: response});
                 }
             }
         ); */
-
         /**
          * County data
          */
-        json(
+        /* json(
             NY_COUNTY_SHORELINE_DATA,
             (error, response) => {
                 if (!error) {
-                    this.setState({
-                        countyData: response,
-                    });
+                    this.setState({countyData: response});
                 }
             }
         );
-
+        */
         json(
             NY_CONGRESSIONAL_DATA,
             (error, response) => {
                 if (!error) {
-                    this.setState({
-                        congressionalDistrictData: response,
-                    });
+                    console.log(response);
+                    this.setState({ congressionalDistrictData: response });
                 }
             }
         );
+
+        /* json(
+            NY_PRECINCT_DATA,
+            (error, response) => {
+                if (!error) {
+                    console.log(response);
+                    this.setState({precinctData: response});
+                }
+                else {
+                    console.log(error);
+                }
+            }
+        ); */
     }
 
     /**
@@ -552,7 +599,7 @@ export default class App extends Component {
                 </Source >
 
                 {/* NY COUNTY DATA */}
-                < Source type="geojson" data={countyData} >
+                {/* < Source type="geojson" data={countyData} >
                     <Layer
                         {...countyDataLayerFillableHighlight}
                         filter={countyFilter}
@@ -564,29 +611,31 @@ export default class App extends Component {
                         minzoom={5}
                         maxzoom={8}
                     />
-                </Source >
+                </Source > */}
 
                 {/* NY COUNTY DATA (OUTLINE) */}
-                < Source type="geojson" data={countyDataOutline} >
+                {/* < Source type="geojson" data={countyDataOutline} >
                     <Layer
                         {...countyDataLayerOutline}
                         minzoom={5}
                     // maxzoom={8}
                     />
-                </Source >
+                </Source > */}
 
                 {/* CONGRESSIONAL DATA */}
                 < Source type="geojson" data={congressionalDistrictData} >
                     <Layer
-                        {...congressionalLayerFillableHighlight}
-                        filter={congressionalFilter}
-                        minzoom={5}
-                        maxzoom={8}
+                        {...congressionalLayerFillHighlight}
+                        //filter={congressionalFilter}
+                        minzoom={6}
                     />
                     <Layer
-                        {...congressionalDataLayerFillable}
-                        minzoom={5}
-                        maxzoom={8}
+                        {...congressionalLayerOutline}
+                        minzoom={6}
+                    />
+                    <Layer
+                        {...congressionalLayerFill}
+                        minzoom={6}
                     />
                 </Source >
 

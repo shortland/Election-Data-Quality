@@ -27,6 +27,7 @@ class AppData {
                         type: "Feature",
                         properties: {
                             name: result[i].name,
+                            id: result[i].id,
                             amount_counties: result[i].countiesId ? result[i].countiesId.length : 0
                         },
                         geometry: {
@@ -42,11 +43,11 @@ class AppData {
     }
 
     fetchCongressionalDistricts(){
-
+        return this.asyncFetch('http://67.80.171.107:1234/congressionalDistrictsForState?')
     }
 
     fetchPrecincts(){
-        
+
     }
 }
 
