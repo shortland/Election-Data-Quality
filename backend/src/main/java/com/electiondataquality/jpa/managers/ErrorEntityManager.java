@@ -1,19 +1,18 @@
 package com.electiondataquality.jpa.managers;
 
 import java.util.List;
-import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import com.electiondataquality.jpa.objects.CDFeature;
+import com.electiondataquality.jpa.tables.ErrorTable;
 
-public class CDEntityManager {
+public class ErrorEntityManager {
 
     private EntityManagerFactory emf;
 
     public EntityManager em;
 
-    public CDEntityManager(EntityManagerFactory emf) {
+    public ErrorEntityManager(EntityManagerFactory emf) {
         this.emf = emf;
         this.em = emf.createEntityManager();
 
@@ -46,15 +45,8 @@ public class CDEntityManager {
         }
     }
 
-    public Optional<CDFeature> findCDFeatureById(int id) {
-        CDFeature result = em.createQuery("Select a from CDFeature a where fips_code = " + id, CDFeature.class)
-                .getSingleResult();
-
-        return Optional.of(result);
-    }
-
-    public List<CDFeature> findAllCDFeature() {
-        List<CDFeature> results = em.createQuery("Select a from CDFeature a", CDFeature.class).getResultList();
+    public List<ErrorTable> findAllErrors() {
+        List<ErrorTable> results = em.createQuery("Select a from ErrorTable a", ErrorTable.class).getResultList();
 
         return results;
     }

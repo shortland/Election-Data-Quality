@@ -1,15 +1,21 @@
 package com.electiondataquality.jpa.objects;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.electiondataquality.jpa.tables.DemographicTable;
+import com.electiondataquality.jpa.tables.ErrorTable;
 import com.electiondataquality.jpa.tables.FeatureTable;
 import com.electiondataquality.restservice.demographics.DemographicData;
 
@@ -38,17 +44,24 @@ public class PrecinctFeature {
     @JoinColumn(name = "feature_idn")
     private FeatureTable feature;
 
+    // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
+    @JoinColumn(name = "feature_idn")
+    private Set<ErrorTable> errors;
+
     @OneToOne
     @JoinColumn(name = "precinct_idn")
     private DemographicTable demographic;
 
     public PrecinctFeature() {
-
+        // this.errors = new;
     }
 
     public PrecinctFeature(int id, String fullName) {
         this.id = id;
         this.fullName = fullName;
+
+        // this.errors = new ArrayList<ErrorTable>();
     }
 
     public int getId() {
@@ -120,12 +133,20 @@ public class PrecinctFeature {
         } else {
             return null;
         }
+    }
 
+    public Set<ErrorTable> getErrorTables() {
+        return this.errors;
+    }
+
+    public void setErrorTables(Set<ErrorTable> errorTables) {
+        this.errors = errorTables;
     }
 
     public String toString() {
         return "Id : " + Integer.toString(this.id) + " Name : " + this.fullName + "Parent ID : " + this.parentDistrictId
-                + "Demographic : " + this.demographic.toString() + "Feature" + this.feature.toString();
+                + " Errors: " + this.errors.toString() + "Demographic : " + this.demographic.toString() + "Feature : "
+                + this.feature.toString();
     }
 
     // private VotingData votingData;
