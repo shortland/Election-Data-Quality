@@ -35,7 +35,7 @@ class AppData {
 
     fetchAllStates() {
         //return this.fetchDataFromAPI('http://0.0.0.0:1234/allStates')
-        return this.asyncFetch('http://0.0.0.0:1234/allStates');
+        return this.asyncFetch('http://67.80.171.107:1234/allStates');
     }
 
 }
