@@ -82,7 +82,7 @@ public class Precinct extends Feature {
         // p.getVotingData(), p.getDemographicData(), p.getNeighborsId(),
         // p.getAllError(), p.getMultiPolygon());
 
-        // TODO: this is for tesiting only
+        // TODO: this is for tesiting only : Missing Error rn
         Precinct ans = new Precinct(p.getId(), p.getCanonicalName(), p.getFullName(), p.getParentDistrictId(),
                 p.getVotingData(), p.getDemographicData(), p.getNeighborsId(), null, p.getMultiPolygon());
 
@@ -101,7 +101,6 @@ public class Precinct extends Feature {
         this.votingData = precinctFeature.getVotingData();
 
         // TODO: Need to get these data from other table
-
         this.canonicalName = "";
         this.precinctErrors = null;
     }

@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.electiondataquality.restservice.voting.elections.ElectionResults;
+import com.electiondataquality.restservice.voting.elections.enums.PARTIES;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+
 @Entity
 @Table(name = "election_data")
 public class ElectionDataTable {
@@ -32,6 +36,16 @@ public class ElectionDataTable {
 
     public ElectionDataTable() {
 
+    }
+
+    public ElectionDataTable(ElectionResults electionResults, int precinctId) {
+        this.election = electionResults.getElection().name();
+        this.precinct_id = precinctId;
+        this.dataId = Integer.toString(precinctId) + "_" + this.election;
+        this.republican_vote = electionResults.getResultByParty(PARTIES.REPUBLICAN);
+        this.democrat_vote = electionResults.getResultByParty(PARTIES.DEMOCRAT);
+        this.libratarian_vote = electionResults.getResultByParty(PARTIES.LIBRATARIAN);
+        this.other_vote = electionResults.getResultByParty(PARTIES.OTHER);
     }
 
     public int getRepulican() {

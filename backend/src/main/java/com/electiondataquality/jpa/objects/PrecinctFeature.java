@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.jpa.tables.DemographicTable;
 import com.electiondataquality.jpa.tables.ElectionDataTable;
 import com.electiondataquality.jpa.tables.FeatureTable;
@@ -55,6 +56,22 @@ public class PrecinctFeature {
 
     public PrecinctFeature() {
 
+    }
+
+    // TODO: for data to be store back to the database
+    public PrecinctFeature(Precinct precinct) {
+        this.id = precinct.getId();
+        this.fullName = precinct.getFullName();
+        this.parentDistrictId = precinct.getParentDistrictId();
+        this.demographic = new DemographicTable(precinct.getDemographicData(), precinct.getId());
+        this.electionDataTableSet = new HashSet<ElectionDataTable>();
+        for (ELECTIONS e : precinct.getVotingData().getAllElections()) {
+            ElectionDataTable edt = new ElectionDataTable(precinct.getVotingData().getElectionData(e),
+                    precinct.getId());
+            this.electionDataTableSet.add(edt);
+        }
+        // feature
+        // errorsId
     }
 
     public PrecinctFeature(int id, String fullName) {
