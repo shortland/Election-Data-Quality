@@ -55,6 +55,10 @@ public class PrecinctFeature {
     @JoinColumn(name = "precinct_idn")
     private Set<ElectionDataTable> electionDataTableSet;
 
+    @OneToMany
+    @JoinColumn(name = "precinct_idn")
+    private Set<ErrorTable> errors;
+
     public PrecinctFeature() {
         // this.errors = new;
     }
@@ -174,8 +178,8 @@ public class PrecinctFeature {
     }
 
     public void printErrorTable() {
-        for (ErrorTable er : this.feature.getErrors()) {
-            System.out.println(er.toString());
+        for (ErrorTable et : this.errors) {
+            System.out.println(et.toString());
         }
     }
 
@@ -210,13 +214,11 @@ public class PrecinctFeature {
         return vd;
     }
 
-    // public String toString() {
-    // return "Id : " + Integer.toString(this.id) + " Name : " + this.fullName +
-    // "Parent ID : " + this.parentDistrictId
-    // + " Errors: " + this.errors + "\nDemographic : " +
-    // this.demographic.toString() + "Feature : "
-    // + this.feature.toString();
-    // }
+    public String toString() {
+        return "Id : " + this.id + " Name : " + this.fullName + "Parent ID : " + this.parentDistrictId + " Errors: "
+                + this.errors + "\nDemographic : " + this.demographic.toString() + "Feature : "
+                + this.feature.toString();
+    }
 
     // private VotingData votingData;
 

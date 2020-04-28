@@ -23,10 +23,11 @@ public class FeatureTable {
     @Column(name = "geometry")
     private String geometry;
 
-    @OneToMany
-    @JoinColumn(name = "feature_idn", referencedColumnName = "idn", insertable = false, updatable = false)
-    @NotFound(action = NotFoundAction.IGNORE)
-    private Set<ErrorTable> errors;
+    // @OneToMany
+    // @JoinColumn(name = "feature_idn", referencedColumnName = "idn", insertable =
+    // false, updatable = false)
+    // @NotFound(action = NotFoundAction.IGNORE)
+    // private Set<ErrorTable> errors;
 
     public FeatureTable() {
     }
@@ -52,13 +53,13 @@ public class FeatureTable {
         this.geometry = geometry;
     }
 
-    public Set<ErrorTable> getErrors() {
-        return this.errors;
-    }
+    // public Set<ErrorTable> getErrors() {
+    // return this.errors;
+    // }
 
-    public void setErrors(Set<ErrorTable> errors) {
-        this.errors = errors;
-    }
+    // public void setErrors(Set<ErrorTable> errors) {
+    // this.errors = errors;
+    // }
 
     @Override
     public String toString() {
