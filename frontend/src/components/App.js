@@ -58,6 +58,10 @@ import NY_PRECINCT_DATA from '../data/ny_precincts.geojson';
 const MAPBOX_STYLE = 'mapbox://styles/shortland/ck7fn4gmu014c1ip60jlumnm2';
 const MAPBOX_API = 'pk.eyJ1Ijoic2hvcnRsYW5kIiwiYSI6ImNqeXVzOWhsbjBpYzczY29hNGZycTlqdXAifQ.B6l-uEqGG-Pw6-quz4eflQ';
 
+/**
+ * @state viewport: the mpas viewport (lat, long, etc)
+ * 
+ */
 export default class App extends Component {
     constructor(props) {
         super(props);
@@ -211,107 +215,6 @@ export default class App extends Component {
         }
 
     };
-
-    componentDidMount() {
-        this.appData = new AppData();
-        this.appData.fetchAllStates()
-            .then(data => {
-                console.log(data);
-                this.allStates = data;
-            });
-        console.log(this.allStates);
-        //NOTE: new added code should get move to somewhere else
-        fetch("http://67.80.171.107:1234/allStates")
-            .then((res) => {
-                return res.json();
-            })
-            .then((result) => {
-                console.log(result)
-                let FeatureCollection = {
-                    type: "FeatureCollection",
-                    features: []
-                };
-                for (let i in result) {
-                    let feature = {
-                        type: "Feature",
-                        properties: {
-                            name: result[i].name,
-                            amount_counties: result[i].countiesId ? result[i].countiesId.length : 0
-                        },
-                        geometry: {
-                            type: "MultiPolygon",
-                            coordinates: result[i].shape
-                        }
-                    };
-                    FeatureCollection["features"].push(feature);
-                }
-                console.log(FeatureCollection);
-                this.setState({
-                    stateData: FeatureCollection
-                })
-                //GEO JSON STATE FORMAT FOR MAPBOX
-                //{"type": "FeatureCollection", "features": []
-                //{"type" : "Feature", "properties" : {"name":"NewYork", "amount_counties" : 0}, 
-                //"geometry": {"type": "MultiPolygon", "coordinates" : []}}
-            })
-
-        /**
-         * State data
-         */
-        json(
-            STATES_TOOLTIP_DATA,
-            (error, response) => {
-                if (!error) {
-                    console.log(response)
-                    // this.setState({
-                    //     stateData: response,
-                    // });
-                }
-            }
-        );
-
-        /**
-         * County data outline
-         */
-        /* json(
-            NY_COUNTY_SHORELINE_DATA,
-            (error, response) => {
-                if (!error) {
-                    this.setState({
-                        countyDataOutline: response,
-                    });
-                }
-            }
-        ); */
-
-        /**
-         * County data
-         */
-        json(
-            NY_COUNTY_SHORELINE_DATA,
-            (error, response) => {
-                if (!error) {
-                    this.setState({
-                        countyData: response,
-                    });
-                }
-            }
-        );
-
-        /**
-         * Precinct Data
-         */
-        /*  json(
-             NY_PRECINCT_DATA,
-             (error, response) => {
-                 if (!error) {
-                     this.setState({
-                         precinctData: response,
-                     });
-                 }
-             }
-         ); */
-    }
 
     _onClick = event => {
         // sets the selected feature onclcik, to have properties displayed by LeftSidebar
@@ -562,6 +465,95 @@ export default class App extends Component {
         } else {
             this.setState({ shouldShowPins: true });
         }
+    }
+
+
+
+    componentDidMount() {
+        this.appData = new AppData();
+        this.appData.fetchAllStates()
+            .then(data => {
+                console.log(data);
+                this.allStates = data;
+            });
+        console.log(this.allStates);
+        //NOTE: new added code should get move to somewhere else
+        fetch("http://67.80.171.107:1234/allStates")
+            .then((res) => {
+                return res.json();
+            })
+            .then((result) => {
+                console.log(result)
+                let FeatureCollection = {
+                    type: "FeatureCollection",
+                    features: []
+                };
+                for (let i in result) {
+                    let feature = {
+                        type: "Feature",
+                        properties: {
+                            name: result[i].name,
+                            amount_counties: result[i].countiesId ? result[i].countiesId.length : 0
+                        },
+                        geometry: {
+                            type: "MultiPolygon",
+                            coordinates: result[i].geometry.coordinates
+                        }
+                    };
+                    FeatureCollection["features"].push(feature);
+                }
+                console.log(FeatureCollection);
+                this.setState({
+                    stateData: FeatureCollection
+                })
+                //GEO JSON STATE FORMAT FOR MAPBOX
+                //{"type": "FeatureCollection", "features": []
+                //{"type" : "Feature", "properties" : {"name":"NewYork", "amount_counties" : 0}, 
+                //"geometry": {"type": "MultiPolygon", "coordinates" : []}}
+            })
+
+        /**
+         * State data
+         */
+        json(
+            STATES_TOOLTIP_DATA,
+            (error, response) => {
+                if (!error) {
+                    console.log(response)
+                    // this.setState({
+                    //     stateData: response,
+                    // });
+                }
+            }
+        );
+
+        /**
+         * County data outline
+         */
+        /* json(
+            NY_COUNTY_SHORELINE_DATA,
+            (error, response) => {
+                if (!error) {
+                    this.setState({
+                        countyDataOutline: response,
+                    });
+                }
+            }
+        ); */
+
+        /**
+         * County data
+         */
+        json(
+            NY_COUNTY_SHORELINE_DATA,
+            (error, response) => {
+                if (!error) {
+                    this.setState({
+                        countyData: response,
+                    });
+                }
+            }
+        );
     }
 
     render() {

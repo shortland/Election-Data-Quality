@@ -3,6 +3,7 @@ package com.electiondataquality.jpa.objects;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,8 +17,12 @@ import javax.persistence.Table;
 
 import com.electiondataquality.jpa.tables.DemographicTable;
 import com.electiondataquality.jpa.tables.ErrorTable;
+import com.electiondataquality.jpa.tables.ElectionDataTable;
 import com.electiondataquality.jpa.tables.FeatureTable;
 import com.electiondataquality.restservice.demographics.DemographicData;
+import com.electiondataquality.restservice.voting.VotingData;
+import com.electiondataquality.restservice.voting.elections.ElectionResults;
+import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 
 @Entity
 @Table(name = "precincts")
@@ -52,6 +57,10 @@ public class PrecinctFeature {
     @OneToOne
     @JoinColumn(name = "precinct_idn")
     private DemographicTable demographic;
+
+    @OneToMany
+    @JoinColumn(name = "precinct_idn")
+    private Set<ElectionDataTable> electionDataTableSet;
 
     public PrecinctFeature() {
         // this.errors = new;
@@ -104,6 +113,22 @@ public class PrecinctFeature {
         this.demographic = demographic;
     }
 
+    public Set<ElectionDataTable> getElectionDataSet() {
+        return this.electionDataTableSet;
+    }
+
+    public void addElecionalDataTable(ElectionDataTable electionDataTable) {
+        this.electionDataTableSet.add(electionDataTable);
+    }
+
+    public void removeElectionalDataTable(String election, int precicnt_idn) {
+        for (ElectionDataTable edt : this.electionDataTableSet) {
+            if (edt.getElection().equals(election) && edt.getPrecinctId() == precicnt_idn) {
+                this.electionDataTableSet.remove(edt);
+            }
+        }
+    }
+
     public HashSet<Integer> getNeighborsIdSet() {
         String str = this.neighborsId.replaceAll("\\[|]", "");
         String[] neighbors = str.split(",");
@@ -141,6 +166,37 @@ public class PrecinctFeature {
 
     public void setErrorTables(Set<ErrorTable> errorTables) {
         this.errors = errorTables;
+    }
+
+    private ElectionResults convertToElectionResult(ElectionDataTable electionDataTable) {
+        String election = electionDataTable.getElection();
+        if (election.equals("PRES2016")) {
+            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
+                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
+                    ELECTIONS.PRES2016);
+            return result;
+        } else if (election.equals("CONG2016")) {
+            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
+                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
+                    ELECTIONS.CONG2016);
+            return result;
+        } else if (election.equals("CONG2018")) {
+            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
+                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
+                    ELECTIONS.CONG2018);
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    public VotingData getVotingData() {
+        HashSet<ElectionResults> data = new HashSet<ElectionResults>();
+        for (ElectionDataTable edt : this.electionDataTableSet) {
+            data.add(this.convertToElectionResult(edt));
+        }
+        VotingData vd = new VotingData(data);
+        return vd;
     }
 
     public String toString() {
