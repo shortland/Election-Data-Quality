@@ -3,28 +3,8 @@ import { json } from 'd3-request';
  * A js class to access all our fetch API calls through
  */
 class AppData {
-
-    fetchDataFromAPI = (url) => {
-        let obj = null;
-        /* fetch(url)
-            .then((response) => response.json())
-            .then(data => obj = data)
-            .then(() => console.log(obj))
-            .catch(console.log) */
-
-        json(
-            url,
-            (error, response) => {
-                if (!error) {
-                    obj = response;
-                    console.log(response);
-                }
-                else {
-                    console.log(error);
-                }
-            }
-        );
-        return obj;
+    constructor() {
+        this.allStates = null;
     }
 
     asyncFetch = async (url) => {
@@ -35,9 +15,39 @@ class AppData {
 
     fetchAllStates() {
         //return this.fetchDataFromAPI('http://0.0.0.0:1234/allStates')
-        return this.asyncFetch('http://67.80.171.107:1234/allStates');
+        return this.asyncFetch('http://67.80.171.107:1234/allStates')
+            .then(result => {
+                console.log(result)
+                let FeatureCollection = {
+                    type: "FeatureCollection",
+                    features: []
+                };
+                for (let i in result) {
+                    let feature = {
+                        type: "Feature",
+                        properties: {
+                            name: result[i].name,
+                            amount_counties: result[i].countiesId ? result[i].countiesId.length : 0
+                        },
+                        geometry: {
+                            type: "MultiPolygon",
+                            coordinates: result[i].geometry.coordinates
+                        }
+                    };
+                    FeatureCollection["features"].push(feature);
+                }
+                console.log(FeatureCollection);
+                return FeatureCollection;
+            });
     }
 
+    fetchCongressionalDistricts(){
+
+    }
+
+    fetchPrecincts(){
+        
+    }
 }
 
 export default AppData;
