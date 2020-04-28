@@ -32,11 +32,11 @@ public class ErrorController {
                 target.getPrecinctError(errorId).resolved();
 
                 return ErrorGen.ok();
-            } else {
-                return ErrorGen.create("there are no errors in this precinct");
             }
-        } else {
-            return ErrorGen.create("unable to get precinct");
+
+            return ErrorGen.create("there are no errors in this precinct");
         }
+
+        return ErrorGen.create("unable to get precinct");
     }
 }

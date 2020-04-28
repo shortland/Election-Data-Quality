@@ -3,14 +3,12 @@ package com.electiondataquality.restservice;
 import java.util.List;
 import java.util.HashSet;
 import javax.persistence.Persistence;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.electiondataquality.jpa.managers.CDEntityManager;
 import com.electiondataquality.jpa.managers.StateEntityManager;
 import com.electiondataquality.jpa.objects.CDFeature;
 import com.electiondataquality.jpa.objects.StateFeature;
-import com.electiondataquality.jpa.tables.CongressionalDistrictTable;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.features.precinct.Precinct;
@@ -41,6 +39,7 @@ public class DataPopulator {
 
         HashSet<State> stateSet = new HashSet<>();
         List<StateFeature> allStateFeatures = stateTableEm.findAllStateFeatures();
+
         for (StateFeature stateFeature : allStateFeatures) {
             State stateObj = new State(stateFeature);
             stateSet.add(stateObj);
