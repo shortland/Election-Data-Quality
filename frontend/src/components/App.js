@@ -12,15 +12,15 @@ import { Editor, EditorModes } from 'react-map-gl-draw';
 /**
  * JS classes
  */
-import AppData from './data/AppData';
+import AppData from '../data/AppData';
 
 /**
  * CSS Styling
  */
-import './App.css';
-import './styles/Collapsible.css';
-import './styles/PinPopup.css';
-import './static/app.css';
+import '../App.css';
+import '../styles/Collapsible.css';
+import '../styles/PinPopup.css';
+import '../static/app.css';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -29,27 +29,27 @@ import 'react-toastify/dist/ReactToastify.css';
 /**
  * Map layers
  */
-import { countyDataLayerFillable, countyDataLayerFillableHighlight, countyDataLayerOutline } from './layers/CountyLayer';
-import { stateLayerFill, stateLayerFillHighlight } from './layers/StateLayer';
-import { precinctLayerFill, precinctLayerFillHighlight, precinctLayerOutline } from './layers/PrecinctLayer';
+import { countyDataLayerFillable, countyDataLayerFillableHighlight, countyDataLayerOutline } from '../layers/CountyLayer';
+import { stateLayerFill, stateLayerFillHighlight } from '../layers/StateLayer';
+import { precinctLayerFill, precinctLayerFillHighlight, precinctLayerOutline } from '../layers/PrecinctLayer';
 
 /**
  * Our components
  */
-import Pins from './components/map-components/ErrorPins';
-import ErrorInfo from './components/map-components/ErrorModal';
-import StateSelector from './components/StateSelector';
-import LeftSidebar from './components/LeftSidebar';
-import Toolbar from './toolbar';
-import UserModeSelector from './components/UserModeSelector';
+import Pins from './map/ErrorPins';
+import ErrorInfo from './map/ErrorModal';
+import StateSelector from './navbar/StateSelector';
+import LeftSidebar from './sidebar/LeftSidebar';
+import Toolbar from './map/toolbar';
+import UserModeSelector from './navbar/UserModeSelector';
 
 /**
  * Static data files
  */
-import ERRORS from './data/errors.json';
-import STATES_TOOLTIP_DATA from './data/states_tooltip_data.geojson';
-import NY_COUNTY_SHORELINE_DATA from './data/ny_county_shoreline.geojson';
-import NY_PRECINCT_DATA from './data/ny_precincts.geojson';
+import ERRORS from '../data/errors.json';
+import STATES_TOOLTIP_DATA from '../data/states_tooltip_data.geojson';
+import NY_COUNTY_SHORELINE_DATA from '../data/ny_county_shoreline.geojson';
+import NY_PRECINCT_DATA from '../data/ny_precincts.geojson';
 // import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 
 /**
