@@ -39,7 +39,7 @@ public class PrecinctManager {
         }
     }
 
-    public Precinct getPrecicnt(int precinctId) {
+    public Precinct getPrecinct(int precinctId) {
         if (this.precinctMap.containsKey(precinctId)) {
             return this.precinctMap.get(precinctId);
         }

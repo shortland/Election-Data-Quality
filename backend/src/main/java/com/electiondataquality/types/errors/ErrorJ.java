@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
 public class ErrorJ {
+
     private String errorString;
+
     private String messageString;
 
     public ErrorJ(String error) {
