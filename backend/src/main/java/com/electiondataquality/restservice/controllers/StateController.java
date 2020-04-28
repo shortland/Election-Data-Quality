@@ -16,11 +16,7 @@ public class StateController {
     /**
      * Get the shape data for all of the states
      */
-<<<<<<< HEAD
-    @CrossOrigin(origins = "http://localhost:3000")
-=======
     @CrossOrigin
->>>>>>> 9067aba0f4e9cb5b9c6672cdacebbffe0d42120c
     @GetMapping("/allStates")
     public ArrayList<State> getAllStates() {
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();

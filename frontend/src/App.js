@@ -213,7 +213,6 @@ export default class App extends Component {
     };
 
     componentDidMount() {
-<<<<<<< HEAD
         this.appData = new AppData();
         this.appData.fetchAllStates()
             .then(data => {
@@ -221,7 +220,6 @@ export default class App extends Component {
                 this.allStates = data;
             });
         console.log(this.allStates);
-=======
         //NOTE: new added code should get move to somewhere else
         fetch("http://67.80.171.107:1234/allStates")
             .then((res) => {
@@ -257,7 +255,6 @@ export default class App extends Component {
                 //"geometry": {"type": "MultiPolygon", "coordinates" : []}}
             })
 
->>>>>>> 9067aba0f4e9cb5b9c6672cdacebbffe0d42120c
         /**
          * State data
          */
