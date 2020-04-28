@@ -16,7 +16,7 @@ public class ErrorTable {
     @Column(name = "idn")
     private int errorId;
 
-    @Column(name = "n")
+    @Column(name = "feature_idn")
     private int featureId;
 
     // @Column(name = "type")

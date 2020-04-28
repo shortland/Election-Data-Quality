@@ -8,13 +8,13 @@ import com.electiondataquality.jpa.tables.ErrorTable;
 
 public class ErrorEntityManager {
 
-    private EntityManagerFactory emf;
+    private EntityManagerFactory factory;
 
-    public EntityManager em;
+    public EntityManager manager;
 
-    public ErrorEntityManager(EntityManagerFactory emf) {
-        this.emf = emf;
-        this.em = emf.createEntityManager();
+    public ErrorEntityManager(EntityManagerFactory factory) {
+        this.factory = factory;
+        this.manager = factory.createEntityManager();
 
         this.initialize();
     }
@@ -23,7 +23,7 @@ public class ErrorEntityManager {
      * Startup the transactions manager
      */
     private void initialize() {
-        this.em.getTransaction().begin();
+        this.manager.getTransaction().begin();
     }
 
     /**
@@ -37,16 +37,16 @@ public class ErrorEntityManager {
      * Cleanup the entity manager factory
      */
     public void cleanup(boolean cleanFactory) {
-        this.em.getTransaction().commit();
-        this.em.close();
+        this.manager.getTransaction().commit();
+        this.manager.close();
 
         if (cleanFactory) {
-            emf.close();
+            factory.close();
         }
     }
 
     public List<ErrorTable> findAllErrors() {
-        List<ErrorTable> results = em.createQuery("Select a from ErrorTable a", ErrorTable.class).getResultList();
+        List<ErrorTable> results = manager.createQuery("Select a from ErrorTable a", ErrorTable.class).getResultList();
 
         return results;
     }

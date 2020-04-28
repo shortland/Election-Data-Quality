@@ -52,7 +52,7 @@ public class PrecinctFeature {
     // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany
     @JoinColumn(name = "feature_idn")
-    private Set<ErrorTable> errors;
+    private List<ErrorTable> errors;
 
     @OneToOne
     @JoinColumn(name = "precinct_idn")
@@ -160,11 +160,11 @@ public class PrecinctFeature {
         }
     }
 
-    public Set<ErrorTable> getErrorTables() {
+    public List<ErrorTable> getErrorTables() {
         return this.errors;
     }
 
-    public void setErrorTables(Set<ErrorTable> errorTables) {
+    public void setErrorTables(List<ErrorTable> errorTables) {
         this.errors = errorTables;
     }
 
@@ -201,7 +201,7 @@ public class PrecinctFeature {
 
     public String toString() {
         return "Id : " + Integer.toString(this.id) + " Name : " + this.fullName + "Parent ID : " + this.parentDistrictId
-                + " Errors: " + this.errors.toString() + "Demographic : " + this.demographic.toString() + "Feature : "
+                + " Errors: " + this.errors + "\nDemographic : " + this.demographic.toString() + "Feature : "
                 + this.feature.toString();
     }
 
