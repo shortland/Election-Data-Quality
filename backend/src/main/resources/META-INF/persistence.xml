@@ -37,12 +37,10 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
         </properties>  
     </persistence-unit> 
 
-    <persistence-unit name="PrecinctTable" transaction-type="RESOURCE_LOCAL">  
-        <description>precicntTable</description>
+    <persistence-unit name="ErrorTable" transaction-type="RESOURCE_LOCAL">  
+        <description>errorTable</description>
  
-        <class>com.electiondataquality.jpa.objects.PrecinctFeature</class>
-        <class>com.electiondataquality.jpa.tables.FeatureTable</class>
-        <class>com.electiondataquality.jpa.tables.DemographicTable</class>
+        <class>com.electiondataquality.jpa.tables.ErrorTable</class>
 
         <properties>  
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
@@ -51,5 +49,23 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
             <property name="javax.persistence.jdbc.user" value="jerryman"/>  
             <property name="javax.persistence.jdbc.password" value="JerryManderingIsBad123!"/>  
         </properties>  
-    </persistence-unit> 
+    </persistence-unit>
+
+    <persistence-unit name="PrecinctTable" transaction-type="RESOURCE_LOCAL">  
+        <description>precinctTable</description>
+ 
+        <class>com.electiondataquality.jpa.objects.PrecinctFeature</class>
+        <class>com.electiondataquality.jpa.tables.FeatureTable</class>
+        <class>com.electiondataquality.jpa.tables.DemographicTable</class>
+        <class>com.electiondataquality.jpa.tables.ErrorTable</class>
+        <class>com.electiondataquality.jpa.tables.ElectionDataTable</class>
+
+        <properties>  
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>  
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://45.55.121.121:3306/jerryman?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC"/>  
+            <property name="javax.persistence.jdbc.user" value="jerryman"/>  
+            <property name="javax.persistence.jdbc.password" value="JerryManderingIsBad123!"/>  
+        </properties>  
+    </persistence-unit>
 </persistence>  

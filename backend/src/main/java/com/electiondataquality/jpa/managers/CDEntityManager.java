@@ -2,13 +2,13 @@ package com.electiondataquality.jpa.managers;
 
 import java.util.List;
 import java.util.Optional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.electiondataquality.jpa.objects.CDFeature;
 
 public class CDEntityManager {
+
     private EntityManagerFactory emf;
 
     public EntityManager em;

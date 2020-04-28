@@ -18,7 +18,7 @@ public class ElectionResults {
 
     public static ElectionResults mergeElectionResults(ElectionResults er1, ElectionResults er2) {
         if (er1.getElection() == er2.getElection()) {
-            PARTIES[] allParties = { PARTIES.REPUBLICAN, PARTIES.DEMOCRAT, PARTIES.LIBRATARIAN, PARTIES.DEMOCRAT };
+            PARTIES[] allParties = { PARTIES.REPUBLICAN, PARTIES.DEMOCRAT, PARTIES.LIBRATARIAN, PARTIES.OTHER };
             int[] votes = new int[4];
 
             for (int i = 0; i < 4; i++) {
