@@ -42,26 +42,6 @@ public class DataPopulator {
         this.databaseConfig = databaseConfig;
     }
 
-    public void populateErrors() {
-        // EntityManagerFactory emFactory =
-        // Persistence.createEntityManagerFactory("ErrorTable");
-        // EntityManager em = emFactory.createEntityManager();
-        // FeatureTable ft = em.find(FeatureTable.class, 2);
-        // for (ErrorTable et : ft.getErrors()) {
-        // System.out.println(et.toString());
-        // }
-        // ErrorEntityManager errorTableEm = new ErrorEntityManager(emFactory);
-
-        // List<ErrorTable> allErrorTables = errorTableEm.findAllErrors();
-
-        // for (ErrorTable errorTable : allErrorTables) {
-        // System.out.println(errorTable);
-        // }
-
-        // this.serverManager.getStateManager().populate(stateSet);
-        // errorTableEm.cleanup(true);
-    }
-
     public void populateStates() {
         // this.populateErrors();
 
@@ -99,20 +79,19 @@ public class DataPopulator {
     public void populatePrecinctAndComments() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
         PrecinctEntityManager pem = new PrecinctEntityManager(emf);
-        PrecinctFeature pf = pem.findPrecinctFeatureById("11790");
-        System.out.println(pf.toString());
+        System.out.println("----------------------------------------");
+        HashSet<Precinct> precinctSet = new HashSet<Precinct>();
+        List<PrecinctFeature> allPrecinct = pem.findAllPrecinctFeature();
 
-        // HashSet<Precinct> precinctSet = new HashSet<Precinct>();
-        // List<PrecinctFeature> allPrecicnt = pem.findAllPrecinctFeature();
+        System.out.println("----------------------------------------");
 
-        // for (PrecinctFeature precinctFeature : allPrecicnt) {
-        // // System.out.println(precinctFeature);
-        // precinctFeature.printErrorTable();
-        // Precinct precinct = new Precinct(precinctFeature);
-        // precinctSet.add(precinct);
-        // }
+        for (PrecinctFeature precinctFeature : allPrecinct) {
+            precinctFeature.printErrorTable();
+            Precinct precinct = new Precinct(precinctFeature);
+            precinctSet.add(precinct);
+        }
 
-        // this.serverManager.getPrecinctManager().populate(precinctSet);
+        this.serverManager.getPrecinctManager().populate(precinctSet);
         pem.cleanup(true);
 
         // EntityManagerFactory emf =
