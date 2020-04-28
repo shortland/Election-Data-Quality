@@ -6,6 +6,7 @@ import java.util.HashSet;
 import com.electiondataquality.features.precinct.Precinct;
 
 public class PrecinctManager {
+
     private HashMap<Integer, Precinct> precinctMap;
 
     private HashMap<Integer, Precinct> originalPrecinctMap;

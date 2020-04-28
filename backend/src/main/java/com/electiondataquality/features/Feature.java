@@ -2,14 +2,18 @@ package com.electiondataquality.features;
 
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.electiondataquality.geometry.Geometry;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.geometry.Polygon;
 
 public abstract class Feature {
-    private ArrayList<ArrayList<ArrayList<double[]>>> shape;
 
-    private boolean isMultiPolygon = false;
+    public Geometry geometry;
+
+    public ArrayList<ArrayList<ArrayList<double[]>>> shape;
+
+    @JsonIgnore
+    public boolean isMultiPolygon = false;
 
     public static boolean CompareShape(Feature f1, Feature f2) {
         ArrayList<ArrayList<ArrayList<double[]>>> shape1 = f1.getShape();

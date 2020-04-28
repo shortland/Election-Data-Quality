@@ -3,6 +3,7 @@ package com.electiondataquality.geometry;
 import java.util.ArrayList;
 
 public class Polygon {
+
     public ArrayList<ArrayList<double[]>> coordinates;
 
     public Polygon(ArrayList<ArrayList<double[]>> coordinates) {

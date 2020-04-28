@@ -213,6 +213,7 @@ export default class App extends Component {
     };
 
     componentDidMount() {
+<<<<<<< HEAD
         this.appData = new AppData();
         this.appData.fetchAllStates()
             .then(data => {
@@ -220,6 +221,43 @@ export default class App extends Component {
                 this.allStates = data;
             });
         console.log(this.allStates);
+=======
+        //NOTE: new added code should get move to somewhere else
+        fetch("http://67.80.171.107:1234/allStates")
+            .then((res) => {
+                return res.json();
+            })
+            .then((result) => {
+                console.log(result)
+                let FeatureCollection = {
+                    type: "FeatureCollection",
+                    features: []
+                };
+                for (let i in result) {
+                    let feature = {
+                        type: "Feature",
+                        properties: {
+                            name: result[i].name,
+                            amount_counties: result[i].countiesId ? result[i].countiesId.length : 0
+                        },
+                        geometry: {
+                            type: "MultiPolygon",
+                            coordinates: result[i].shape
+                        }
+                    };
+                    FeatureCollection["features"].push(feature);
+                }
+                console.log(FeatureCollection);
+                this.setState({
+                    stateData: FeatureCollection
+                })
+                //GEO JSON STATE FORMAT FOR MAPBOX
+                //{"type": "FeatureCollection", "features": []
+                //{"type" : "Feature", "properties" : {"name":"NewYork", "amount_counties" : 0}, 
+                //"geometry": {"type": "MultiPolygon", "coordinates" : []}}
+            })
+
+>>>>>>> 9067aba0f4e9cb5b9c6672cdacebbffe0d42120c
         /**
          * State data
          */
@@ -227,9 +265,10 @@ export default class App extends Component {
             STATES_TOOLTIP_DATA,
             (error, response) => {
                 if (!error) {
-                    this.setState({
-                        stateData: response,
-                    });
+                    console.log(response)
+                    // this.setState({
+                    //     stateData: response,
+                    // });
                 }
             }
         );

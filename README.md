@@ -1,21 +1,25 @@
 # Election Data Quality
 
-## Project Members
-
-- David Lin
-- Ilan Kleiman
-- Reed Gantz
-- Samuel Hoffmann
-
 ## Project Description
 
-CSE 416 course project.
+CSE 416 course project. The goal of the project is to provide users with an easily understandable visual representation of different elections' voting data in a comprehensive and unified manner.
 
-Frontend: https://shortland.github.io/Election-Data-Quality/
+There is currently no mainstream reference in gathering and visualizing election data in the U.S. at the detailed level of a precinct/election ward. The hopeful goal of this project is to provide something that can be the start of exactly that.
 
-Backend: http://67.80.171.107:1234/
+Live site: https://shortland.github.io/Election-Data-Quality/
 
-Database: http://45.55.121.121/phpmyadmin/
+### Project Members
+
+- David Lin [@DavidLSC](https://github.com/DavidLSC)
+- Ilan Kleiman [@shortland](https://github.com/shortland)
+- Reed Gantz [@reedm121](https://github.com/reedm121)
+- Samuel Hoffmann [@SamuelHHoffmann](https://github.com/SamuelHHoffmann)
+
+## Frontend
+
+Developed in Javascript with React and Bootstrap.
+
+[react-mapbox-gl](https://uber.github.io/react-map-gl/docs)
 
 ### Frontend Install/Build/Run/Deploy
 
@@ -33,6 +37,10 @@ After cloning the directory and entering the `frontend` directory, follow the be
 
 `$ yarn run deploy`
 
+## Backend
+
+Developed in Java with SpringBoot.
+
 ### Backend Install/Build/Run/Deploy
 
 After cloning the directory and entering the `backend` directory, follow the below instructions.
@@ -43,56 +51,21 @@ After cloning the directory and entering the `backend` directory, follow the bel
 
 `$ ./gradlew build`
 
-#### Executing .jar executable
+#### Deploying latest server-code to the server
+
+`$ ./gradlew deploy`
+
+More info on how the backend handles the deploy can be found in the branch: `upgrader-servlet`.
+
+#### Executing .jar executable locally
 
 `$ java -jar build/libs/rest-service-0.0.1-SNAPSHOT.jar`
 
-#### Deploying updated server-code to the server
+## Database
 
-Visit the webpage: `http://67.80.171.107:1234/pull` once. It may not appear to ever finish loading but it should upgrade the server to the current github master branch server build.
+MySQL Server.
 
-The auto-deploy script is a small http servlet written in Golang, Bash, and uses a system service file for uptime.
-Location of service file: /etc/systemd/system/election-upgrader.service
-
-```service
-[Unit]
-Description=ElectionDataUpgraderService
-After=network.target
-
-[Service]
-WorkingDirectory=/home/ilankleiman
-User=ilankleiman
-Group=users
-Type=simple
-ExecStart=/home/ilankleiman/ElectionDataQualityUpgrader
-RestartSec=15
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-
-### States
-
-- Wisconsin
-- Utah
-- New York
-
-### Frontend
-
-Javascript stuff is cool. React and Bootstrap probably
-
-[react-mapbox-gl](https://uber.github.io/react-map-gl/docs)
-
-### Backend
-
-Java backend seems whatever.
-
-### Database
-
-Using our own dedicated database.
-
-#### Database Login
+### Database Login
 
 Web Interface: [Login](http://45.55.121.121/phpmyadmin)
 
@@ -101,6 +74,14 @@ Username: jerryman
 Password: JerryManderingIsBad123!
 IP Address: 45.55.121.121:3306
 ```
+
+## States
+
+Sample State Data
+
+- Wisconsin
+- Utah
+- New York
 
 ## Data Sources
 
@@ -190,7 +171,7 @@ County FIPS Codes:
 
 Must visit each individual NYS county's website to get the results of its precincts.
 
-- [Albany County](#)
+<!-- - [Albany County](#)
 
 - [Allegany County](#)
 
@@ -318,4 +299,4 @@ Must visit each individual NYS county's website to get the results of its precin
 
 Other Data:
 
-- [State Parks](https://gis.ny.gov/gisdata/inventories/details.cfm?DSID=430)
+- [State Parks](https://gis.ny.gov/gisdata/inventories/details.cfm?DSID=430) -->

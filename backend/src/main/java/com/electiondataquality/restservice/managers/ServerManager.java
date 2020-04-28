@@ -8,6 +8,7 @@ import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.restservice.comments.Comment;
 
 public class ServerManager {
+
     private static StateManager stateManager;
 
     private static CongressionalManager congressionalManager;

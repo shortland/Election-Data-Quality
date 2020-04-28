@@ -2,31 +2,30 @@ package com.electiondataquality.restservice;
 
 import java.util.List;
 import java.util.HashSet;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 
-import com.electiondataquality.features.state.State;
-import com.electiondataquality.jpa.features.state.StateFeature;
+import com.electiondataquality.jpa.managers.CDEntityManager;
+import com.electiondataquality.jpa.managers.StateEntityManager;
+import com.electiondataquality.jpa.objects.CDFeature;
+import com.electiondataquality.jpa.objects.StateFeature;
+import com.electiondataquality.jpa.tables.CongressionalDistrictTable;
 import com.electiondataquality.restservice.managers.ServerManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
-import com.electiondataquality.restservice.voting.elections.enums.*;
+import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.comments.Comment;
 import com.electiondataquality.restservice.config.DatabaseConfig;
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
+import com.electiondataquality.features.state.State;
 import com.electiondataquality.features.precinct.error.PrecinctError;
-import com.electiondataquality.dao.state.StateDao;
 
 public class DataPopulator {
+
     private ServerManager serverManager;
 
     private DatabaseConfig databaseConfig;
@@ -36,79 +35,62 @@ public class DataPopulator {
         this.databaseConfig = databaseConfig;
     }
 
-    // public void populateStates() {
-    // EntityManagerFactory emFactory =
-    // Persistence.createEntityManagerFactory("StateDetails");
-    // EntityManager em = emFactory.createEntityManager();
-
-    // em.getTransaction().begin();
-    // CriteriaBuilder cb = em.getCriteriaBuilder();
-    // CriteriaQuery<StateFeature> cq = cb.createQuery(StateFeature.class);
-
-    // Root<StateFeature> state = cq.from(StateFeature.class);
-
-    // // Not sure what this is meant for yet
-    // cq.select(state.get("stateId"));
-
-    // CriteriaQuery<StateFeature> select = cq.select(state);
-    // TypedQuery<StateFeature> q = em.createQuery(select);
-    // List<StateFeature> list = q.getResultList();
-
-    // System.out.println("stateName");
-    // HashSet<StateFeature> stateSet = new HashSet<>();
-
-    // for (StateFeature s : list) {
-    // stateSet.add(s);
-    // System.out.println(s.getStateName());
-    // }
-
-    // em.getTransaction().commit();
-    // em.close();
-
-    // emFactory.close();
-
-    // // this.serverManager.getStateManager().populate(stateSet);
-    // }
-
     public void populateStates() {
-        StateDao dao = new StateDao();
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("StateTable");
+        StateEntityManager stateTableEm = new StateEntityManager(emFactory);
 
-        /**
-         * Configure datasource
-         */
-        dataSource.setDriverClassName(databaseConfig.getDriver());
-        dataSource.setUrl("jdbc:mysql://" + databaseConfig.getHostname() + ":" + databaseConfig.getPort() + "/"
-                + databaseConfig.getDatabase() + "?" + databaseConfig.getOptions());
-        dataSource.setUsername(databaseConfig.getUsername());
-        dataSource.setPassword(databaseConfig.getPassword());
-        dao.setDataSource(dataSource);
-
-        /**
-         * Get all the states
-         */
-        List<Object> states = dao.selectAll();
-        HashSet<State> stateSet = new HashSet<State>();
-
-        for (Object state : states) {
-            stateSet.add((State) state);
-            System.out.printf("State is: %s", state.toString());
+        HashSet<State> stateSet = new HashSet<>();
+        List<StateFeature> allStateFeatures = stateTableEm.findAllStateFeatures();
+        for (StateFeature stateFeature : allStateFeatures) {
+            State stateObj = new State(stateFeature);
+            stateSet.add(stateObj);
         }
 
         this.serverManager.getStateManager().populate(stateSet);
+        stateTableEm.cleanup(true);
     }
 
     public void populateCongressional() {
-        CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null, null);
-        CongressionalDistrict cd2 = new CongressionalDistrict("CD2", 55, 11, null, null);
-        CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 55, 12, null, null);
-        HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
 
-        cdSet.add(cd);
-        cdSet.add(cd1);
-        cdSet.add(cd2);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("CongressionalTable");
+        CDEntityManager cdEm = new CDEntityManager(emf);
+
+        HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
+        List<CDFeature> allCDFeatures = cdEm.findAllCDFeature();
+        for (CDFeature cdFeature : allCDFeatures) {
+            CongressionalDistrict congressionalDistrict = new CongressionalDistrict(cdFeature);
+            System.out.println(congressionalDistrict);
+            cdSet.add(congressionalDistrict);
+        }
 
         this.serverManager.getCongressionalManager().populate(cdSet);
+        cdEm.cleanup(true);
+
+        // EntityManager em = emf.createEntityManager();
+        // em.getTransaction().begin();
+
+        // CongressionalDistrictTable cdt = em.find(CongressionalDistrictTable.class,
+        // 36005);
+        // cdt.childrenStrToArray();
+
+        // System.out.println(cdt);
+        // em.getTransaction().commit();
+        // em.close();
+        // emf.close();
+        // OLD
+        // CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null,
+        // null);
+        // CongressionalDistrict cd2 = new CongressionalDistrict("CD2", 55, 11, null,
+        // null);
+        // CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 55, 12, null,
+        // null);
+        // HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
+
+        // cdSet.add(cd);
+        // cdSet.add(cd1);
+        // cdSet.add(cd2);
+
+        // this.serverManager.getCongressionalManager().populate(cdSet);
     }
 
     public void populatePrecinctAndComments() {

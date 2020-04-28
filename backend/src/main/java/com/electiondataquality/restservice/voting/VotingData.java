@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
 
 public class VotingData {
+
     private EnumMap<ELECTIONS, ElectionResults> electionData;
 
     public static VotingData mergeVotingData(VotingData vd1, VotingData vd2) {

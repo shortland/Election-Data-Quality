@@ -2,6 +2,8 @@ package com.electiondataquality.restservice.controllers;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,8 +22,11 @@ public class CongDistrictController {
      * @param stateId
      * @return
      */
+    @CrossOrigin
     @GetMapping("/congressionalDistrictsForState")
     public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam int stateId) {
+        System.out.println("------------------");
+        System.out.println(stateId);
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
         HashSet<Integer> congDistrictIds = stateManager.getAllDistricts(stateId);
@@ -38,6 +43,14 @@ public class CongDistrictController {
         }
 
         return cdList;
+    }
+
+    @CrossOrigin
+    @GetMapping("/congressionalDistrict")
+    public CongressionalDistrict x(@RequestParam int cid) {
+        CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
+        CongressionalDistrict c = cdManager.getCongDistrict(cid);
+        return c;
     }
 
 }
