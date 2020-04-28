@@ -38,7 +38,7 @@ public class CommentController {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         int newId = commentManager.getLargestId() + 1;
         Comment newComment = new Comment(newId, commentText);
-        Precinct parentPrecinct = precinctManager.getPrecicnt(precinctId);
+        Precinct parentPrecinct = precinctManager.getPrecinct(precinctId);
 
         if (parentPrecinct != null) {
             PrecinctError parentError = parentPrecinct.getPrecinctError(errorId);
@@ -101,7 +101,7 @@ public class CommentController {
         if (target != null) {
             int parentErrorId = target.getParentErrorId();
             int parentPrecinctId = target.getParentPrecinctId();
-            Precinct parentPrecinct = precinctManager.getPrecicnt(parentPrecinctId);
+            Precinct parentPrecinct = precinctManager.getPrecinct(parentPrecinctId);
 
             if (parentPrecinct != null) {
                 PrecinctError parentError = parentPrecinct.getPrecinctError(parentErrorId);

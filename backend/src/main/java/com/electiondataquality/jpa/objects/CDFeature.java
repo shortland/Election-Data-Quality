@@ -1,20 +1,14 @@
 package com.electiondataquality.jpa.objects;
 
-import java.io.Serializable;
 import java.util.HashSet;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import com.electiondataquality.jpa.tables.FeatureTable;
-
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+
+import com.electiondataquality.jpa.tables.FeatureTable;
 
 @Entity
 @Table(name = "congressional_districts")
@@ -83,12 +77,12 @@ public class CDFeature {
         String str = this.childrenStr.replaceAll("\\[|]", "");
         String[] childrens = str.split(",");
         HashSet<Integer> childrenPrecinctIds = new HashSet<Integer>();
+
         for (String idString : childrens) {
             childrenPrecinctIds.add(Integer.parseInt(idString));
         }
+
         return childrenPrecinctIds;
-        // System.out.println(this.childrenStr);
-        // System.out.println(childrenPrecinctIds);
     }
 
     public String toString() {

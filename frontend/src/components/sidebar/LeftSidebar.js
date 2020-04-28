@@ -1,19 +1,12 @@
 import React, { Component } from 'react';
 
-// import InputGroup from 'react-bootstrap/InputGroup';
-// import FormControl from 'react-bootstrap/FormControl';
-// import Table from 'react-bootstrap/Table';
-// import Jumbotron from 'react-bootstrap/Jumbotron';
-// import Tabs from 'react-bootstrap/Tabs';
-// import Tab from 'react-bootstrap/Tab';
-// import Button from 'react-bootstrap/Tab';
 import Collapsible from 'react-collapsible';
 
-import ElectionDisplayBar from '../components/ElectionDisplayBar';
-import DemographicsTable from '../components/DemographicsTable';
-import DataCorrectionPage from '../components/DataCorrectionPage';
-import Comments from '../components/Comments';
-import CommentModal from '../components/CommentModal';
+import ElectionDisplayBar from './ElectionDisplayBar';
+import DemographicsTable from './DemographicsTable';
+import DataCorrectionPage from './DataCorrectionPage';
+import Comments from './Comments';
+import CommentModal from './CommentModal';
 
 class LeftSidebar extends Component {
     constructor(props) {
