@@ -3,6 +3,7 @@ package com.electiondataquality.restservice;
 import java.util.List;
 import java.util.HashSet;
 import javax.persistence.Persistence;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.electiondataquality.jpa.managers.CDEntityManager;
@@ -13,8 +14,10 @@ import com.electiondataquality.jpa.objects.CDFeature;
 import com.electiondataquality.jpa.objects.PrecinctFeature;
 import com.electiondataquality.jpa.objects.StateFeature;
 import com.electiondataquality.jpa.tables.ErrorTable;
+import com.electiondataquality.jpa.tables.FeatureTable;
 // import com.electiondataquality.jpa.tables.CongressionalDistrictTable;
 import com.electiondataquality.restservice.managers.ServerManager;
+import com.electiondataquality.features.Feature;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
@@ -39,74 +42,80 @@ public class DataPopulator {
     }
 
     public void populateErrors() {
-        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("ErrorTable");
-        ErrorEntityManager errorTableEm = new ErrorEntityManager(emFactory);
+        // EntityManagerFactory emFactory =
+        // Persistence.createEntityManagerFactory("ErrorTable");
+        // EntityManager em = emFactory.createEntityManager();
+        // FeatureTable ft = em.find(FeatureTable.class, 2);
+        // for (ErrorTable et : ft.getErrors()) {
+        // System.out.println(et.toString());
+        // }
+        // ErrorEntityManager errorTableEm = new ErrorEntityManager(emFactory);
 
-        List<ErrorTable> allErrorTables = errorTableEm.findAllErrors();
+        // List<ErrorTable> allErrorTables = errorTableEm.findAllErrors();
 
-        for (ErrorTable errorTable : allErrorTables) {
-            System.out.println(errorTable);
-        }
+        // for (ErrorTable errorTable : allErrorTables) {
+        // System.out.println(errorTable);
+        // }
 
         // this.serverManager.getStateManager().populate(stateSet);
-        errorTableEm.cleanup(true);
+        // errorTableEm.cleanup(true);
     }
 
     public void populateStates() {
-        this.populateErrors();
+        // this.populateErrors();
+
         EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("StateTable");
         StateEntityManager stateTableEm = new StateEntityManager(emFactory);
 
-        HashSet<State> stateSet = new HashSet<>();
-        List<StateFeature> allStateFeatures = stateTableEm.findAllStateFeatures();
+        System.out.println(stateTableEm.findById(36).toString());
 
-        for (StateFeature stateFeature : allStateFeatures) {
-            State stateObj = new State(stateFeature);
-            stateSet.add(stateObj);
-        }
+        // HashSet<State> stateSet = new HashSet<>();
+        // List<StateFeature> allStateFeatures = stateTableEm.findAllStateFeatures();
 
-        this.serverManager.getStateManager().populate(stateSet);
-        stateTableEm.cleanup(true);
+        // for (StateFeature stateFeature : allStateFeatures) {
+        // State stateObj = new State(stateFeature);
+        // stateSet.add(stateObj);
+        // }
+
+        // this.serverManager.getStateManager().populate(stateSet);
+        // stateTableEm.cleanup(true);
     }
 
     public void populateCongressional() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("CongressionalTable");
-        CDEntityManager cdEm = new CDEntityManager(emf);
+        // EntityManagerFactory emf =
+        // Persistence.createEntityManagerFactory("CongressionalTable");
+        // CDEntityManager cdEm = new CDEntityManager(emf);
 
-        HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
-        List<CDFeature> allCDFeatures = cdEm.findAllCDFeature();
+        // HashSet<CongressionalDistrict> cdSet = new HashSet<CongressionalDistrict>();
+        // List<CDFeature> allCDFeatures = cdEm.findAllCDFeature();
 
-        for (CDFeature cdFeature : allCDFeatures) {
-            CongressionalDistrict congressionalDistrict = new CongressionalDistrict(cdFeature);
-            cdSet.add(congressionalDistrict);
-        }
+        // for (CDFeature cdFeature : allCDFeatures) {
+        // CongressionalDistrict congressionalDistrict = new
+        // CongressionalDistrict(cdFeature);
+        // cdSet.add(congressionalDistrict);
+        // }
 
-        // OLD
-        // CongressionalDistrict cd = new CongressionalDistrict("NEWCD", 36, 10, null,
-        // null);
-        // CongressionalDistrict cd2 = new CongressionalDistrict("CD2", 55, 11, null,
-        // null);
-        // CongressionalDistrict cd1 = new CongressionalDistrict("CD1", 55, 12, null,
-        // null);
-
-        this.serverManager.getCongressionalManager().populate(cdSet);
-        cdEm.cleanup(true);
+        // this.serverManager.getCongressionalManager().populate(cdSet);
+        // cdEm.cleanup(true);
     }
 
     public void populatePrecinctAndComments() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
         PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature pf = pem.findPrecinctFeatureById("11790");
+        pf.printErrorTable();
 
-        HashSet<Precinct> precinctSet = new HashSet<Precinct>();
-        List<PrecinctFeature> allPrecicnt = pem.findAllPrecinctFeature();
+        // HashSet<Precinct> precinctSet = new HashSet<Precinct>();
+        // List<PrecinctFeature> allPrecicnt = pem.findAllPrecinctFeature();
 
-        for (PrecinctFeature precinctFeature : allPrecicnt) {
-            System.out.println(precinctFeature);
-            Precinct precinct = new Precinct(precinctFeature);
-            precinctSet.add(precinct);
-        }
+        // for (PrecinctFeature precinctFeature : allPrecicnt) {
+        // // System.out.println(precinctFeature);
+        // precinctFeature.printErrorTable();
+        // Precinct precinct = new Precinct(precinctFeature);
+        // precinctSet.add(precinct);
+        // }
 
-        this.serverManager.getPrecinctManager().populate(precinctSet);
+        // this.serverManager.getPrecinctManager().populate(precinctSet);
         pem.cleanup(true);
 
         // EntityManagerFactory emf =

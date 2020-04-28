@@ -1,9 +1,16 @@
 package com.electiondataquality.jpa.tables;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 @Table(name = "features")
@@ -15,6 +22,11 @@ public class FeatureTable {
 
     @Column(name = "geometry")
     private String geometry;
+
+    @OneToMany
+    @JoinColumn(name = "feature_idn", referencedColumnName = "idn", insertable = false, updatable = false)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private Set<ErrorTable> errors;
 
     public FeatureTable() {
     }
@@ -38,6 +50,14 @@ public class FeatureTable {
 
     public void setGeometry(String geometry) {
         this.geometry = geometry;
+    }
+
+    public Set<ErrorTable> getErrors() {
+        return this.errors;
+    }
+
+    public void setErrors(Set<ErrorTable> errors) {
+        this.errors = errors;
     }
 
     @Override

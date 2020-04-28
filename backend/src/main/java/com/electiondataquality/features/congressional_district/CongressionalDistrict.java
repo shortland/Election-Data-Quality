@@ -13,11 +13,11 @@ public class CongressionalDistrict extends Feature {
 
     private String name;
 
-    private int parentStateId;
+    private String parentStateId;
 
-    private int cdId;
+    private String cdId;
 
-    private HashSet<Integer> childrenPrecincts;
+    private HashSet<String> childrenPrecincts;
 
     public CongressionalDistrict(CDFeature cdFeature) {
         this.cdId = cdFeature.getId();
@@ -27,7 +27,7 @@ public class CongressionalDistrict extends Feature {
         this.geometry = RawGeometryToShape.convertRawToGeometry(cdFeature.getFeature().getGeometry());
     }
 
-    public CongressionalDistrict(String name, int parentStateId, int cdId, HashSet<Integer> childrenPrecincts,
+    public CongressionalDistrict(String name, String parentStateId, String cdId, HashSet<String> childrenPrecincts,
             MultiPolygon multiPolygon) {
         super(multiPolygon);
 
@@ -41,23 +41,23 @@ public class CongressionalDistrict extends Feature {
         return this.name;
     }
 
-    public int getId() {
+    public String getId() {
         return this.cdId;
     }
 
-    public int getParentId() {
+    public String getParentId() {
         return this.parentStateId;
     }
 
-    public void setParentId(int newParentId) {
+    public void setParentId(String newParentId) {
         this.parentStateId = newParentId;
     }
 
-    public HashSet<Integer> getChildrenId() {
+    public HashSet<String> getChildrenId() {
         return this.childrenPrecincts;
     }
 
-    public void addChildId(int newChildId) {
+    public void addChildId(String newChildId) {
         if (!this.childrenPrecincts.contains(newChildId)) {
             this.childrenPrecincts.add(newChildId);
         }
@@ -78,8 +78,8 @@ public class CongressionalDistrict extends Feature {
     }
 
     public String toString() {
-        String str = this.getName() + "\nID : " + Integer.toString(this.getId()) + "\nParent ID : "
-                + Integer.toString(this.getParentId()) + "\nChildren : " + this.getChildrenId().toString();
+        String str = this.getName() + "\nID : " + this.getId() + "\nParent ID : " + this.getParentId() + "\nChildren : "
+                + this.getChildrenId().toString();
 
         return str;
     }

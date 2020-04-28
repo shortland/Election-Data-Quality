@@ -17,7 +17,7 @@ public class PrecinctError {
 
     private HashSet<Comment> comments;
 
-    private int parentPrecinctId;
+    private String parentPrecinctId;
 
     public PrecinctError(ERROR_TYPE errorType, int errorId, String errorText, boolean isResolved,
             HashSet<Comment> comments) {
@@ -26,7 +26,7 @@ public class PrecinctError {
         this.errorText = errorText;
         this.isResolved = isResolved;
         this.comments = comments;
-        this.parentPrecinctId = 0;
+        this.parentPrecinctId = "0";
         this.assignCommentParentId();
     }
 
@@ -34,7 +34,7 @@ public class PrecinctError {
         for (Comment c : this.comments) {
             c.setParentErrorId(this.errorId);
 
-            if (this.parentPrecinctId != 0) {
+            if (!this.parentPrecinctId.equals(0)) {
                 c.setParentPrecinctId(this.parentPrecinctId);
             }
         }
@@ -56,11 +56,11 @@ public class PrecinctError {
         this.errorText = errorText;
     }
 
-    public int getParentPrecinctId() {
+    public String getParentPrecinctId() {
         return this.parentPrecinctId;
     }
 
-    public void setParentPrecinctId(int precinctId) {
+    public void setParentPrecinctId(String precinctId) {
         this.parentPrecinctId = precinctId;
 
         for (Comment c : this.comments) {

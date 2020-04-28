@@ -8,7 +8,7 @@ public class Comment {
 
     private int parentErrorId;
 
-    private int parentPrecinctId;
+    private String parentPrecinctId;
 
     // TODO: TimeStamp
     // private Timestamp commentCreated;
@@ -17,7 +17,7 @@ public class Comment {
         this.commentId = id;
         this.commentText = text;
         this.parentErrorId = 0;
-        this.parentPrecinctId = 0;
+        this.parentPrecinctId = "0";
     }
 
     public int getId() {
@@ -32,7 +32,7 @@ public class Comment {
         return this.parentErrorId;
     }
 
-    public int getParentPrecinctId() {
+    public String getParentPrecinctId() {
         return this.parentPrecinctId;
     }
 
@@ -44,7 +44,7 @@ public class Comment {
         this.parentErrorId = parentErrorId;
     }
 
-    public void setParentPrecinctId(int parentPrecinctId) {
+    public void setParentPrecinctId(String parentPrecinctId) {
         this.parentPrecinctId = parentPrecinctId;
     }
 

@@ -15,19 +15,19 @@ import com.electiondataquality.jpa.objects.PrecinctFeature;
 
 public class Precinct extends Feature {
 
-    private int id;
+    private String id;
 
     private String canonicalName;
 
     private String fullName;
 
-    private int parentDistrictId;
+    private String parentDistrictId;
 
     private VotingData votingData;
 
     private DemographicData demographicData;
 
-    private HashSet<Integer> neighborsId;
+    private HashSet<String> neighborsId;
 
     private HashMap<Integer, PrecinctError> precinctErrors;
 
@@ -36,24 +36,24 @@ public class Precinct extends Feature {
     // TODO: figure out mergeing Polygon
     // TODO: error needs more than just merging thee sets
     public static Precinct mergePrecinct(Precinct p1, Precinct p2) {
-        int id = p1.getId();
+        String id = p1.getId();
         String cName = p1.getCanonicalName();
         String fullName = p1.getFullName();
-        int parentId = p1.getParentDistrictId();
+        String parentId = p1.getParentDistrictId();
         VotingData vd = VotingData.mergeVotingData(p1.getVotingData(), p2.getVotingData());
         DemographicData dd = DemographicData.mergeDemographicData(p1.getDemographicData(), p2.getDemographicData());
 
-        HashSet<Integer> neighborsId1 = p1.getNeighborsId();
-        HashSet<Integer> neighborsId2 = p2.getNeighborsId();
-        HashSet<Integer> mergedNeighborsId = new HashSet<Integer>();
+        HashSet<String> neighborsId1 = p1.getNeighborsId();
+        HashSet<String> neighborsId2 = p2.getNeighborsId();
+        HashSet<String> mergedNeighborsId = new HashSet<String>();
 
-        for (int neighborId : neighborsId1) {
+        for (String neighborId : neighborsId1) {
             if (!mergedNeighborsId.contains(neighborId)) {
                 mergedNeighborsId.add(neighborId);
             }
         }
 
-        for (int neighborId : neighborsId2) {
+        for (String neighborId : neighborsId2) {
             if (!mergedNeighborsId.contains(neighborId)) {
                 mergedNeighborsId.add(neighborId);
             }
@@ -91,7 +91,7 @@ public class Precinct extends Feature {
 
     // constructor for JPA
     public Precinct(PrecinctFeature precinctFeature) {
-        this.id = precinctFeature.getId();
+        // this.id = precinctFeature.getId();
         this.fullName = precinctFeature.getFullName();
         this.parentDistrictId = precinctFeature.getParentDistrictId();
         this.geometry = RawGeometryToShape.convertRawToGeometry(precinctFeature.getFeature().getGeometry());
@@ -105,8 +105,8 @@ public class Precinct extends Feature {
         this.precinctErrors = null;
     }
 
-    public Precinct(int id, String canonicalName, String fullName, int parentDistrictId, VotingData votingData,
-            DemographicData demographicData, HashSet<Integer> neighborsId, HashSet<PrecinctError> errors,
+    public Precinct(String id, String canonicalName, String fullName, String parentDistrictId, VotingData votingData,
+            DemographicData demographicData, HashSet<String> neighborsId, HashSet<PrecinctError> errors,
             MultiPolygon multiPolygon) {
         super(multiPolygon);
 
@@ -140,19 +140,19 @@ public class Precinct extends Feature {
         return errorMap;
     }
 
-    public int getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getParentDistrictId() {
+    public String getParentDistrictId() {
         return this.parentDistrictId;
     }
 
-    public void setParentDistrictId(int id) {
+    public void setParentDistrictId(String id) {
         this.parentDistrictId = id;
     }
 
@@ -172,25 +172,25 @@ public class Precinct extends Feature {
         this.fullName = fullname;
     }
 
-    public HashSet<Integer> getNeighborsId() {
+    public HashSet<String> getNeighborsId() {
         return this.neighborsId;
     }
 
-    public void setNeighborsId(HashSet<Integer> neighborsId) {
+    public void setNeighborsId(HashSet<String> neighborsId) {
         this.neighborsId = neighborsId;
     }
 
     // create neighborsId if it was null
-    public void addNeighbor(int neighborId) {
+    public void addNeighbor(String neighborId) {
         if (this.neighborsId != null) {
             this.neighborsId.add(neighborId);
         } else {
-            this.neighborsId = new HashSet<Integer>();
+            this.neighborsId = new HashSet<String>();
             this.neighborsId.add(neighborId);
         }
     }
 
-    public void deleteNeighbor(int neighborId) {
+    public void deleteNeighbor(String neighborId) {
         if (this.neighborsId != null) {
             this.neighborsId.remove(neighborId);
         }
@@ -276,16 +276,16 @@ public class Precinct extends Feature {
     }
 
     public void updatePrecinct(Precinct info) {
-        int infoId = info.getId();
+        String infoId = info.getId();
         String infoCName = info.getCanonicalName();
         String infoFullName = info.getFullName();
-        int infoParentId = info.getParentDistrictId();
-        HashSet<Integer> infoNeighborsId = info.getNeighborsId();
+        String infoParentId = info.getParentDistrictId();
+        HashSet<String> infoNeighborsId = info.getNeighborsId();
         VotingData infoVD = info.getVotingData();
         DemographicData infoDD = info.getDemographicData();
         HashMap<Integer, PrecinctError> infoErrors = info.getPrecinctErrors();
 
-        if (infoId != 0)
+        if (!infoId.equals("0"))
             this.setId(infoId);
 
         if (infoCName != null)
@@ -294,7 +294,7 @@ public class Precinct extends Feature {
         if (infoFullName != null)
             this.setFullName(infoFullName);
 
-        if (infoParentId != 0)
+        if (!infoParentId.equals("0"))
             this.setParentDistrictId(infoParentId);
 
         if (infoNeighborsId != null)

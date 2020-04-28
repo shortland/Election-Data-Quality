@@ -7,11 +7,11 @@ public class County extends Feature {
 
     private String countyName;
 
-    private int parentStateId;
+    private String parentStateId;
 
-    private int countyId;
+    private String countyId;
 
-    public County(String countyName, int parentStateId, int countyId, MultiPolygon multiPolygon) {
+    public County(String countyName, String parentStateId, String countyId, MultiPolygon multiPolygon) {
         super(multiPolygon);
 
         this.countyName = countyName;
@@ -23,21 +23,20 @@ public class County extends Feature {
         return this.countyName;
     }
 
-    public int getId() {
+    public String getId() {
         return this.countyId;
     }
 
-    public int getParentId() {
+    public String getParentId() {
         return this.parentStateId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(String parentId) {
         this.parentStateId = parentId;
     }
 
     public String toString() {
-        String str = this.countyName + "\nID : " + Integer.toString(this.countyId) + "\n Parent ID : "
-                + Integer.toString(this.parentStateId);
+        String str = this.countyName + "\nID : " + this.countyId + "\n Parent ID : " + this.parentStateId;
 
         return str;
     }

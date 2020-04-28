@@ -13,7 +13,7 @@ import com.electiondataquality.restservice.demographics.enums.RACE;
 public class DemographicTable {
     @Id
     @Column(name = "precinct_idn")
-    private int precicntId;
+    private String precicntId;
 
     @Column(name = "asian")
     private int asianPopulation;
@@ -30,7 +30,7 @@ public class DemographicTable {
 
     }
 
-    public DemographicTable(DemographicData demographic_data, int precinctId) {
+    public DemographicTable(DemographicData demographic_data, String precinctId) {
         this.precicntId = precinctId;
         this.asianPopulation = demographic_data.getDemographicByRace(RACE.ASIAN);
         this.blackPopulation = demographic_data.getDemographicByRace(RACE.BLACK);

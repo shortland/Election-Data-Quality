@@ -4,6 +4,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
@@ -16,7 +17,7 @@ public class ErrorTable {
     @Column(name = "idn")
     private int errorId;
 
-    @Column(name = "feature_idn")
+    @Column(name = "feature_idn", insertable = false, updatable = false)
     private int featureId;
 
     // @Column(name = "type")
@@ -35,17 +36,27 @@ public class ErrorTable {
     private int valid;
 
     public ErrorTable() {
+
     }
 
-    public ErrorTable(int errorId, int featureId, String text, Date created, int resolved, int valid) {
+    public ErrorTable(int errorId, int featureId, String text, int resolved, int valid) {
         this.errorId = errorId;
         this.featureId = featureId;
-        // this.errorType = errorType;
         this.text = text;
-        this.created = created;
         this.resolved = resolved;
         this.valid = valid;
     }
+
+    // public ErrorTable(int errorId, int featureId, String text, Date created, int
+    // resolved, int valid) {
+    // this.errorId = errorId;
+    // this.featureId = featureId;
+    // // this.errorType = errorType;
+    // this.text = text;
+    // this.created = created;
+    // this.resolved = resolved;
+    // this.valid = valid;
+    // }
 
     public int getErrorId() {
         return errorId;

@@ -61,6 +61,7 @@ public class StateEntityManager {
     }
 
     public List<StateFeature> findAllStateFeatures() {
+        System.out.println("hji");
         List<StateFeature> results = manager.createQuery("Select a from StateFeature a", StateFeature.class)
                 .getResultList();
 

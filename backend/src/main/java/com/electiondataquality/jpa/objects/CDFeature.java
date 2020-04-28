@@ -16,7 +16,7 @@ public class CDFeature {
 
     @Id
     @Column(name = "fips_code")
-    private int cdId;
+    private String cdId;
 
     @Column(name = "county_name")
     private String name;
@@ -26,7 +26,7 @@ public class CDFeature {
     private FeatureTable feature;
 
     @Column(name = "parent_state_idn")
-    private int parentStateId;
+    private String parentStateId;
 
     @Column(name = "children_precinct_idn")
     private String childrenStr;
@@ -41,11 +41,11 @@ public class CDFeature {
     // this.childrenStr = "";
     // }
 
-    public int getId() {
+    public String getId() {
         return this.cdId;
     }
 
-    public void setId(int cdId) {
+    public void setId(String cdId) {
         this.cdId = cdId;
     }
 
@@ -57,11 +57,11 @@ public class CDFeature {
         this.name = name;
     }
 
-    public int getParentId() {
+    public String getParentId() {
         return this.parentStateId;
     }
 
-    public void setParentId(int id) {
+    public void setParentId(String id) {
         this.parentStateId = id;
     }
 
@@ -73,13 +73,13 @@ public class CDFeature {
         this.feature = feature;
     }
 
-    public HashSet<Integer> childrenStrToArray() {
+    public HashSet<String> childrenStrToArray() {
         String str = this.childrenStr.replaceAll("\\[|]", "");
         String[] childrens = str.split(",");
-        HashSet<Integer> childrenPrecinctIds = new HashSet<Integer>();
+        HashSet<String> childrenPrecinctIds = new HashSet<String>();
 
         for (String idString : childrens) {
-            childrenPrecinctIds.add(Integer.parseInt(idString));
+            childrenPrecinctIds.add(idString);
         }
 
         return childrenPrecinctIds;
@@ -87,10 +87,10 @@ public class CDFeature {
 
     public String toString() {
         if (this.feature != null) {
-            return "Id: " + Integer.toString(this.cdId) + ", Name : " + this.name + "Parent Id : " + this.parentStateId
-                    + "Feature : {\n" + this.feature.toString() + "}";
+            return "Id: " + this.cdId + ", Name : " + this.name + "Parent Id : " + this.parentStateId + "Feature : {\n"
+                    + this.feature.toString() + "}";
         } else {
-            return "Id: " + Integer.toString(this.cdId) + ", Name : " + this.name + "Parent Id : " + this.parentStateId;
+            return "Id: " + this.cdId + ", Name : " + this.name + "Parent Id : " + this.parentStateId;
         }
     }
 }
