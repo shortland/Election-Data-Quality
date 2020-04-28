@@ -22,10 +22,11 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
         </properties>  
     </persistence-unit>  
 
-     <persistence-unit name="congressionalDetails" transaction-type="RESOURCE_LOCAL">  
+     <persistence-unit name="CongressionalTable" transaction-type="RESOURCE_LOCAL">  
         <description>congressionalTables</description>
  
-        <class>com.electiondataquality.jpa.tables.CogressionalDistrictTable</class> 
+        <!-- <class>com.electiondataquality.jpa.tables.CongressionalDistrictTable</class>  -->
+        <class>com.electiondataquality.jpa.objects.CDFeature</class>
         <class>com.electiondataquality.jpa.tables.FeatureTable</class>
 
         <properties>  

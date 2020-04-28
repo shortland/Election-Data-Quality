@@ -1,4 +1,4 @@
-package com.electiondataquality.jpa.tables;
+package com.electiondataquality.jpa.objects;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -8,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.electiondataquality.jpa.tables.FeatureTable;
+
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -15,7 +18,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 @Table(name = "congressional_districts")
-public class CongressionalDistrictTable {
+public class CDFeature {
 
     @Id
     @Column(name = "fips_code")
@@ -34,19 +37,14 @@ public class CongressionalDistrictTable {
     @Column(name = "children_precinct_idn")
     private String childrenStr;
 
-    @Transient
-    private HashSet<Integer> childrenPrecinctIds;
-
-    public CongressionalDistrictTable() {
-        this.childrenPrecinctIds = new HashSet<Integer>();
+    public CDFeature() {
     }
 
-    public CongressionalDistrictTable(int cdId, String name) {
+    public CDFeature(int cdId, String name) {
         this.cdId = cdId;
         this.name = name;
         this.feature = null;
         this.childrenStr = "";
-        this.childrenPrecinctIds = new HashSet<Integer>();
     }
 
     public int getId() {
@@ -65,6 +63,14 @@ public class CongressionalDistrictTable {
         this.name = name;
     }
 
+    public int getParentId() {
+        return this.parentStateId;
+    }
+
+    public void setParentId(int id) {
+        this.parentStateId = id;
+    }
+
     public FeatureTable getFeature() {
         return this.feature;
     }
@@ -73,15 +79,16 @@ public class CongressionalDistrictTable {
         this.feature = feature;
     }
 
-    public void childrenStrToArray() {
+    public HashSet<Integer> childrenStrToArray() {
         String str = this.childrenStr.replaceAll("\\[|]", "");
         String[] childrens = str.split(",");
+        HashSet<Integer> childrenPrecinctIds = new HashSet<Integer>();
         for (String idString : childrens) {
-            this.childrenPrecinctIds.add(Integer.parseInt(idString));
+            childrenPrecinctIds.add(Integer.parseInt(idString));
         }
-
-        System.out.println(this.childrenStr);
-        System.out.println(this.childrenPrecinctIds);
+        return childrenPrecinctIds;
+        // System.out.println(this.childrenStr);
+        // System.out.println(childrenPrecinctIds);
     }
 
     public String toString() {
