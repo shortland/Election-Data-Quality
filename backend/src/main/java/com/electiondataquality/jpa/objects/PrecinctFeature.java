@@ -9,7 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.electiondataquality.jpa.tables.DemographicTable;
 import com.electiondataquality.jpa.tables.FeatureTable;
+import com.electiondataquality.restservice.demographics.DemographicData;
 
 @Entity
 @Table(name = "precincts")
@@ -35,6 +37,10 @@ public class PrecinctFeature {
     @OneToOne
     @JoinColumn(name = "feature_idn")
     private FeatureTable feature;
+
+    @OneToOne
+    @JoinColumn(name = "precinct_idn")
+    private DemographicTable demographic;
 
     public PrecinctFeature() {
 
@@ -77,6 +83,14 @@ public class PrecinctFeature {
         this.feature = feature;
     }
 
+    public DemographicTable getDemogrpahicTable() {
+        return this.demographic;
+    }
+
+    public void setDemographicTable(DemographicTable demographic) {
+        this.demographic = demographic;
+    }
+
     public HashSet<Integer> getNeighborsIdSet() {
         String str = this.neighborsId.replaceAll("\\[|]", "");
         String[] neighbors = str.split(",");
@@ -97,9 +111,21 @@ public class PrecinctFeature {
         return errorIdSet;
     }
 
+    public DemographicData getDemographicData() {
+        if (demographic != null) {
+            DemographicData data = new DemographicData(this.demographic.getAsianPopulation(),
+                    this.demographic.getBlackPopulation(), this.demographic.getHispanicPopulation(),
+                    this.demographic.getOtherPopulation(), this.demographic.getWhitePopulation());
+            return data;
+        } else {
+            return null;
+        }
+
+    }
+
     public String toString() {
         return "Id : " + Integer.toString(this.id) + " Name : " + this.fullName + "Parent ID : " + this.parentDistrictId
-                + "Feature" + this.feature.toString();
+                + "Demographic : " + this.demographic.toString() + "Feature" + this.feature.toString();
     }
 
     // private VotingData votingData;

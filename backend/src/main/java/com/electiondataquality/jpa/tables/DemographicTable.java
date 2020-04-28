@@ -67,4 +67,11 @@ public class DemographicTable {
         this.whitePopulation = whitePopulation;
     }
 
+    public String toString() {
+        return "Asian : " + Integer.toString(this.asianPopulation) + " Black : "
+                + Integer.toString(this.blackPopulation) + " Hispanic : " + Integer.toString(this.hispanicPopulation)
+                + " Other : " + Integer.toString(this.otherPopulation) + " White : "
+                + Integer.toString(this.whitePopulation);
+    }
+
 }
