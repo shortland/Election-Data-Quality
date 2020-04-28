@@ -1,5 +1,7 @@
 package com.electiondataquality.restservice.controllers;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -456,9 +458,10 @@ public class PrecinctController {
     @GetMapping("/createNewPrecinct")
     public ErrorJ createNewPrecinct(@RequestParam MultiPolygon mp) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        int newId = precinctManager.getLargestPrecinctId() + 1;
-        Precinct newPrecinct = new Precinct(newId, "", "", 0, null, null, null, null, mp);
-
+        BigInteger bigintId = new BigInteger(precinctManager.getLargestPrecinctId());
+        bigintId.add(new BigInteger("1"));
+        String newId = new String(bigintId.toByteArray());
+        Precinct newPrecinct = new Precinct(newId, "", "", null, null, null, null, null, mp);
         precinctManager.addPrecinct(newPrecinct);
 
         return ErrorGen.ok();

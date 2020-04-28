@@ -71,10 +71,10 @@ public class PrecinctFeature {
                     precinct.getId());
             this.electionDataTableSet.add(edt);
         }
-        HashSet<PrecinctError> allErrors = precinct.getAllError();
-        for (PrecinctError pe : allErrors) {
-            ErrorTable et = new ErrorTable(pe.getId(), featureId, text, resolved, valid)
-        }
+        // HashSet<PrecinctError> allErrors = precinct.getAllError();
+        // for (PrecinctError pe : allErrors) {
+        // ErrorTable et = new ErrorTable(pe.getId(), featureId, text, resolved, valid)
+        // }
         // feature
         // errorsId
     }
