@@ -6,9 +6,11 @@ import sys
 if __name__ == '__main__':
     precinctFileName = ""
     outputFileNamePrefix = ""
+    previousPath = ""
     try:
         precinctFileName : str = sys.argv[1]
         outputFileNamePrefix = precinctFileName[:precinctFileName.find(".")]
+        previousPath = precinctFileName[:precinctFileName.rfind("/")]
     except:
         print("INVALID USAGE: Please input an state, precinct, and output file name")
         print("Usage:")
@@ -33,13 +35,14 @@ if __name__ == '__main__':
     for index, precinct in precinctGDF.iterrows():
 
         if precinct.CNTY_NAME in splitDataFrameDict.keys():
-            splitDataFrameDict[precinct.CNTY_NAME].append(index)
+            splitDataFrameDict[precinct.CNTY_NAME].append(precinctGDF[index:(index+1)])
         else:
-            splitDataFrameDict[precinct.CNTY_NAME] = [index]
+            splitDataFrameDict[precinct.CNTY_NAME] = precinctGDF[index:(index+1)]
 
 
     for county in splitDataFrameDict:
         # Iterate over all the data and export into individual geojson
-        startIndex = splitDataFrameDict[county].__getitem__(0)
-        endIndex = splitDataFrameDict[county].__getitem__(splitDataFrameDict[county].__len__()-1)
-        precinctGDF[startIndex:endIndex].to_file(outputFileNamePrefix+"_"+county+"_County.GeoJSON", driver='GeoJSON')
+        # startIndex = splitDataFrameDict[county].__getitem__(0)
+        # endIndex = splitDataFrameDict[county].__getitem__(splitDataFrameDict[county].__len__()-1)
+        outputFileName = outputFileNamePrefix + "_" + str(county) + "_County.GeoJSON"
+        precinctGDF[precinctGDF.CNTY_NAME == county].to_file(outputFileName, driver='GeoJSON')

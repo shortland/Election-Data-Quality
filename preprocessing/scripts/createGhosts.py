@@ -26,7 +26,7 @@ if __name__ == '__main__':
     # has been modified to find that ID Number.
     precinctTXT = open(statePrecinctDataFileName, mode="rt")
     tempData = precinctTXT.read()
-    stateID = "55"
+    stateID = "49"
     if tempData.find("STATE_ID") == -1:
         id = tempData[tempData.find("\"GEOID\": \"")+10:tempData.find("\"GEOID\": \"")+12]
         stateID = str(id)
@@ -46,8 +46,8 @@ if __name__ == '__main__':
 
     precinctGDF = precinctGDF.dissolve(by='STATE_ID')
 
-    stateGDF.explode()
-    precinctGDF.explode()
+    # stateGDF.explode()
+    # precinctGDF.explode()
 
     precinctGDF.crs
     stateGDF.crs
@@ -57,13 +57,13 @@ if __name__ == '__main__':
     ghosts = geopandas.overlay(precinctGDF, stateGDF, how="symmetric_difference", keep_geom_type=False)
 
     # Explode Multipolygons into multiple single polygons
-    ghosts = ghosts.explode()
+    # ghosts = ghosts.explode()
 
     ghosts['GEOID'] = None
     for index, ghost in ghosts.iterrows():
         CNTY_FIPS = '999'
         COUSUBFP = '99999'
-        precinctID = str(index[1]).zfill(4)
+        precinctID = str(index).zfill(4)
         ghosts.loc[index, "GEOID"] = str(stateID)+CNTY_FIPS+COUSUBFP+precinctID
         ghosts.loc[index, "CNTY_FIPS"] = CNTY_FIPS
         ghosts.loc[index, "CNTY_NAME"] = None
