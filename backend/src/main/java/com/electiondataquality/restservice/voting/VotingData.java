@@ -1,6 +1,7 @@
 package com.electiondataquality.restservice.voting;
 
 import java.util.EnumMap;
+import java.util.HashSet;
 
 import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,35 +12,25 @@ public class VotingData {
     private EnumMap<ELECTIONS, ElectionResults> electionData;
 
     public static VotingData mergeVotingData(VotingData vd1, VotingData vd2) {
-        ELECTIONS[] allElections;
-        ElectionResults[] result;
-
-        if (vd1.getAllElections().length > vd2.getAllElections().length) {
+        HashSet<ELECTIONS> allElections;
+        HashSet<ElectionResults> results = new HashSet<ElectionResults>();
+        if (vd1.getAllElections().size() > vd2.getAllElections().size()) {
             allElections = vd1.getAllElections();
-            result = new ElectionResults[vd1.getAllElections().length];
         } else {
             allElections = vd2.getAllElections();
-            result = new ElectionResults[vd2.getAllElections().length];
         }
-
-        int counter = 0;
         for (ELECTIONS e : allElections) {
             ElectionResults er1 = vd1.getElectionData(e);
             ElectionResults er2 = vd2.getElectionData(e);
-
             if (er1 != null && er2 != null) {
-                result[counter] = ElectionResults.mergeElectionResults(er1, er2);
+                results.add(ElectionResults.mergeElectionResults(er1, er2));
             } else if (er1 == null && er2 != null) {
-                result[counter] = er2;
+                results.add(er2);
             } else if (er1 == null && er2 != null) {
-                result[counter] = er1;
+                results.add(er1);
             }
-
-            counter += 1;
         }
-
-        VotingData mergedVD = new VotingData(result);
-
+        VotingData mergedVD = new VotingData(results);
         return mergedVD;
     }
 
@@ -47,23 +38,19 @@ public class VotingData {
         this.electionData = new EnumMap<ELECTIONS, ElectionResults>(ELECTIONS.class);
     }
 
-    public VotingData(ElectionResults[] arrE) {
+    public VotingData(HashSet<ElectionResults> erSet) {
         this.electionData = new EnumMap<ELECTIONS, ElectionResults>(ELECTIONS.class);
-
-        for (int i = 0; i < arrE.length; i++) {
-            ElectionResults currE = arrE[i];
-            this.electionData.put(currE.getElection(), currE);
+        for (ElectionResults er : erSet) {
+            this.electionData.put(er.getElection(), er);
         }
     }
 
     @JsonIgnore
-    public ELECTIONS[] getAllElections() {
-        ELECTIONS[] allElections = new ELECTIONS[this.electionData.size()];
+    public HashSet<ELECTIONS> getAllElections() {
+        HashSet<ELECTIONS> allElections = new HashSet<ELECTIONS>();
 
-        int counter = 0;
         for (ELECTIONS e : this.electionData.keySet()) {
-            allElections[counter] = e;
-            counter += 1;
+            allElections.add(e);
         }
 
         return allElections;

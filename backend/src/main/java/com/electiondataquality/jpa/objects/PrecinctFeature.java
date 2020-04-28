@@ -1,17 +1,24 @@
 package com.electiondataquality.jpa.objects;
 
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.electiondataquality.jpa.tables.DemographicTable;
+import com.electiondataquality.jpa.tables.ElectionDataTable;
 import com.electiondataquality.jpa.tables.FeatureTable;
 import com.electiondataquality.restservice.demographics.DemographicData;
+import com.electiondataquality.restservice.voting.VotingData;
+import com.electiondataquality.restservice.voting.elections.ElectionResults;
+import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 
 @Entity
 @Table(name = "precincts")
@@ -41,6 +48,10 @@ public class PrecinctFeature {
     @OneToOne
     @JoinColumn(name = "precinct_idn")
     private DemographicTable demographic;
+
+    @OneToMany
+    @JoinColumn(name = "precinct_idn")
+    private Set<ElectionDataTable> electionDataTableSet;
 
     public PrecinctFeature() {
 
@@ -91,6 +102,22 @@ public class PrecinctFeature {
         this.demographic = demographic;
     }
 
+    public Set<ElectionDataTable> getElectionDataSet() {
+        return this.electionDataTableSet;
+    }
+
+    public void addElecionalDataTable(ElectionDataTable electionDataTable) {
+        this.electionDataTableSet.add(electionDataTable);
+    }
+
+    public void removeElectionalDataTable(String election, int precicnt_idn) {
+        for (ElectionDataTable edt : this.electionDataTableSet) {
+            if (edt.getElection().equals(election) && edt.getPrecinctId() == precicnt_idn) {
+                this.electionDataTableSet.remove(edt);
+            }
+        }
+    }
+
     public HashSet<Integer> getNeighborsIdSet() {
         String str = this.neighborsId.replaceAll("\\[|]", "");
         String[] neighbors = str.split(",");
@@ -120,7 +147,37 @@ public class PrecinctFeature {
         } else {
             return null;
         }
+    }
 
+    private ElectionResults convertToElectionResult(ElectionDataTable electionDataTable) {
+        String election = electionDataTable.getElection();
+        if (election.equals("PRES2016")) {
+            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
+                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
+                    ELECTIONS.PRES2016);
+            return result;
+        } else if (election.equals("CONG2016")) {
+            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
+                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
+                    ELECTIONS.CONG2016);
+            return result;
+        } else if (election.equals("CONG2018")) {
+            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
+                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
+                    ELECTIONS.CONG2018);
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+    public VotingData getVotingData() {
+        HashSet<ElectionResults> data = new HashSet<ElectionResults>();
+        for (ElectionDataTable edt : this.electionDataTableSet) {
+            data.add(this.convertToElectionResult(edt));
+        }
+        VotingData vd = new VotingData(data);
+        return vd;
     }
 
     public String toString() {
