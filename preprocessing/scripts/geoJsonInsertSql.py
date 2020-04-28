@@ -36,8 +36,12 @@ def make_insert(inputFile, notes, dbCursor, db):
             #     stateFp, congdFp, geoId, nameLsad)
 
             # Query for Precincts
-            insertQuery = "INSERT IGNORE INTO `precincts` (`precinct_idn`, `county_fips_code`, `neighbors_idn`, `fullname`) VALUES (\'%d\', \'%s\', \'%s\', \'%s\')" % (
-                geoId, area["properties"]["CNTY_FIPS"], "[" + area["properties"]["NEIGHBORS"] + "]", area["properties"]["PrecinctID"])
+            neighbors = area["properties"]["NEIGHBORS"]
+            if neighbors == None:
+                neighbors = ""
+
+            insertQuery = "INSERT IGNORE INTO `precincts` (`precinct_idn`, `county_fips_code`, `neighbors_idn`, `fullname`) VALUES (\'%s\', \'%s\', \'%s\', \'%s\')" % (
+                geoId, area["properties"]["CNTY_FIPS"], "[" + neighbors + "]", area["properties"]["WARDID"])  # Utah - PrecinctID, Wisconsin - WARDID
 
             dbCursor.execute(insertQuery)
             db.commit()
@@ -55,7 +59,7 @@ def make_relationship(dbCursor, db):
 
     for geoId in geoIds:
         dbCursor.execute(
-            "SELECT idn FROM features WHERE geo_id = %s" % (geoId[0]))
+            "SELECT idn FROM features WHERE geo_id = '%s'" % (geoId[0]))
         featureIdns = dbCursor.fetchall()
 
         for featureIdn in featureIdns:
@@ -65,7 +69,7 @@ def make_relationship(dbCursor, db):
 
             # Query for Precincts
             dbCursor.execute(
-                "UPDATE precincts SET feature_idn = %s WHERE precinct_idn = %s" % (featureIdn[0], geoId[0]))
+                "UPDATE IGNORE precincts SET feature_idn = '%s' WHERE precinct_idn = '%s'" % (featureIdn[0], geoId[0]))
             db.commit()
 
             print(dbCursor.rowcount,
@@ -81,8 +85,8 @@ if __name__ == "__main__":
     )
     dbCursor = db.cursor()
 
-    for file in os.listdir("../data/Utah/Utah_Precinct_Data_Split_By_County/"):
+    for file in os.listdir("../data/Wisconsin/Wisconsin_Precinct_Data_Split_By_County/"):
         if file.endswith(".GeoJSON"):
-            # make_insert(os.path.join(
-            #     "../data/Utah/Utah_Precinct_Data_Split_By_County/", file), file, dbCursor, db)
+            make_insert(os.path.join(
+                "../data/Wisconsin/Wisconsin_Precinct_Data_Split_By_County/", file), file, dbCursor, db)
             make_relationship(dbCursor, db)
