@@ -10,6 +10,11 @@ import Geocoder from 'react-map-gl-geocoder';
 import { Editor, EditorModes } from 'react-map-gl-draw';
 
 /**
+ * JS classes
+ */
+import AppData from './data/AppData';
+
+/**
  * CSS Styling
  */
 import './App.css';
@@ -84,6 +89,7 @@ export default class App extends Component {
 
         this._editorRef = null;
         this.showErrorPins = this.showErrorPins.bind(this);
+        this.appData = null;
     }
 
     /**
@@ -207,6 +213,13 @@ export default class App extends Component {
     };
 
     componentDidMount() {
+        this.appData = new AppData();
+        this.appData.fetchAllStates()
+            .then(data => {
+                console.log(data);
+                this.allStates = data;
+            });
+        console.log(this.allStates);
         /**
          * State data
          */
@@ -224,7 +237,7 @@ export default class App extends Component {
         /**
          * County data outline
          */
-        json(
+        /* json(
             NY_COUNTY_SHORELINE_DATA,
             (error, response) => {
                 if (!error) {
@@ -233,7 +246,7 @@ export default class App extends Component {
                     });
                 }
             }
-        );
+        ); */
 
         /**
          * County data
@@ -252,16 +265,16 @@ export default class App extends Component {
         /**
          * Precinct Data
          */
-        json(
-            NY_PRECINCT_DATA,
-            (error, response) => {
-                if (!error) {
-                    this.setState({
-                        precinctData: response,
-                    });
-                }
-            }
-        );
+        /*  json(
+             NY_PRECINCT_DATA,
+             (error, response) => {
+                 if (!error) {
+                     this.setState({
+                         precinctData: response,
+                     });
+                 }
+             }
+         ); */
     }
 
     _onClick = event => {

@@ -3,6 +3,7 @@ package com.electiondataquality.restservice.controllers;
 import java.util.ArrayList;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.managers.StateManager;
@@ -14,6 +15,7 @@ public class StateController {
     /**
      * Get the shape data for all of the states
      */
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/allStates")
     public ArrayList<State> getAllStates() {
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
