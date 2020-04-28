@@ -7,14 +7,14 @@ import com.electiondataquality.features.congressional_district.CongressionalDist
 
 public class CongressionalManager {
 
-    private HashMap<Integer, CongressionalDistrict> congressionalDistrictMap;
+    private HashMap<String, CongressionalDistrict> congressionalDistrictMap;
 
     public CongressionalManager() {
-        this.congressionalDistrictMap = new HashMap<Integer, CongressionalDistrict>();
+        this.congressionalDistrictMap = new HashMap<String, CongressionalDistrict>();
     }
 
     public CongressionalManager(HashSet<CongressionalDistrict> congDistrictSet) {
-        this.congressionalDistrictMap = new HashMap<Integer, CongressionalDistrict>();
+        this.congressionalDistrictMap = new HashMap<String, CongressionalDistrict>();
 
         for (CongressionalDistrict cd : congDistrictSet) {
             this.congressionalDistrictMap.put(cd.getId(), cd);
@@ -30,7 +30,7 @@ public class CongressionalManager {
         }
     }
 
-    public CongressionalDistrict getCongDistrict(int cdId) {
+    public CongressionalDistrict getCongDistrict(String cdId) {
         if (this.congressionalDistrictMap.containsKey(cdId)) {
             return this.congressionalDistrictMap.get(cdId);
         }
@@ -38,7 +38,7 @@ public class CongressionalManager {
         return null;
     }
 
-    public HashSet<Integer> getAllChildrenPrecinct(int cdId) {
+    public HashSet<String> getAllChildrenPrecinct(String cdId) {
         if (this.congressionalDistrictMap.containsKey(cdId)) {
             return this.congressionalDistrictMap.get(cdId).getChildrenId();
         }
@@ -49,7 +49,7 @@ public class CongressionalManager {
     public String toString() {
         String str = "";
 
-        for (int id : this.congressionalDistrictMap.keySet()) {
+        for (String id : this.congressionalDistrictMap.keySet()) {
             str = str + this.congressionalDistrictMap.get(id).toString() + "\n";
         }
 

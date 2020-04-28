@@ -9,14 +9,14 @@ import com.electiondataquality.features.state.State;
 
 public class StateManager {
 
-    private HashMap<Integer, State> stateMap;
+    private HashMap<String, State> stateMap;
 
     public StateManager() {
-        this.stateMap = new HashMap<Integer, State>();
+        this.stateMap = new HashMap<String, State>();
     }
 
     public StateManager(HashSet<State> stateSet) {
-        this.stateMap = new HashMap<Integer, State>();
+        this.stateMap = new HashMap<String, State>();
 
         for (State s : stateSet) {
             this.stateMap.put(s.getId(), s);
@@ -35,14 +35,14 @@ public class StateManager {
     public ArrayList<State> getAllStates() {
         ArrayList<State> allStates = new ArrayList<>();
 
-        for (Map.Entry<Integer, State> state : this.stateMap.entrySet()) {
+        for (Map.Entry<String, State> state : this.stateMap.entrySet()) {
             allStates.add(state.getValue());
         }
 
         return allStates;
     }
 
-    public State getState(int stateId) {
+    public State getState(String stateId) {
         if (this.stateMap.containsKey(stateId)) {
             return this.stateMap.get(stateId);
         }
@@ -50,7 +50,7 @@ public class StateManager {
         return null;
     }
 
-    public HashSet<Integer> getAllCounties(int stateId) {
+    public HashSet<String> getAllCounties(String stateId) {
         if (this.stateMap.containsKey(stateId)) {
             return this.stateMap.get(stateId).getCountiesId();
         }
@@ -58,7 +58,7 @@ public class StateManager {
         return null;
     }
 
-    public HashSet<Integer> getAllDistricts(int stateId) {
+    public HashSet<String> getAllDistricts(String stateId) {
         if (this.stateMap.containsKey(stateId)) {
             return this.stateMap.get(stateId).getDistrictsId();
         }
@@ -69,7 +69,7 @@ public class StateManager {
     public String toString() {
         String str = "";
 
-        for (int id : this.stateMap.keySet()) {
+        for (String id : this.stateMap.keySet()) {
             str = str + this.stateMap.get(id).toString() + "\n";
         }
 

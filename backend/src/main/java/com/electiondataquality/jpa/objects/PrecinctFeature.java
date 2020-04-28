@@ -1,12 +1,8 @@
 package com.electiondataquality.jpa.objects;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,6 +11,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.electiondataquality.features.precinct.Precinct;
+import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.jpa.tables.DemographicTable;
 import com.electiondataquality.jpa.tables.ErrorTable;
 import com.electiondataquality.jpa.tables.ElectionDataTable;
@@ -30,14 +28,14 @@ public class PrecinctFeature {
 
     @Id
     @Column(name = "precinct_idn")
-    private int id;
+    private String id;
     // @Column(name = "")
     // private String canonicalName;
     @Column(name = "fullname")
     private String fullName;
 
     @Column(name = "county_fips_code")
-    private int parentDistrictId;
+    private String parentDistrictId;
 
     @Column(name = "neighbors_idn")
     private String neighborsId;
@@ -49,11 +47,6 @@ public class PrecinctFeature {
     @JoinColumn(name = "feature_idn")
     private FeatureTable feature;
 
-    // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @OneToMany
-    @JoinColumn(name = "feature_idn")
-    private List<ErrorTable> errors;
-
     @OneToOne
     @JoinColumn(name = "precinct_idn")
     private DemographicTable demographic;
@@ -62,22 +55,46 @@ public class PrecinctFeature {
     @JoinColumn(name = "precinct_idn")
     private Set<ElectionDataTable> electionDataTableSet;
 
+    @OneToMany
+    @JoinColumn(name = "precinct_idn")
+    private Set<ErrorTable> errors;
+
     public PrecinctFeature() {
         // this.errors = new;
     }
 
-    public PrecinctFeature(int id, String fullName) {
+    // TODO: for data to be store back to the database
+    public PrecinctFeature(Precinct precinct) {
+        this.id = precinct.getId();
+        this.fullName = precinct.getFullName();
+        this.parentDistrictId = precinct.getParentDistrictId();
+        this.demographic = new DemographicTable(precinct.getDemographicData(), precinct.getId());
+        this.electionDataTableSet = new HashSet<ElectionDataTable>();
+        for (ELECTIONS e : precinct.getVotingData().getAllElections()) {
+            ElectionDataTable edt = new ElectionDataTable(precinct.getVotingData().getElectionData(e),
+                    precinct.getId());
+            this.electionDataTableSet.add(edt);
+        }
+        // HashSet<PrecinctError> allErrors = precinct.getAllError();
+        // for (PrecinctError pe : allErrors) {
+        // ErrorTable et = new ErrorTable(pe.getId(), featureId, text, resolved, valid)
+        // }
+        // feature
+        // errorsId
+    }
+
+    public PrecinctFeature(String id, String fullName) {
         this.id = id;
         this.fullName = fullName;
 
         // this.errors = new ArrayList<ErrorTable>();
     }
 
-    public int getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -89,11 +106,11 @@ public class PrecinctFeature {
         this.fullName = fullName;
     }
 
-    public int getParentDistrictId() {
+    public String getParentDistrictId() {
         return this.parentDistrictId;
     }
 
-    public void setParentDistrictId(int parentDistrictId) {
+    public void setParentDistrictId(String parentDistrictId) {
         this.parentDistrictId = parentDistrictId;
     }
 
@@ -121,20 +138,20 @@ public class PrecinctFeature {
         this.electionDataTableSet.add(electionDataTable);
     }
 
-    public void removeElectionalDataTable(String election, int precicnt_idn) {
+    public void removeElectionalDataTable(String election, String precicnt_idn) {
         for (ElectionDataTable edt : this.electionDataTableSet) {
-            if (edt.getElection().equals(election) && edt.getPrecinctId() == precicnt_idn) {
+            if (edt.getElection().equals(election) && edt.getPrecinctId().equals(precicnt_idn)) {
                 this.electionDataTableSet.remove(edt);
             }
         }
     }
 
-    public HashSet<Integer> getNeighborsIdSet() {
+    public HashSet<String> getNeighborsIdSet() {
         String str = this.neighborsId.replaceAll("\\[|]", "");
         String[] neighbors = str.split(",");
-        HashSet<Integer> neighborsIdSet = new HashSet<Integer>();
+        HashSet<String> neighborsIdSet = new HashSet<String>();
         for (String idString : neighbors) {
-            neighborsIdSet.add(Integer.parseInt(idString));
+            neighborsIdSet.add(idString);
         }
         return neighborsIdSet;
     }
@@ -160,12 +177,10 @@ public class PrecinctFeature {
         }
     }
 
-    public List<ErrorTable> getErrorTables() {
-        return this.errors;
-    }
-
-    public void setErrorTables(List<ErrorTable> errorTables) {
-        this.errors = errorTables;
+    public void printErrorTable() {
+        for (ErrorTable et : this.errors) {
+            System.out.println(et.toString());
+        }
     }
 
     private ElectionResults convertToElectionResult(ElectionDataTable electionDataTable) {
@@ -200,8 +215,8 @@ public class PrecinctFeature {
     }
 
     public String toString() {
-        return "Id : " + Integer.toString(this.id) + " Name : " + this.fullName + "Parent ID : " + this.parentDistrictId
-                + " Errors: " + this.errors + "\nDemographic : " + this.demographic.toString() + "Feature : "
+        return "Id : " + this.id + " Name : " + this.fullName + "Parent ID : " + this.parentDistrictId + " Errors: "
+                + this.errors + "\nDemographic : " + this.demographic.toString() + "Feature : "
                 + this.feature.toString();
     }
 

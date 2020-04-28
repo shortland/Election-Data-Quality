@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.electiondataquality.restservice.voting.elections.ElectionResults;
+import com.electiondataquality.restservice.voting.elections.enums.PARTIES;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+
 @Entity
 @Table(name = "election_data")
 public class ElectionDataTable {
@@ -28,10 +32,20 @@ public class ElectionDataTable {
     private String election;
 
     @Column(name = "precinct_idn")
-    private int precinct_id;
+    private String precinct_id;
 
     public ElectionDataTable() {
 
+    }
+
+    public ElectionDataTable(ElectionResults electionResults, String precinctId) {
+        this.election = electionResults.getElection().name();
+        this.precinct_id = precinctId;
+        this.dataId = precinctId + "_" + this.election;
+        this.republican_vote = electionResults.getResultByParty(PARTIES.REPUBLICAN);
+        this.democrat_vote = electionResults.getResultByParty(PARTIES.DEMOCRAT);
+        this.libratarian_vote = electionResults.getResultByParty(PARTIES.LIBRATARIAN);
+        this.other_vote = electionResults.getResultByParty(PARTIES.OTHER);
     }
 
     public int getRepulican() {
@@ -74,15 +88,15 @@ public class ElectionDataTable {
         this.election = election;
     }
 
-    public int getPrecinctId() {
+    public String getPrecinctId() {
         return this.precinct_id;
     }
 
-    public void setPrecicntId(int precinct_id) {
+    public void setPrecicntId(String precinct_id) {
         this.precinct_id = precinct_id;
     }
 
     public String toString() {
-        return "PID : " + Integer.toString(this.precinct_id) + "ELECTION : " + this.election;
+        return "PID : " + this.precinct_id + "ELECTION : " + this.election;
     }
 }

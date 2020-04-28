@@ -32,10 +32,11 @@ public class CommentController {
      */
     @CrossOrigin
     @RequestMapping(value = "/createComment", method = RequestMethod.POST)
-    public ErrorJ createComment(@RequestBody String commentText, @RequestParam int precinctId,
+    public ErrorJ createComment(@RequestBody String commentText, @RequestParam String precinctId,
             @RequestParam int errorId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
+
         int newId = commentManager.getLargestId() + 1;
         Comment newComment = new Comment(newId, commentText);
         Precinct parentPrecinct = precinctManager.getPrecinct(precinctId);
@@ -50,13 +51,12 @@ public class CommentController {
                 commentManager.addComment(newComment);
 
                 return ErrorGen.ok();
-            } else {
-                return ErrorGen.create("unable to get error");
             }
-        } else {
-            return ErrorGen.create("unable to get precinct");
+
+            return ErrorGen.create("unable to get error");
         }
 
+        return ErrorGen.create("unable to get precinct");
     }
 
     /**
@@ -78,9 +78,9 @@ public class CommentController {
             target.updateText(commentText);
 
             return ErrorGen.ok();
-        } else {
-            return ErrorGen.create("unable to update specified comment");
         }
+
+        return ErrorGen.create("unable to update specified comment");
     }
 
     /**
@@ -100,7 +100,7 @@ public class CommentController {
 
         if (target != null) {
             int parentErrorId = target.getParentErrorId();
-            int parentPrecinctId = target.getParentPrecinctId();
+            String parentPrecinctId = target.getParentPrecinctId();
             Precinct parentPrecinct = precinctManager.getPrecinct(parentPrecinctId);
 
             if (parentPrecinct != null) {
@@ -117,9 +117,9 @@ public class CommentController {
             }
 
             return ErrorGen.ok();
-        } else {
-            return ErrorGen.create("unable to delete specified comment");
         }
+
+        return ErrorGen.create("unable to delete specified comment");
     }
 
     /**

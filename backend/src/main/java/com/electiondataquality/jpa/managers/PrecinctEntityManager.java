@@ -46,12 +46,12 @@ public class PrecinctEntityManager {
         }
     }
 
-    public Optional<PrecinctFeature> findPrecinctFeatureById(int id) {
+    public PrecinctFeature findPrecinctFeatureById(String id) {
         PrecinctFeature result = em
-                .createQuery("Select a from PrecinctFeature a where precinct_idn = " + id, PrecinctFeature.class)
+                .createQuery("Select a from PrecinctFeature a where precinct_idn = '" + id + "'", PrecinctFeature.class)
                 .getSingleResult();
 
-        return Optional.of(result);
+        return result;
     }
 
     public List<PrecinctFeature> findAllPrecinctFeature() {

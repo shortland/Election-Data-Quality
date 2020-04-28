@@ -5,12 +5,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.electiondataquality.restservice.demographics.DemographicData;
+import com.electiondataquality.restservice.demographics.enums.RACE;
+
 @Entity
 @Table(name = "demographic_data")
 public class DemographicTable {
     @Id
     @Column(name = "precinct_idn")
-    private int precicntId;
+    private String precicntId;
 
     @Column(name = "asian")
     private int asianPopulation;
@@ -25,6 +28,15 @@ public class DemographicTable {
 
     public DemographicTable() {
 
+    }
+
+    public DemographicTable(DemographicData demographic_data, String precinctId) {
+        this.precicntId = precinctId;
+        this.asianPopulation = demographic_data.getDemographicByRace(RACE.ASIAN);
+        this.blackPopulation = demographic_data.getDemographicByRace(RACE.BLACK);
+        this.hispanicPopulation = demographic_data.getDemographicByRace(RACE.HISPANIC);
+        this.otherPopulation = demographic_data.getDemographicByRace(RACE.OTHER);
+        this.whitePopulation = demographic_data.getDemographicByRace(RACE.WHITE);
     }
 
     public int getAsianPopulation() {

@@ -53,11 +53,12 @@ public class StateEntityManager {
         return results;
     }
 
-    public Optional<StateTable> findById(int id) {
-        StateTable result = manager.createQuery("Select a from StateTable a where state_idn = " + id, StateTable.class)
+    public StateTable findById(String id) {
+        StateTable result = manager
+                .createQuery("Select a from StateTable a where state_idn = '" + id + "'", StateTable.class)
                 .getSingleResult();
 
-        return Optional.of(result);
+        return result;
     }
 
     public List<StateFeature> findAllStateFeatures() {

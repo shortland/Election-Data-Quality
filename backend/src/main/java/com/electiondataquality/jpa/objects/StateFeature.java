@@ -15,7 +15,7 @@ public class StateFeature {
 
     @Id
     @Column(name = "state_idn")
-    private int stateId;
+    private String stateId;
 
     @Column(name = "state_name")
     private String stateName;
@@ -30,18 +30,18 @@ public class StateFeature {
     public StateFeature() {
     }
 
-    public StateFeature(int stateId, String stateName, String stateAbv) {
+    public StateFeature(String stateId, String stateName, String stateAbv) {
         this.stateId = stateId;
         this.stateName = stateName;
         this.stateAbv = stateAbv;
         this.feature = null;
     }
 
-    public int getStateId() {
+    public String getStateId() {
         return stateId;
     }
 
-    public void setStateId(int stateId) {
+    public void setStateId(String stateId) {
         this.stateId = stateId;
     }
 

@@ -39,7 +39,8 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
 
     <persistence-unit name="ErrorTable" transaction-type="RESOURCE_LOCAL">  
         <description>errorTable</description>
- 
+
+        <class>com.electiondataquality.jpa.tables.FeatureTable</class>
         <class>com.electiondataquality.jpa.tables.ErrorTable</class>
 
         <properties>  
@@ -55,9 +56,9 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
         <description>precinctTable</description>
  
         <class>com.electiondataquality.jpa.objects.PrecinctFeature</class>
+        <class>com.electiondataquality.jpa.tables.ErrorTable</class>
         <class>com.electiondataquality.jpa.tables.FeatureTable</class>
         <class>com.electiondataquality.jpa.tables.DemographicTable</class>
-        <class>com.electiondataquality.jpa.tables.ErrorTable</class>
         <class>com.electiondataquality.jpa.tables.ElectionDataTable</class>
 
         <properties>  

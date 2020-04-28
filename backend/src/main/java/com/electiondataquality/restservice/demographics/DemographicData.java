@@ -16,7 +16,7 @@ public class DemographicData {
         RACE[] rs = { RACE.ASIAN, RACE.BLACK, RACE.HISPANIC, RACE.OTHER, RACE.WHITE };
 
         for (int i = 0; i < rs.length; i++) {
-            population[i] = dd1.getDemogaphic(rs[i]) + dd2.getDemogaphic(rs[i]);
+            population[i] = dd1.getDemographicByRace(rs[i]) + dd2.getDemographicByRace(rs[i]);
         }
 
         DemographicData mergedDD = new DemographicData(population[0], population[1], population[2], population[3],
@@ -51,11 +51,11 @@ public class DemographicData {
         return this.total;
     }
 
-    public EnumMap<RACE, Integer> getDemographicByRace() {
+    public EnumMap<RACE, Integer> getDemographic() {
         return this.demographicByRace;
     }
 
-    public int getDemogaphic(RACE race) {
+    public int getDemographicByRace(RACE race) {
         if (this.demographicByRace.containsKey(race)) {
             return this.demographicByRace.get(race);
         }
@@ -65,7 +65,7 @@ public class DemographicData {
 
     public double getDemogaphicPercentage(RACE race) {
         if (this.demographicByRace.containsKey(race)) {
-            double percentage = Double.valueOf(this.getDemogaphic(race)) / Double.valueOf(this.total);
+            double percentage = Double.valueOf(this.getDemographicByRace(race)) / Double.valueOf(this.total);
 
             return percentage;
         }
@@ -89,7 +89,7 @@ public class DemographicData {
         String str = "Demographic : ";
 
         for (RACE r : this.demographicByRace.keySet()) {
-            str = str + "\t" + r.name() + " : " + Integer.toString(this.getDemogaphic(r)) + " ["
+            str = str + "\t" + r.name() + " : " + Integer.toString(this.getDemographicByRace(r)) + " ["
                     + Double.toString(this.getDemogaphicPercentage(r)) + "]\n";
         }
 

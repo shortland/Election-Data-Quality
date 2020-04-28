@@ -12,15 +12,15 @@ import com.electiondataquality.jpa.objects.StateFeature;
 
 public class State extends Feature {
 
-    private int stateId;
+    private String stateId;
 
     private String stateName;
 
     private String stateAbreviation;
 
-    private HashSet<Integer> counties;
+    private HashSet<String> counties;
 
-    private HashSet<Integer> districts;
+    private HashSet<String> districts;
 
     public State(StateFeature stateFeature) {
         this.stateId = stateFeature.getStateId();
@@ -29,8 +29,8 @@ public class State extends Feature {
         this.geometry = RawGeometryToShape.convertRawToGeometry(stateFeature.getFeature().getGeometry());
     }
 
-    public State(int stateId, String stateName, String stateAbreviation, HashSet<Integer> counties,
-            HashSet<Integer> districts, Polygon shape) {
+    public State(String stateId, String stateName, String stateAbreviation, HashSet<String> counties,
+            HashSet<String> districts, Polygon shape) {
         super(shape);
 
         this.stateId = stateId;
@@ -40,8 +40,8 @@ public class State extends Feature {
         this.districts = districts;
     }
 
-    public State(int stateId, String stateName, String stateAbreviation, HashSet<Integer> counties,
-            HashSet<Integer> districts, MultiPolygon shape) {
+    public State(String stateId, String stateName, String stateAbreviation, HashSet<String> counties,
+            HashSet<String> districts, MultiPolygon shape) {
         super(shape);
 
         this.stateId = stateId;
@@ -51,7 +51,7 @@ public class State extends Feature {
         this.districts = districts;
     }
 
-    public int getId() {
+    public String getId() {
         return this.stateId;
     }
 
@@ -63,33 +63,33 @@ public class State extends Feature {
         return this.stateAbreviation;
     }
 
-    public HashSet<Integer> getCountiesId() {
+    public HashSet<String> getCountiesId() {
         return this.counties;
     }
 
-    public void addCounty(int newCountyId) {
+    public void addCounty(String newCountyId) {
         if (!this.counties.contains(newCountyId)) {
             this.counties.add(newCountyId);
         }
     }
 
-    public void deleteCounty(int countyId) {
+    public void deleteCounty(String countyId) {
         if (this.counties.contains(countyId)) {
             this.counties.remove(countyId);
         }
     }
 
-    public HashSet<Integer> getDistrictsId() {
+    public HashSet<String> getDistrictsId() {
         return this.districts;
     }
 
-    public void addDistrict(int newDistrictId) {
+    public void addDistrict(String newDistrictId) {
         if (!this.districts.contains(newDistrictId)) {
             this.districts.add(newDistrictId);
         }
     }
 
-    public void deleteDistrict(int districtId) {
+    public void deleteDistrict(String districtId) {
         if (this.districts.contains(districtId)) {
             this.districts.remove(districtId);
         }
@@ -111,7 +111,7 @@ public class State extends Feature {
 
     @Override
     public String toString() {
-        return this.stateName + "(" + this.stateAbreviation + ")\nID: " + Integer.toString(this.stateId) + "\n"
-                + "Shape: " + this.shapeToString() + "\nGeometry: " + "TODO" + "\n";
+        return this.stateName + "(" + this.stateAbreviation + ")\nID: " + this.stateId + "\n" + "Shape: "
+                + this.shapeToString() + "\nGeometry: " + "TODO" + "\n";
     }
 }
