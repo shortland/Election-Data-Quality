@@ -23,7 +23,7 @@ public class ErrorController {
      */
     @CrossOrigin
     @GetMapping("/correctError")
-    public ErrorJ setErrorAsCorrected(@RequestParam int precinctId, @RequestParam int errorId) {
+    public ErrorJ setErrorAsCorrected(@RequestParam String precinctId, @RequestParam int errorId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getPrecinct(precinctId);
 

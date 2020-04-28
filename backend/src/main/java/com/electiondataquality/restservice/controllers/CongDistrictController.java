@@ -2,7 +2,6 @@ package com.electiondataquality.restservice.controllers;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,17 +23,15 @@ public class CongDistrictController {
      */
     @CrossOrigin
     @GetMapping("/congressionalDistrictsForState")
-    public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam int stateId) {
-        // System.out.println("------------------");
-        // System.out.println(stateId);
+    public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam String stateId) {
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
-        HashSet<Integer> congDistrictIds = stateManager.getAllDistricts(stateId);
+        HashSet<String> congDistrictIds = stateManager.getAllDistricts(stateId);
         ArrayList<CongressionalDistrict> cdList = new ArrayList<>();
 
         if (congDistrictIds != null) {
-            for (Integer cdId : congDistrictIds) {
-                CongressionalDistrict cd = cdManager.getCongDistrict(cdId.intValue());
+            for (String cdId : congDistrictIds) {
+                CongressionalDistrict cd = cdManager.getCongDistrict(cdId);
 
                 if (cd != null) {
                     cdList.add(cd);
@@ -45,13 +42,18 @@ public class CongDistrictController {
         return cdList;
     }
 
-    // NOTE: for testing
+    /**
+     * NOTE: For testing
+     * 
+     * @param cid
+     * @return
+     */
     @CrossOrigin
     @GetMapping("/congressionalDistrict")
-    public CongressionalDistrict x(@RequestParam int cid) {
+    public CongressionalDistrict x(@RequestParam String cid) {
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
         CongressionalDistrict c = cdManager.getCongDistrict(cid);
+
         return c;
     }
-
 }
