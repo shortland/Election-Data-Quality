@@ -32,6 +32,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { countyDataLayerFillable, countyDataLayerFillableHighlight, countyDataLayerOutline } from '../layers/CountyLayer';
 import { stateLayerFill, stateLayerFillHighlight } from '../layers/StateLayer';
 import { precinctLayerFill, precinctLayerFillHighlight, precinctLayerOutline } from '../layers/PrecinctLayer';
+import { congressionalDataLayerFillable, congressionalLayerFillableHighlight, congressionalLayerOutline } from '../layers/CongressionalLayer';
 
 /**
  * Our components
@@ -50,6 +51,7 @@ import ERRORS from '../data/errors.json';
 import STATES_TOOLTIP_DATA from '../data/states_tooltip_data.geojson';
 import NY_COUNTY_SHORELINE_DATA from '../data/ny_county_shoreline.geojson';
 import NY_PRECINCT_DATA from '../data/ny_precincts.geojson';
+import NY_CONGRESSIONAL_DATA from '../data//New_York_Congressional_Districts.GeoJSON';
 // import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 
 /**
@@ -66,11 +68,12 @@ export default class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            stateData: null,
             countyData: null,
             countyDataOutline: null,
-            stateData: null,
-            hoveredFeature: null,
+            congressionalDistrictData: null,
             precinctData: null,
+            hoveredFeature: null,
             viewport: {
                 width: "100%",
                 height: window.innerHeight - 56,
@@ -89,11 +92,12 @@ export default class App extends Component {
             countyFilter: ['==', 'NAME', ''],
             precinctFilter: ['==', 'GEOID10', ''],
             stateFilter: ['==', 'name', ''],
+            congressionalFilter: ['==', 'NAMELSAD', '']
         };
 
         this._editorRef = null;
         this.showErrorPins = this.showErrorPins.bind(this);
-        this.appData = null;
+        this.appData = new AppData();
     }
 
     /**
@@ -467,51 +471,11 @@ export default class App extends Component {
         }
     }
 
-
-
     componentDidMount() {
-        this.appData = new AppData();
-        this.appData.fetchAllStates()
-            .then(data => {
-                console.log(data);
-                this.allStates = data;
-            });
-        console.log(this.allStates);
-        //NOTE: new added code should get move to somewhere else
-        fetch("http://67.80.171.107:1234/allStates")
-            .then((res) => {
-                return res.json();
-            })
-            .then((result) => {
-                console.log(result)
-                let FeatureCollection = {
-                    type: "FeatureCollection",
-                    features: []
-                };
-                for (let i in result) {
-                    let feature = {
-                        type: "Feature",
-                        properties: {
-                            name: result[i].name,
-                            amount_counties: result[i].countiesId ? result[i].countiesId.length : 0
-                        },
-                        geometry: {
-                            type: "MultiPolygon",
-                            coordinates: result[i].geometry.coordinates
-                        }
-                    };
-                    FeatureCollection["features"].push(feature);
-                }
-                console.log(FeatureCollection);
-                this.setState({
-                    stateData: FeatureCollection
-                })
-                //GEO JSON STATE FORMAT FOR MAPBOX
-                //{"type": "FeatureCollection", "features": []
-                //{"type" : "Feature", "properties" : {"name":"NewYork", "amount_counties" : 0}, 
-                //"geometry": {"type": "MultiPolygon", "coordinates" : []}}
-            })
-
+        this.appData.fetchAllStates().then(result => {
+            console.log(result);
+            this.setState({ stateData: result });
+        });
         /**
          * State data
          */
@@ -554,10 +518,100 @@ export default class App extends Component {
                 }
             }
         );
+
+        json(
+            NY_CONGRESSIONAL_DATA,
+            (error, response) => {
+                if (!error) {
+                    this.setState({
+                        congressionalDistrictData: response,
+                    });
+                }
+            }
+        );
+    }
+
+    /**
+     * called when rendering our data layers to the map
+     */
+    renderLayers() {
+        const { stateData, countyData, countyDataOutline, congressionalDistrictData, precinctData, stateFilter, countyFilter, precinctFilter, congressionalFilter } = this.state;
+        return (
+            <>
+                {/* STATES DATA */}
+                < Source type="geojson" data={stateData} >
+                    <Layer
+                        {...stateLayerFillHighlight}
+                        filter={stateFilter}
+                        maxzoom={5}
+                    />
+                    <Layer
+                        {...stateLayerFill}
+                        maxzoom={5}
+                    />
+                </Source >
+
+                {/* NY COUNTY DATA */}
+                < Source type="geojson" data={countyData} >
+                    <Layer
+                        {...countyDataLayerFillableHighlight}
+                        filter={countyFilter}
+                        minzoom={5}
+                        maxzoom={8}
+                    />
+                    <Layer
+                        {...countyDataLayerFillable}
+                        minzoom={5}
+                        maxzoom={8}
+                    />
+                </Source >
+
+                {/* NY COUNTY DATA (OUTLINE) */}
+                < Source type="geojson" data={countyDataOutline} >
+                    <Layer
+                        {...countyDataLayerOutline}
+                        minzoom={5}
+                    // maxzoom={8}
+                    />
+                </Source >
+
+                {/* CONGRESSIONAL DATA */}
+                < Source type="geojson" data={congressionalDistrictData} >
+                    <Layer
+                        {...congressionalLayerFillableHighlight}
+                        filter={congressionalFilter}
+                        minzoom={5}
+                        maxzoom={8}
+                    />
+                    <Layer
+                        {...congressionalDataLayerFillable}
+                        minzoom={5}
+                        maxzoom={8}
+                    />
+                </Source >
+
+                {/* NY PRECINCT DATA */}
+                < Source type="geojson" data={precinctData} >
+                    <Layer
+                        {...precinctLayerFillHighlight}
+                        filter={precinctFilter}
+                        minzoom={8}
+                    />
+                    <Layer
+                        {...precinctLayerOutline}
+                        minzoom={8}
+                    />
+                    <Layer
+                        {...precinctLayerFill}
+                        minzoom={8}
+                    />
+                </Source >
+            </>
+        );
     }
 
     render() {
-        const { viewport, stateData, countyDataOutline, countyData, precinctData, selectedMode, shouldShowPins, stateFilter, countyFilter, precinctFilter } = this.state;
+        const { viewport, selectedMode, shouldShowPins } = this.state;
 
         return (
             <div className="App">
@@ -626,59 +680,7 @@ export default class App extends Component {
                             <ScaleControl />
                         </div>
 
-                        {/* STATES DATA */}
-                        <Source type="geojson" data={stateData}>
-                            <Layer
-                                {...stateLayerFillHighlight}
-                                filter={stateFilter}
-                                maxzoom={5}
-                            />
-                            <Layer
-                                {...stateLayerFill}
-                                maxzoom={5}
-                            />
-                        </Source>
-
-                        {/* NY COUNTY DATA */}
-                        <Source type="geojson" data={countyData}>
-                            <Layer
-                                {...countyDataLayerFillableHighlight}
-                                filter={countyFilter}
-                                minzoom={5}
-                                maxzoom={8}
-                            />
-                            <Layer
-                                {...countyDataLayerFillable}
-                                minzoom={5}
-                                maxzoom={8}
-                            />
-                        </Source>
-
-                        {/* NY COUNTY DATA (OUTLINE) */}
-                        <Source type="geojson" data={countyDataOutline}>
-                            <Layer
-                                {...countyDataLayerOutline}
-                                minzoom={5}
-                            // maxzoom={8}
-                            />
-                        </Source>
-
-                        {/* NY PRECINCT DATA */}
-                        <Source type="geojson" data={precinctData}>
-                            <Layer
-                                {...precinctLayerFillHighlight}
-                                filter={precinctFilter}
-                                minzoom={8}
-                            />
-                            <Layer
-                                {...precinctLayerOutline}
-                                minzoom={8}
-                            />
-                            <Layer
-                                {...precinctLayerFill}
-                                minzoom={8}
-                            />
-                        </Source>
+                        {this.renderLayers()}
 
                         {this._renderTooltip()}
 
