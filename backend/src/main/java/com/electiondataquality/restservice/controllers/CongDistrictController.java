@@ -25,8 +25,8 @@ public class CongDistrictController {
     @CrossOrigin
     @GetMapping("/congressionalDistrictsForState")
     public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam int stateId) {
-        System.out.println("------------------");
-        System.out.println(stateId);
+        // System.out.println("------------------");
+        // System.out.println(stateId);
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
         HashSet<Integer> congDistrictIds = stateManager.getAllDistricts(stateId);

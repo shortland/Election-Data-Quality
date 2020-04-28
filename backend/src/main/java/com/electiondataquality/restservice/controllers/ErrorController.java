@@ -25,7 +25,7 @@ public class ErrorController {
     @GetMapping("/correctError")
     public ErrorJ setErrorAsCorrected(@RequestParam int precinctId, @RequestParam int errorId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct target = precinctManager.getPrecicnt(precinctId);
+        Precinct target = precinctManager.getPrecinct(precinctId);
 
         if (target != null) {
             if (target.getPrecinctErrors() != null) {
