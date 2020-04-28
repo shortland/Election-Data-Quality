@@ -1,4 +1,4 @@
-export const congressionalDataLayerFillable = {
+export const congressionalLayerFill = {
     id: 'congressionalFill',
     type: 'fill',
     paint: {
@@ -6,7 +6,7 @@ export const congressionalDataLayerFillable = {
     },
 };
 
-export const congressionalLayerFillableHighlight = {
+export const congressionalLayerFillHighlight = {
     id: 'congressionalFillHighlighted',
     type: 'fill',
     source: 'congressionalFill',
@@ -16,10 +16,10 @@ export const congressionalLayerFillableHighlight = {
 };
 
 export const congressionalLayerOutline = {
-    id: 'congressionalDataOutline',
+    id: 'congressionalOutline',
     type: 'line',
     paint: {
-        'line-color': '#000000',
+        'line-color': 'rgba(196, 14, 14, 1.0)',
         'line-width': 2,
     },
 };
