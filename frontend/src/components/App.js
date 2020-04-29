@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import MapGL, { Popup, NavigationControl, FullscreenControl, ScaleControl, Source, Layer, LinearInterpolator, WebMercatorViewport } from 'react-map-gl';
-import { Nav, Navbar } from 'react-bootstrap';
+import { Nav, Navbar, Form } from 'react-bootstrap';
 import { json } from 'd3-request';
 import bbox from '@turf/bbox';
 import { ToastContainer, toast } from 'react-toastify';
@@ -25,6 +25,8 @@ import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-toastify/dist/ReactToastify.css';
+
+import Card from 'react-bootstrap/Card';
 
 /**
  * Map layers
@@ -704,6 +706,16 @@ export default class App extends Component {
                         doubleClickZoom={false}
                         ref={this.mapRef}
                     >
+                        <div id="map-checkboxes" style={{
+                            position: 'absolute',
+                            textAlign: 'left',
+                            fontSize: '10pt',
+                            bottom: '10%',
+                            right: '10px'
+                        }}>
+                            {this._renderCheckboxes()}
+                        </div>
+
                         <Editor
                             ref={_ => (this._editorRef = _)}
                             clickRadius={12}
@@ -755,6 +767,28 @@ export default class App extends Component {
 
                 <ToastContainer />
             </div >
+        );
+    }
+
+    _renderCheckboxes = () => {
+        return (
+            <div>
+                <Card border="secondary" style={{ width: '12rem', backgroundColor: 'rgba(255,255,255,0.9)' }} >
+                    <Card.Header>Layers</Card.Header>
+                    <Card.Body>
+                        <Form>
+                            {['States', 'Counties', 'Congressional Districts', 'Precincts', 'National Parks'].map((name) => (
+                                <div key={"checkbox-".concat(name)}>
+                                    <Form.Check inline label={name} type={'checkbox'} />
+                                </div>
+                            ))}
+                        </Form>
+                    </Card.Body>
+                    <Card.Footer style={{ fontSize: '8pt' }}>
+                        Note: some layers will only show at certain zoom levels
+                    </Card.Footer>
+                </Card>
+            </div>
         );
     }
 }
