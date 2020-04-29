@@ -28,6 +28,7 @@ import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
 
 @RestController
+@CrossOrigin
 public class PrecinctController {
 
     /**
@@ -38,24 +39,22 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
-    @CrossOrigin
     @GetMapping("/shapeOfPrecinct")
     public HashMap<String, Object> getShapeOfPrecinct(@RequestParam String precinctId) {
         HashMap<String, Object> result = new HashMap<String, Object>();
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
         PrecinctEntityManager pem = new PrecinctEntityManager(emf);
         PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
+        pem.cleanup(true);
 
         Precinct target = new Precinct(targetData);
         if (target != null) {
             result.put("id", target.getId());
             result.put("geometry", target.geometry);
-            pem.cleanup(true);
             return result;
-        } else {
-            pem.cleanup(true);
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -66,7 +65,6 @@ public class PrecinctController {
      * @param precinctIds
      * @return
      */
-    @CrossOrigin
     @GetMapping("/multiplePrecinctShapes")
     public ArrayList<HashMap<String, Object>> getMultipleprecincts(
             @RequestParam(value = "precinctIdList") String[] precinctIds) {
@@ -97,7 +95,6 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
-    @CrossOrigin
     @GetMapping("/precinctInfo")
     public HashMap<String, Object> getPrecinctInfo(@RequestParam String precinctId) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
@@ -118,11 +115,10 @@ public class PrecinctController {
             result.put("isGhost", target.getIsGhost());
             pem.cleanup(true);
             return result;
-        } else {
-            pem.cleanup(true);
-            return null;
         }
 
+        pem.cleanup(true);
+        return null;
     }
 
     /**
@@ -133,7 +129,6 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
-    @CrossOrigin
     @GetMapping("/originalPrecinctInfo")
     public HashMap<String, Object> getOriginalPrecinctInfo(@RequestParam String precinctId) {
         HashMap<String, Object> result = new HashMap<String, Object>();
@@ -165,7 +160,6 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
-    @CrossOrigin
     @GetMapping("/originalPrecinctShape")
     public HashMap<String, Object> getOriginalPrecinctShape(@RequestParam String precinctId) {
         HashMap<String, Object> result = new HashMap<String, Object>();
@@ -190,7 +184,6 @@ public class PrecinctController {
      * @param precinctIds
      * @return
      */
-    @CrossOrigin
     @GetMapping("/originalMultPrecinctShapes")
     public ArrayList<HashMap<String, Object>> getMultipleOriginalprecincts(
             @RequestParam(value = "precinctIdList") String[] precinctIds) {
@@ -219,7 +212,6 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
-    @CrossOrigin
     @GetMapping("/neighborsOfPrecinct")
     public ArrayList<String> getNeighborsOfPrecinct(@RequestParam String precinctId) {
         ArrayList<String> neighbors = new ArrayList<String>();
@@ -234,9 +226,9 @@ public class PrecinctController {
             }
 
             return neighbors;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -249,7 +241,6 @@ public class PrecinctController {
      * @param shape
      * @return
      */
-    @CrossOrigin
     @GetMapping("/shapesOfPrecinct")
     public ErrorJ updateShapeOfPrecicnt(@RequestParam String precinctId,
             @RequestParam ArrayList<ArrayList<ArrayList<double[]>>> shape) {
@@ -274,7 +265,6 @@ public class PrecinctController {
      * @param precinctId
      * @return
      */
-    @CrossOrigin
     @GetMapping("/deletePrecinct")
     public ErrorJ deletePrecinct(@RequestParam String precinctId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -292,7 +282,6 @@ public class PrecinctController {
      * @param isGhost
      * @return
      */
-    @CrossOrigin
     @GetMapping("/defineGhostPrecinct")
     public ErrorJ setGhost(@RequestParam String precinctId, @RequestParam boolean isGhost) {
 
@@ -319,7 +308,6 @@ public class PrecinctController {
      * @param info
      * @return
      */
-    @CrossOrigin
     @RequestMapping(value = "/updatePrecinctInfo", method = RequestMethod.PUT)
     public ErrorJ updatePrecinctInfo(@RequestParam String precinctId, @RequestBody Precinct info) {
 
@@ -350,11 +338,9 @@ public class PrecinctController {
      * @param votingData
      * @return
      */
-    @CrossOrigin
     @GetMapping("/updateVotingData")
     public ErrorJ updateVotingData(@RequestParam String precinctId, @RequestBody VotingData votingData) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
-        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
 
         if (targetData != null) {
@@ -363,7 +349,7 @@ public class PrecinctController {
                     edt.update(votingData.getElectionData(edt.getElection()), precinctId);
                 }
             }
-            pem.cleanup(true);
+
             return ErrorGen.ok();
         }
 
@@ -383,7 +369,6 @@ public class PrecinctController {
      * @param demographicData
      * @return
      */
-    @CrossOrigin
     @GetMapping("/updateDemographicData")
     public ErrorJ updateDemographicData(@RequestParam String precinctId, @RequestBody DemographicData demographicData) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
@@ -410,7 +395,6 @@ public class PrecinctController {
      * @param precinctId2
      * @return
      */
-    @CrossOrigin
     @GetMapping("/addPrecinctNeighbor")
     public ErrorJ addPrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -443,7 +427,6 @@ public class PrecinctController {
      * @param precinctId2
      * @return
      */
-    @CrossOrigin
     @GetMapping("/deletePrecinctNeighbor")
     public ErrorJ deletePrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -472,7 +455,6 @@ public class PrecinctController {
      * @param mp
      * @return
      */
-    @CrossOrigin
     @GetMapping("/createNewPrecinct")
     public ErrorJ createNewPrecinct(@RequestParam MultiPolygon mp) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -498,7 +480,6 @@ public class PrecinctController {
      * @param precinctId2
      * @return
      */
-    @CrossOrigin
     @GetMapping("/mergePrecinct")
     public ErrorJ mergePrecincts(@RequestParam String precinctId1, @RequestParam String precinctId2) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
