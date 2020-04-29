@@ -11,8 +11,9 @@ import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.jpa.managers.PrecinctEntityManager;
 import com.electiondataquality.jpa.objects.PrecinctFeature;
 import com.electiondataquality.jpa.tables.ErrorTable;
-import com.electiondataquality.types.errors.ErrorGen;
-import com.electiondataquality.types.errors.ErrorJ;
+import com.electiondataquality.types.responses.ApiResponse;
+import com.electiondataquality.types.responses.ResponseGen;
+import com.electiondataquality.types.responses.enums.API_STATUS;
 
 @RestController
 @CrossOrigin
@@ -28,52 +29,68 @@ public class ErrorController {
      * @return
      */
     @GetMapping("/resolveError")
-    public ErrorJ setErrorAsCorrected(@RequestParam String precinctId, @RequestParam int errorId) {
+    public ApiResponse setErrorAsCorrected(@RequestParam String precinctId, @RequestParam int errorId) {
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetPrecinct = pem.findPrecinctFeatureById(precinctId);
 
         if (targetPrecinct.isPresent()) {
             Set<ErrorTable> errors = targetPrecinct.get().getErrors();
             Set<Integer> errorsId = targetPrecinct.get().getErrorsId();
+
             if (errorsId.contains(errorId)) {
                 for (ErrorTable et : errors) {
                     if (et.getErrorId() == errorId) {
                         et.setResolved(true);
                     }
                 }
+
                 targetPrecinct.get().setErrors(errors);
+
                 pem.cleanup();
-                return ErrorGen.ok();
+
+                return ResponseGen.create(API_STATUS.OK, "error successfully resolved");
             }
+
             pem.cleanup();
-            return ErrorGen.create("there are no errors in this precinct");
+
+            return ResponseGen.create(API_STATUS.ERROR, "there are no errors in the specified precinct");
         }
+
         pem.cleanup();
-        return ErrorGen.create("unable to get precinct");
+
+        return ResponseGen.create(API_STATUS.ERROR, "unable to get the specified precinct");
     }
 
     @GetMapping("/unresolveError")
-    public ErrorJ setErrorAsIncorrected(@RequestParam String precinctId, @RequestParam int errorId) {
+    public ApiResponse setErrorAsIncorrected(@RequestParam String precinctId, @RequestParam int errorId) {
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetPrecinct = pem.findPrecinctFeatureById(precinctId);
 
         if (targetPrecinct.isPresent()) {
             Set<ErrorTable> errors = targetPrecinct.get().getErrors();
             Set<Integer> errorsId = targetPrecinct.get().getErrorsId();
+
             if (errorsId.contains(errorId)) {
                 for (ErrorTable et : errors) {
                     if (et.getErrorId() == errorId) {
                         et.setResolved(false);
                     }
                 }
+
                 targetPrecinct.get().setErrors(errors);
+
                 pem.cleanup();
-                return ErrorGen.ok();
+
+                return ResponseGen.create(API_STATUS.OK, "error successfully unresolved");
             }
+
             pem.cleanup();
-            return ErrorGen.create("there are no errors in this precinct");
+
+            return ResponseGen.create(API_STATUS.ERROR, "there are no errors in the specified precinct");
         }
+
         pem.cleanup();
-        return ErrorGen.create("unable to get precinct");
+
+        return ResponseGen.create(API_STATUS.ERROR, "unable to get the specified precinct");
     }
 }

@@ -1,19 +1,20 @@
 package com.electiondataquality.restservice.managers;
 
-import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.HashMap;
 
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 
 public class CongressionalManager {
 
-    private HashMap<String, CongressionalDistrict> congressionalDistrictMap;
+    private Map<String, CongressionalDistrict> congressionalDistrictMap;
 
     public CongressionalManager() {
         this.congressionalDistrictMap = new HashMap<String, CongressionalDistrict>();
     }
 
-    public CongressionalManager(HashSet<CongressionalDistrict> congDistrictSet) {
+    public CongressionalManager(Set<CongressionalDistrict> congDistrictSet) {
         this.congressionalDistrictMap = new HashMap<String, CongressionalDistrict>();
 
         for (CongressionalDistrict cd : congDistrictSet) {
@@ -22,7 +23,7 @@ public class CongressionalManager {
     }
 
     // NOTE: this clears the map and populate the map with the congDistrictSet
-    public void populate(HashSet<CongressionalDistrict> congDistrictSet) {
+    public void populate(Set<CongressionalDistrict> congDistrictSet) {
         this.congressionalDistrictMap.clear();
 
         for (CongressionalDistrict cd : congDistrictSet) {
@@ -38,7 +39,7 @@ public class CongressionalManager {
         return null;
     }
 
-    public HashSet<String> getAllChildrenPrecinct(String cdId) {
+    public Set<String> getAllChildrenPrecinct(String cdId) {
         if (this.congressionalDistrictMap.containsKey(cdId)) {
             return this.congressionalDistrictMap.get(cdId).getChildrenId();
         }

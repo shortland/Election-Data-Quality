@@ -2,6 +2,7 @@ package com.electiondataquality.jpa.objects;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -183,7 +184,7 @@ public class PrecinctFeature {
     }
 
     public Set<Integer> getErrorsId() {
-        HashSet<Integer> errorsId = new HashSet<>();
+        Set<Integer> errorsId = new HashSet<>();
 
         for (ErrorTable et : this.errors) {
             errorsId.add(et.getErrorId());
@@ -209,10 +210,10 @@ public class PrecinctFeature {
         this.neighborsId = newNeighbors;
     }
 
-    public HashSet<String> getNeighborsIdSet() {
+    public Set<String> getNeighborsIdSet() {
         String str = this.neighborsId.replaceAll("\\[|]", "");
         String[] neighbors = str.split(",");
-        HashSet<String> neighborsIdSet = new HashSet<String>();
+        Set<String> neighborsIdSet = new HashSet<String>();
 
         for (String idString : neighbors) {
             neighborsIdSet.add(idString);
@@ -222,17 +223,19 @@ public class PrecinctFeature {
     }
 
     public void addNeighbor(String neighborId) {
-        HashSet<String> neighborSet = this.getNeighborsIdSet();
+        Set<String> neighborSet = this.getNeighborsIdSet();
 
         if (!neighborSet.contains(neighborId)) {
             String newNeighborsId = this.neighborsId.replaceAll("\\]", "");
+
             newNeighborsId = newNeighborsId + "," + neighborId + "]";
+
             this.setNeighbors(newNeighborsId);
         }
     }
 
     public void deleteNeighbor(String neighborId) {
-        HashSet<String> neighborSet = this.getNeighborsIdSet();
+        Set<String> neighborSet = this.getNeighborsIdSet();
 
         if (neighborSet.contains(neighborId)) {
             neighborSet.remove(neighborId);
@@ -240,6 +243,7 @@ public class PrecinctFeature {
 
         String newNeighborsId = "[";
         int counter = 0;
+
         for (String nid : neighborSet) {
             if (counter == neighborSet.size() - 1) {
                 newNeighborsId = newNeighborsId + nid;
@@ -248,12 +252,14 @@ public class PrecinctFeature {
             }
             counter += 1;
         }
+
         newNeighborsId += "]";
+
         this.setNeighbors(newNeighborsId);
     }
 
-    public HashMap<Integer, PrecinctError> getPrecinctErrors() {
-        HashMap<Integer, PrecinctError> precinctErrors = new HashMap<>();
+    public Map<Integer, PrecinctError> getPrecinctErrors() {
+        Map<Integer, PrecinctError> precinctErrors = new HashMap<>();
 
         for (ErrorTable et : this.errors) {
             PrecinctError error = new PrecinctError(et);

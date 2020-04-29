@@ -23,6 +23,7 @@ public class CompareFeatureShape {
                             for (int k = 0; k < thirdLayer1.size(); k++) {
                                 boolean xSame = false;
                                 boolean ySame = false;
+
                                 double x1 = thirdLayer1.get(k)[0];
                                 double x2 = thirdLayer2.get(k)[0];
                                 double y1 = thirdLayer1.get(k)[1];

@@ -1,6 +1,7 @@
 package com.electiondataquality.features.state;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import com.electiondataquality.features.Feature;
 import com.electiondataquality.restservice.demographics.DemographicData;
@@ -21,9 +22,9 @@ public class State extends Feature {
 
     private String stateAbreviation;
 
-    private HashSet<CountyTable> counties;
+    private Set<CountyTable> counties;
 
-    private HashSet<CongressionalDistrictTable> congressionalDistricts;
+    private Set<CongressionalDistrictTable> congressionalDistricts;
 
     public State(StateFeature stateFeature, StateEntityManager stateEm) {
         this.stateId = stateFeature.getStateId();
@@ -56,8 +57,8 @@ public class State extends Feature {
         return this.stateAbreviation;
     }
 
-    public HashSet<String> getCountyIds() {
-        HashSet<String> countyIds = new HashSet<>();
+    public Set<String> getCountyIds() {
+        Set<String> countyIds = new HashSet<>();
 
         for (CountyTable county : counties) {
             countyIds.add(county.getFipsCode());
@@ -66,8 +67,8 @@ public class State extends Feature {
         return countyIds;
     }
 
-    public HashSet<String> getCongressionalDistrictIds() {
-        HashSet<String> congrIds = new HashSet<>();
+    public Set<String> getCongressionalDistrictIds() {
+        Set<String> congrIds = new HashSet<>();
 
         for (CongressionalDistrictTable congrD : congressionalDistricts) {
             congrIds.add(congrD.getCdId() + "");

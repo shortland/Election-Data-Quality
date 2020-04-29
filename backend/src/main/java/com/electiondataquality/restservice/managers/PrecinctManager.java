@@ -3,14 +3,15 @@ package com.electiondataquality.restservice.managers;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import com.electiondataquality.features.precinct.Precinct;
 
 public class PrecinctManager {
 
-    private HashMap<String, Precinct> precinctMap;
+    private Map<String, Precinct> precinctMap;
 
-    private HashMap<String, Precinct> originalPrecinctMap;
+    private Map<String, Precinct> originalPrecinctMap;
 
     public PrecinctManager() {
         this.precinctMap = new HashMap<String, Precinct>();
@@ -80,6 +81,7 @@ public class PrecinctManager {
 
         for (String currKey : this.precinctMap.keySet()) {
             BigInteger curr = new BigInteger(currKey);
+
             // -1 if max key is samller
             if (maxKey.compareTo(curr) == -1) {
                 maxKey = curr;

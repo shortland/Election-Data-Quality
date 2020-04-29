@@ -2,6 +2,8 @@ package com.electiondataquality.restservice.voting;
 
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,11 +11,11 @@ import com.electiondataquality.restservice.voting.elections.ElectionResults;
 
 public class VotingData {
 
-    private EnumMap<ELECTIONS, ElectionResults> electionData;
+    private Map<ELECTIONS, ElectionResults> electionData;
 
     public static VotingData mergeVotingData(VotingData vd1, VotingData vd2) {
-        HashSet<ELECTIONS> allElections;
-        HashSet<ElectionResults> results = new HashSet<ElectionResults>();
+        Set<ELECTIONS> allElections;
+        Set<ElectionResults> results = new HashSet<ElectionResults>();
 
         if (vd1.getAllElections().size() > vd2.getAllElections().size()) {
             allElections = vd1.getAllElections();
@@ -41,7 +43,7 @@ public class VotingData {
         this.electionData = new EnumMap<ELECTIONS, ElectionResults>(ELECTIONS.class);
     }
 
-    public VotingData(HashSet<ElectionResults> erSet) {
+    public VotingData(Set<ElectionResults> erSet) {
         this.electionData = new EnumMap<ELECTIONS, ElectionResults>(ELECTIONS.class);
 
         for (ElectionResults er : erSet) {
@@ -50,8 +52,8 @@ public class VotingData {
     }
 
     @JsonIgnore
-    public HashSet<ELECTIONS> getAllElections() {
-        HashSet<ELECTIONS> allElections = new HashSet<ELECTIONS>();
+    public Set<ELECTIONS> getAllElections() {
+        Set<ELECTIONS> allElections = new HashSet<ELECTIONS>();
 
         for (ELECTIONS e : this.electionData.keySet()) {
             allElections.add(e);
@@ -60,7 +62,7 @@ public class VotingData {
         return allElections;
     }
 
-    public EnumMap<ELECTIONS, ElectionResults> getElectionData() {
+    public Map<ELECTIONS, ElectionResults> getElectionData() {
         return this.electionData;
     }
 

@@ -1,6 +1,6 @@
 package com.electiondataquality.features.precinct.error;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
 import com.electiondataquality.jpa.tables.ErrorTable;
@@ -16,12 +16,12 @@ public class PrecinctError {
 
     private boolean isResolved;
 
-    private HashSet<Comment> comments;
+    private Set<Comment> comments;
 
     private String parentPrecinctId;
 
     public PrecinctError(ERROR_TYPE errorType, int errorId, String errorText, boolean isResolved,
-            HashSet<Comment> comments) {
+            Set<Comment> comments) {
         this.errorType = errorType;
         this.errorId = errorId;
         this.errorText = errorText;
@@ -91,7 +91,7 @@ public class PrecinctError {
         this.isResolved = false;
     }
 
-    public HashSet<Comment> getComments() {
+    public Set<Comment> getComments() {
         return this.comments;
     }
 
