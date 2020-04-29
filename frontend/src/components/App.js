@@ -105,10 +105,6 @@ export default class App extends Component {
             stateFilter: ['==', 'name', ''],
             congressionalFilter: ['==', 'NAMELSAD', '']
         }
-
-        this.checkboxes = {
-            States: React.createRef(), Counties: React.createRef(), CongressionalDistricts: React.createRef(), Precincts: React.createRef(), NationalParks: React.createRef()
-        }
     }
 
     /**
@@ -278,7 +274,7 @@ export default class App extends Component {
                 this.setState({ selectedFeature: precinctFeature });
             }
             else {
-                this.setState({ selectedFeature: null });
+                //this.setState({ selectedFeature: null });
             }
         }
     }
@@ -565,7 +561,7 @@ export default class App extends Component {
             }
         );
         */
-        /* json(
+        json(
             NY_CONGRESSIONAL_DATA,
             (error, response) => {
                 if (!error) {
@@ -573,7 +569,7 @@ export default class App extends Component {
                     this.setState({ congressionalDistrictData: response });
                 }
             }
-        ); */
+        );
 
         /* json(
             NY_PRECINCT_DATA,
@@ -637,38 +633,42 @@ export default class App extends Component {
                 </Source > */}
 
                 {/* CONGRESSIONAL DATA */}
-                < Source type="geojson" data={congressionalDistrictData} >
-                    <Layer
-                        {...congressionalLayerFillHighlight}
-                        //filter={congressionalFilter}
-                        minzoom={6}
-                    />
-                    <Layer
-                        {...congressionalLayerOutline}
-                        minzoom={6}
-                    />
-                    <Layer
-                        {...congressionalLayerFill}
-                        minzoom={6}
-                    />
-                </Source >
+                {layers.congressional &&
+                    < Source type="geojson" data={congressionalDistrictData} >
+                        <Layer
+                            {...congressionalLayerFillHighlight}
+                            //filter={congressionalFilter}
+                            minzoom={5}
+                        />
+                        <Layer
+                            {...congressionalLayerOutline}
+                            minzoom={5}
+                        />
+                        <Layer
+                            {...congressionalLayerFill}
+                            minzoom={5}
+                        />
+                    </Source >
+                }
 
                 {/* NY PRECINCT DATA */}
-                < Source type="geojson" data={precinctData} >
-                    <Layer
-                        {...precinctLayerFillHighlight}
-                        filter={precinctFilter}
-                        minzoom={8}
-                    />
-                    <Layer
-                        {...precinctLayerOutline}
-                        minzoom={8}
-                    />
-                    <Layer
-                        {...precinctLayerFill}
-                        minzoom={8}
-                    />
-                </Source >
+                {layers.precinct &&
+                    < Source type="geojson" data={precinctData} >
+                        <Layer
+                            {...precinctLayerFillHighlight}
+                            filter={precinctFilter}
+                            minzoom={8}
+                        />
+                        <Layer
+                            {...precinctLayerOutline}
+                            minzoom={8}
+                        />
+                        <Layer
+                            {...precinctLayerFill}
+                            minzoom={8}
+                        />
+                    </Source >
+                }
             </>
         );
     }
@@ -714,7 +714,7 @@ export default class App extends Component {
                             position: 'absolute',
                             textAlign: 'left',
                             fontSize: '10pt',
-                            bottom: '10%',
+                            top: '10%',
                             right: '10px'
                         }}>
                             {this._renderCheckboxes()}
@@ -800,13 +800,13 @@ export default class App extends Component {
     _renderCheckboxes = () => {
         return (
             <div>
-                <Card border="secondary" style={{ width: '12rem', backgroundColor: 'rgba(255,255,255,0.9)' }} >
+                <Card border="secondary" style={{ width: '10rem', backgroundColor: 'rgba(255,255,255,0.9)' }} >
                     <Card.Header>Layers</Card.Header>
                     <Card.Body>
                         <Form>
                             {['States', 'Counties', 'Congressional Districts', 'Precincts', 'National Parks'].map((name) => (
                                 <div key={"checkbox-".concat(name)}>
-                                    <Form.Check inline label={name} type={'checkbox'} defaultChecked={true} onChange={this.toggleLayer.bind(this, name)} />
+                                    <Form.Check label={name} type={'checkbox'} defaultChecked={true} onChange={this.toggleLayer.bind(this, name)} />
                                 </div>
                             ))}
                         </Form>
