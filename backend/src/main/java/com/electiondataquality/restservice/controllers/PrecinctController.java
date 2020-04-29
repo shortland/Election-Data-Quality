@@ -3,6 +3,7 @@ package com.electiondataquality.restservice.controllers;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -34,23 +35,23 @@ public class PrecinctController {
     /**
      * Get the boundary data/shape of a precinct.
      * 
-     * NOTE: Tested
+     * NOTE: Tested 4/28
      * 
      * @param precinctId
      * @return
      */
     @GetMapping("/shapeOfPrecinct")
     public HashMap<String, Object> getShapeOfPrecinct(@RequestParam String precinctId) {
-        HashMap<String, Object> result = new HashMap<String, Object>();
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
-        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
-        PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
-        pem.cleanup(true);
+        PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
+        Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
-        Precinct target = new Precinct(targetData);
-        if (target != null) {
+        if (targetData.isPresent()) {
+            HashMap<String, Object> result = new HashMap<>();
+            Precinct target = new Precinct(targetData.get());
+
             result.put("id", target.getId());
             result.put("geometry", target.geometry);
+
             return result;
         }
 
@@ -68,21 +69,20 @@ public class PrecinctController {
     @GetMapping("/multiplePrecinctShapes")
     public ArrayList<HashMap<String, Object>> getMultipleprecincts(
             @RequestParam(value = "precinctIdList") String[] precinctIds) {
+        PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         ArrayList<HashMap<String, Object>> pList = new ArrayList<HashMap<String, Object>>();
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
-        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
-
         for (int i = 0; i < precinctIds.length; i++) {
-            PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctIds[i]);
-            Precinct target = new Precinct(targetData);
-            if (target != null) {
-                HashMap<String, Object> geometry = new HashMap<String, Object>();
+            Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctIds[i]);
+
+            if (targetData.isPresent()) {
+                HashMap<String, Object> geometry = new HashMap<>();
+                Precinct target = new Precinct(targetData.get());
+                
                 geometry.put(precinctIds[i], target.geometry);
                 pList.add(geometry);
             }
         }
-        pem.cleanup(true);
 
         return pList;
     }
