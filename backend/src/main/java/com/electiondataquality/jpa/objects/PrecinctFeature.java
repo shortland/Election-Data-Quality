@@ -93,7 +93,7 @@ public class PrecinctFeature {
     }
 
     // TODO: Need to update features
-    public void updatePrecinctFeature(Precinct precinct) {
+    public void update(Precinct precinct) {
         if (!precinct.getId().equals("0")) {
             this.id = precinct.getId();
         }
@@ -182,17 +182,18 @@ public class PrecinctFeature {
         return this.electionDataTableSet;
     }
 
-    public void addElecionalDataTable(ElectionDataTable electionDataTable) {
-        this.electionDataTableSet.add(electionDataTable);
-    }
+    // public void addElecionalDataTable(ElectionDataTable electionDataTable) {
+    // this.electionDataTableSet.add(electionDataTable);
+    // }
 
-    public void removeElectionalDataTable(String election, String precicnt_idn) {
-        for (ElectionDataTable edt : this.electionDataTableSet) {
-            if (edt.getElection().equals(election) && edt.getPrecinctId().equals(precicnt_idn)) {
-                this.electionDataTableSet.remove(edt);
-            }
-        }
-    }
+    // public void removeElectionalDataTable(String election, String precicnt_idn) {
+    // for (ElectionDataTable edt : this.electionDataTableSet) {
+    // if (edt.getElection().equals(election) &&
+    // edt.getPrecinctId().equals(precicnt_idn)) {
+    // this.electionDataTableSet.remove(edt);
+    // }
+    // }
+    // }
 
     public HashSet<String> getNeighborsIdSet() {
         String str = this.neighborsId.replaceAll("\\[|]", "");
@@ -202,6 +203,28 @@ public class PrecinctFeature {
             neighborsIdSet.add(idString);
         }
         return neighborsIdSet;
+    }
+
+    public void addNeighbor(String neighborId) {
+        HashSet<String> neighborSet = this.getNeighborsIdSet();
+        if (!neighborSet.contains(neighborId)) {
+            String newNeighborsId = this.neighborsId.replaceAll("\\]", "");
+            newNeighborsId = newNeighborsId + "," + neighborId + "]";
+            this.neighborsId = newNeighborsId;
+        }
+    }
+
+    public void deleteNeighbor(String neighborId) {
+        HashSet<String> neighborSet = this.getNeighborsIdSet();
+        if (neighborSet.contains(neighborId)) {
+            neighborSet.remove(neighborId);
+        }
+        String newNeighborsId = "[";
+        for (String nid : neighborSet) {
+            newNeighborsId = newNeighborsId + nid + ",";
+        }
+        newNeighborsId += "]";
+        this.neighborsId = newNeighborsId;
     }
 
     public HashSet<Integer> getErrorIdSet() {
@@ -238,12 +261,6 @@ public class PrecinctFeature {
             this.isGhost = 1;
         } else {
             this.isGhost = 0;
-        }
-    }
-
-    public void printErrorTable() {
-        for (ErrorTable et : this.errors) {
-            System.out.println(et.toString());
         }
     }
 

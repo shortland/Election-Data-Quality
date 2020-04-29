@@ -92,10 +92,7 @@ export default class App extends Component {
             features: {},
             selectedFeatureIndex: null,
             userMode: "View",
-            //countyFilter: ['==', 'NAME', ''],
-            //precinctFilter: ['==', 'GEOID10', ''],
-            //stateFilter: ['==', 'name', ''],
-            //congressionalFilter: ['==', 'NAMELSAD', '']
+            layers: { states: true, counties: true, congressional: true, precincts: true, parks: true }
         };
 
         this._editorRef = null;
@@ -107,6 +104,10 @@ export default class App extends Component {
             precinctFilter: ['==', 'GEOID10', ''],
             stateFilter: ['==', 'name', ''],
             congressionalFilter: ['==', 'NAMELSAD', '']
+        }
+
+        this.checkboxes = {
+            States: React.createRef(), Counties: React.createRef(), CongressionalDistricts: React.createRef(), Precincts: React.createRef(), NationalParks: React.createRef()
         }
     }
 
@@ -593,20 +594,23 @@ export default class App extends Component {
      */
     renderLayers() {
         const { stateData, countyData, countyDataOutline, congressionalDistrictData, precinctData, stateFilter, countyFilter, precinctFilter, congressionalFilter } = this.state;
+        const { layers } = this.state;
+
         return (
             <>
-                {/* STATES DATA */}
-                < Source type="geojson" data={stateData} >
-                    <Layer
-                        {...stateLayerFillHighlight}
-                        filter={stateFilter}
-                        maxzoom={5}
-                    />
-                    <Layer
-                        {...stateLayerFill}
-                        maxzoom={5}
-                    />
-                </Source >
+                {layers.states &&
+                    < Source type="geojson" data={stateData} >
+                        <Layer
+                            {...stateLayerFillHighlight}
+                            filter={stateFilter}
+                            maxzoom={5}
+                        />
+                        <Layer
+                            {...stateLayerFill}
+                            maxzoom={5}
+                        />
+                    </Source >
+                }
 
                 {/* NY COUNTY DATA */}
                 {/* < Source type="geojson" data={countyData} >
@@ -770,6 +774,29 @@ export default class App extends Component {
         );
     }
 
+    toggleLayer = (layer) => {
+        const { layers } = this.state;
+        switch (layer) {
+            case "States":
+                layers.states = !layers.states;
+                break;
+            case "Counties":
+                layers.counties = !layers.counties;
+                break;
+            case "Congressional Districts":
+                layers.congressional = !layers.congressional;
+                break;
+            case "Precincts":
+                layers.precincts = !layers.precincts;
+                break;
+            case "National Parks":
+                layers.parks = !layers.parks;
+                break;
+            default:
+        }
+        this.setState({ layers: layers })
+    }
+
     _renderCheckboxes = () => {
         return (
             <div>
@@ -779,13 +806,13 @@ export default class App extends Component {
                         <Form>
                             {['States', 'Counties', 'Congressional Districts', 'Precincts', 'National Parks'].map((name) => (
                                 <div key={"checkbox-".concat(name)}>
-                                    <Form.Check inline label={name} type={'checkbox'} />
+                                    <Form.Check inline label={name} type={'checkbox'} defaultChecked={true} onChange={this.toggleLayer.bind(this, name)} />
                                 </div>
                             ))}
                         </Form>
                     </Card.Body>
-                    <Card.Footer style={{ fontSize: '8pt' }}>
-                        Note: some layers will only show at certain zoom levels
+                    <Card.Footer style={{ lineHeight: '1.0' }}>
+                        <small className="text-muted">Note: some layers will only show at certain zoom levels</small>
                     </Card.Footer>
                 </Card>
             </div>

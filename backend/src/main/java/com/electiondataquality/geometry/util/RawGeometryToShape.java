@@ -29,4 +29,10 @@ public class RawGeometryToShape {
 
         return geo;
     }
+
+    public static String convertGeometryToRaw(Geometry geo) {
+        Gson gson = new Gson();
+
+        return gson.toJson(geo);
+    }
 }

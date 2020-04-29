@@ -254,7 +254,7 @@ public class PrecinctController {
     /**
      * Delete a precinct.
      * 
-     * TODO: Change return type to ControllerError
+     * NOTE: Tested 4/28/2020
      * 
      * 
      * @param precinctId
@@ -262,8 +262,12 @@ public class PrecinctController {
      */
     @GetMapping("/deletePrecinct")
     public ErrorJ deletePrecinct(@RequestParam String precinctId) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        precinctManager.deletePrecinct(precinctId);
+        PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
+        Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
+
+        if (targetData.isPresent()) {
+            pem.removePrecinct(targetData.get());
+        }
 
         return ErrorGen.ok();
     }
@@ -308,6 +312,8 @@ public class PrecinctController {
 
         if (targetData.isPresent()) {
             targetData.get().updatePrecinctFeature(info);
+
+            // targetData.update(info);
 
             return ErrorGen.ok();
         }
@@ -376,9 +382,8 @@ public class PrecinctController {
     /**
      * Add a neighbor to a precinct's neighbor list.
      * 
-     * TODO: Return ControllerError
      * 
-     * NOTE: Tested
+     * TODO: need test
      * 
      * @param precinctId1
      * @param precinctId2
@@ -386,14 +391,15 @@ public class PrecinctController {
      */
     @GetMapping("/addPrecinctNeighbor")
     public ErrorJ addPrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct target1 = precinctManager.getPrecinct(precinctId1);
-        Precinct target2 = precinctManager.getPrecinct(precinctId2);
-
-        if (target1 != null && target2 != null) {
-            target1.addNeighbor(precinctId2);
-            target2.addNeighbor(precinctId1);
-
+        PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
+        
+        Optional<PrecinctFeature> targetData1 = pem.findPrecinctFeatureById(precinctId1);
+        Optional<PrecinctFeature> targetData2 = pem.findPrecinctFeatureById(precinctId2);
+      
+        if (targetData1.isPresent() && targetData2.isPresent()) {
+            targetData1.get().addNeighbor(precinctId2);
+            targetData2.get().addNeighbor(precinctId1);
+          
             return ErrorGen.ok();
         }
 
@@ -404,9 +410,8 @@ public class PrecinctController {
      * Delete a neighbor of a precinct. Removes a precinct from the specified
      * precincts neighbor list.
      * 
-     * TODO: Return ControllerError
      * 
-     * NOTE: Tested
+     * TODO: need test
      * 
      * @param precinctId1
      * @param precinctId2
@@ -414,13 +419,14 @@ public class PrecinctController {
      */
     @GetMapping("/deletePrecinctNeighbor")
     public ErrorJ deletePrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct target1 = precinctManager.getPrecinct(precinctId1);
-        Precinct target2 = precinctManager.getPrecinct(precinctId2);
-
-        if (target1 != null && target2 != null) {
-            target1.deleteNeighbor(precinctId2);
-            target2.deleteNeighbor(precinctId1);
+        PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
+      
+        Optional<PrecinctFeature> targetData1 = pem.findPrecinctFeatureById(precinctId1);
+        Optional<PrecinctFeature> targetData2 = pem.findPrecinctFeatureById(precinctId2);
+      
+        if (targetData1.isPresent() && targetData2.isPresent()) {
+            targetData1.deleteNeighbor(precinctId2);
+            targetData2.deleteNeighbor(precinctId1);
 
             return ErrorGen.ok();
         }
@@ -431,7 +437,7 @@ public class PrecinctController {
     /**
      * Create a new precinct object.
      * 
-     * TODO: Return ControllerError
+     * TODO: have to find a way to create a new precinct id
      * 
      * @param mp
      * @return
@@ -449,13 +455,11 @@ public class PrecinctController {
     }
 
     /**
-     * Merge two precincts together.
-     * 
-     * TODO: Return ControllerError
+     * Merge two precincts together. TODO: Need to update merged errorData
      * 
      * TODO: Have to merge polygon also (with sam's script)
      * 
-     * NOTE: Tested
+     * TODO: need test
      * 
      * @param precinctId1
      * @param precinctId2
@@ -463,15 +467,32 @@ public class PrecinctController {
      */
     @GetMapping("/mergePrecinct")
     public ErrorJ mergePrecincts(@RequestParam String precinctId1, @RequestParam String precinctId2) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct precint1 = precinctManager.getPrecinct(precinctId1);
-        Precinct precint2 = precinctManager.getPrecinct(precinctId2);
-        Precinct mergedPrecinct = Precinct.mergePrecinct(precint1, precint2);
+        PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
+      
+        Optional<PrecinctFeature> targetData1 = pem.findPrecinctFeatureById(precinctId1);
+        Optional<PrecinctFeature> targetData2 = pem.findPrecinctFeatureById(precinctId2);
+      
+        if (targetData1.isPresent() && targetData2.isPresent()) {
+            Precinct target1 = new Precinct(targetData1.get());
+            Precinct target2 = new Precinct(targetData2.get());
 
-        precinctManager.deletePrecinct(precinctId2);
-        precinctManager.updatePrecinct(precinctId1, mergedPrecinct);
+            Precinct mergedPrecinct = Precinct.mergePrecinct(target1, target2);
+            targetData1.get().update(mergedPrecinct);
 
-        return ErrorGen.ok();
+            if (mergedPrecinct.getDemographicData() != null) {
+                targetData1.get().getDemogrpahicTable().update(mergedPrecinct.getDemographicData(), precinctId1);
+            }
+          
+            if (mergedPrecinct.getVotingData() != null) {
+                for (ElectionDataTable edt : targetData1.get().getElectionDataSet()) {
+                    edt.update(mergedPrecinct.getVotingData().getElectionData(edt.getElection()), precinctId1);
+                }
+            }
+            
+            return ErrorGen.ok();
+        }
+
+        return ErrorGen.create("can't find precinct1 or precinct2");
     }
 
     /**
