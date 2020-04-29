@@ -234,44 +234,51 @@ export default class App extends Component {
             features,
         } = event;
 
-        const stateFeature = features && features.find(f => f.layer.id === 'stateFill');
-        if (stateFeature) {
-            // if a clicks on a state that was already selected/clicked on
-            if (this.state.selectedFeature) {
-                if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
-                    this._zoomToFeature(event);
-                    return;
+        if (features) {
+            const stateFeature = features.find(f => f.layer.id === 'stateFill');
+            const countyFeature = features.find(f => f.layer.id === 'countyFill');
+            const congressionalFeature = features.find(f => f.layer.id === 'congressionalFill')
+            const precinctFeature = features.find(f => f.layer.id === 'precinctFill');
+
+            if (stateFeature) {
+                stateFeature.properties.type = "State";
+                // if a clicks on a state that was already selected/clicked on
+                if (this.state.selectedFeature) {
+                    if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
+                        this._zoomToFeature(event);
+                        return;
+                    }
+                } else {
+                    toast.info("Click the same feature (state/county) again to zoom in.", {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                    });
                 }
-            } else {
-                toast.info("Click the same feature (state/county) again to zoom in.", {
-                    position: toast.POSITION.BOTTOM_RIGHT,
-                });
+                this.setState({ selectedFeature: stateFeature });
             }
-
-            this.setState({ selectedFeature: stateFeature });
-            return;
-        }
-
-        const countyFeature = features && features.find(f => f.layer.id === 'countyFill');
-        if (countyFeature) {
-            // if a clicks on a county that was already selected/clicked on
-            if (this.state.selectedFeature) {
-                if (countyFeature.properties.NAME === this.state.selectedFeature.properties.NAME) {
-                    this._zoomToFeature(event);
-                    return;
+            else if (countyFeature) {
+                countyFeature.properties.type = "County";
+                // if a clicks on a county that was already selected/clicked on
+                if (this.state.selectedFeature) {
+                    if (countyFeature.properties.NAME === this.state.selectedFeature.properties.NAME) {
+                        this._zoomToFeature(event);
+                        return;
+                    }
                 }
+                this.setState({ selectedFeature: countyFeature });
             }
-
-            this.setState({ selectedFeature: countyFeature });
-            return;
+            else if (congressionalFeature) {
+                congressionalFeature.properties.type = "Congressional District";
+                this.setState({ selectedFeature: congressionalFeature });
+            }
+            else if (precinctFeature) {
+                precinctFeature.properties.type = "Precinct";
+                this.setState({ selectedFeature: precinctFeature });
+            }
+            else {
+                this.setState({ selectedFeature: null });
+            }
         }
-
-        const precinctFeature = features && features.find(f => f.layer.id === 'precinctFill');
-        if (precinctFeature) {
-            this.setState({ selectedFeature: precinctFeature });
-            return;
-        }
-    };
+    }
 
     _zoomToFeature(event) {
         const feature = event.features[0];
@@ -367,62 +374,58 @@ export default class App extends Component {
     _renderTooltip() {
         const { hoveredFeature, x, y } = this.state;
 
-        if (hoveredFeature) {
-            if (hoveredFeature.isState) {
-                const stateHovered = hoveredFeature;
-                return (
-                    hoveredFeature && (
-                        <div className="state-tooltip" style={{ left: x, top: y }}>
-                            <h5>{stateHovered.properties.name}</h5>
-                            <div>Counties: {stateHovered.properties.amount_counties}</div>
-                            {/* <br /> */}
-                            {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
-                        </div>
-                    )
-                );
-            }
-
-            if (hoveredFeature.isCounty) {
-                const countyHovered = hoveredFeature;
-                return (
-                    countyHovered && (
-                        <div className="state-tooltip" style={{ left: x, top: y }}>
-                            <h5>{countyHovered.properties.NAME} County</h5>
-                            <div>FIPS Code: {countyHovered.properties.FIPS_CODE}</div>
-                            {/* <br /> */}
-                            {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
-                        </div>
-                    )
-                );
-            }
-
-            if (hoveredFeature.isCongressional) {
-                const congressionalHovered = hoveredFeature;
-                return (
-                    congressionalHovered && (
-                        <div className="state-tooltip" style={{ left: x, top: y }}>
-                            <h5>{congressionalHovered.properties.NAMELSAD}</h5>
-                            <div></div>
-                            {/* <br /> */}
-                            {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
-                        </div>
-                    )
-                );
-            }
-
-            if (hoveredFeature.isPrecinct) {
-                const precinctHovered = hoveredFeature;
-                return (
-                    precinctHovered && (
-                        <div className="state-tooltip" style={{ left: x, top: y }}>
-                            <h5>Precinct GEOID: {precinctHovered.properties.GEOID10}</h5>
-                            {/* <div>FIPS Code: {precinctHovered.properties}</div> */}
-                            {/* <br /> */}
-                            {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
-                        </div>
-                    )
-                );
-            }
+        if (!hoveredFeature) { return; }
+        else if (hoveredFeature.isState) {
+            const stateHovered = hoveredFeature;
+            return (
+                hoveredFeature && (
+                    <div className="state-tooltip" style={{ left: x, top: y }}>
+                        <h5>{stateHovered.properties.name}</h5>
+                        <div>Counties: {stateHovered.properties.amount_counties}</div>
+                        {/* <br /> */}
+                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                    </div>
+                )
+            );
+        }
+        else if (hoveredFeature.isCounty) {
+            const countyHovered = hoveredFeature;
+            return (
+                countyHovered && (
+                    <div className="state-tooltip" style={{ left: x, top: y }}>
+                        <h5>{countyHovered.properties.NAME} County</h5>
+                        <div>FIPS Code: {countyHovered.properties.FIPS_CODE}</div>
+                        {/* <br /> */}
+                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                    </div>
+                )
+            );
+        }
+        else if (hoveredFeature.isCongressional) {
+            const congressionalHovered = hoveredFeature;
+            return (
+                congressionalHovered && (
+                    <div className="state-tooltip" style={{ left: x, top: y }}>
+                        <h5>{congressionalHovered.properties.NAMELSAD}</h5>
+                        <div></div>
+                        {/* <br /> */}
+                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                    </div>
+                )
+            );
+        }
+        else if (hoveredFeature.isPrecinct) {
+            const precinctHovered = hoveredFeature;
+            return (
+                precinctHovered && (
+                    <div className="state-tooltip" style={{ left: x, top: y }}>
+                        <h5>Precinct GEOID: {precinctHovered.properties.GEOID10}</h5>
+                        {/* <div>FIPS Code: {precinctHovered.properties}</div> */}
+                        {/* <br /> */}
+                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                    </div>
+                )
+            );
         }
     }
 
@@ -519,6 +522,11 @@ export default class App extends Component {
             console.log(result);
             this.setState({ stateData: result });
         });
+
+        this.appData.fetchCongressionalDistrictByCID(36005).then(result => {
+            console.log(result);
+            this.setState({ congressionalDistrictData: result });
+        })
         /**
          * State data
          */
@@ -554,7 +562,7 @@ export default class App extends Component {
             }
         );
         */
-        json(
+        /* json(
             NY_CONGRESSIONAL_DATA,
             (error, response) => {
                 if (!error) {
@@ -562,7 +570,7 @@ export default class App extends Component {
                     this.setState({ congressionalDistrictData: response });
                 }
             }
-        );
+        ); */
 
         /* json(
             NY_PRECINCT_DATA,

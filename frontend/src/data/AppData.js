@@ -16,23 +16,23 @@ class AppData {
     fetchAllStates() {
         //return this.fetchDataFromAPI('http://0.0.0.0:1234/allStates')
         return this.asyncFetch('http://67.80.171.107:1234/allStates')
-            .then(result => {
-                console.log(result)
+            .then(data => {
+                console.log(data)
                 let FeatureCollection = {
                     type: "FeatureCollection",
                     features: []
                 };
-                for (let i in result) {
+                for (let i in data) {
                     let feature = {
                         type: "Feature",
                         properties: {
-                            name: result[i].name,
-                            id: result[i].id,
-                            amount_counties: result[i].countiesId ? result[i].countiesId.length : 0
+                            name: data[i].name,
+                            id: data[i].id,
+                            amount_counties: data[i].countiesId ? data[i].countiesId.length : 0
                         },
                         geometry: {
                             type: "MultiPolygon",
-                            coordinates: result[i].geometry.coordinates
+                            coordinates: data[i].geometry.coordinates
                         }
                     };
                     FeatureCollection["features"].push(feature);
@@ -42,11 +42,22 @@ class AppData {
             });
     }
 
-    fetchCongressionalDistricts(){
-        return this.asyncFetch('http://67.80.171.107:1234/congressionalDistrictsForState?')
+    fetchCongressionalDistrictByState(stateID) {
+        return this.asyncFetch('http://67.80.171.107:1234/congressionalDistrict?cid='.concat(stateID))
+            .then(data => {
+                return data;
+            });
     }
 
-    fetchPrecincts(){
+    fetchCongressionalDistrictByCID(CID) {
+        return this.asyncFetch('http://67.80.171.107:1234/congressionalDistrict?cid='.concat(CID))
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+    }
+
+    fetchPrecincts() {
 
     }
 }

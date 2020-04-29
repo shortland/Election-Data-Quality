@@ -11,18 +11,23 @@ import com.electiondataquality.restservice.demographics.enums.RACE;
 @Entity
 @Table(name = "demographic_data")
 public class DemographicTable {
+
     @Id
     @Column(name = "precinct_idn")
     private String precicntId;
 
     @Column(name = "asian")
     private int asianPopulation;
+
     @Column(name = "black")
     private int blackPopulation;
+
     @Column(name = "hispanic")
     private int hispanicPopulation;
+
     @Column(name = "other")
     private int otherPopulation;
+
     @Column(name = "white")
     private int whitePopulation;
 
