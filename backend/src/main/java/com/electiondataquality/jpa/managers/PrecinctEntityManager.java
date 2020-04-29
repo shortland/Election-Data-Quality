@@ -70,6 +70,10 @@ public class PrecinctEntityManager {
         return results;
     }
 
+    public void removePrecinct(PrecinctFeature precinctFeature) {
+        em.remove(precinctFeature);
+    }
+
     public void persistPrecinct(PrecinctFeature precinctFeature) {
         em.persist(precinctFeature);
     }

@@ -268,7 +268,7 @@ public class PrecinctController {
     /**
      * Delete a precinct.
      * 
-     * TODO: Change return type to ControllerError
+     * NOTE: Tested 4/28/2020
      * 
      * 
      * @param precinctId
@@ -277,9 +277,13 @@ public class PrecinctController {
     @CrossOrigin
     @GetMapping("/deletePrecinct")
     public ErrorJ deletePrecinct(@RequestParam String precinctId) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        precinctManager.deletePrecinct(precinctId);
-
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
+        if (targetData != null) {
+            pem.removePrecinct(targetData);
+        }
+        pem.cleanup(true);
         return ErrorGen.ok();
     }
 
@@ -328,7 +332,7 @@ public class PrecinctController {
         PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
 
         if (targetData != null) {
-            targetData.updatePrecinctFeature(info);
+            targetData.update(info);
             pem.cleanup(true);
             return ErrorGen.ok();
         }
@@ -402,9 +406,8 @@ public class PrecinctController {
     /**
      * Add a neighbor to a precinct's neighbor list.
      * 
-     * TODO: Return ControllerError
      * 
-     * NOTE: Tested
+     * TODO: need test
      * 
      * @param precinctId1
      * @param precinctId2
@@ -413,31 +416,32 @@ public class PrecinctController {
     @CrossOrigin
     @GetMapping("/addPrecinctNeighbor")
     public ErrorJ addPrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct target1 = precinctManager.getPrecinct(precinctId1);
-        Precinct target2 = precinctManager.getPrecinct(precinctId2);
-
-        if (target1 != null && target2 != null) {
-            target1.addNeighbor(precinctId2);
-            target2.addNeighbor(precinctId1);
-
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature targetData1 = pem.findPrecinctFeatureById(precinctId1);
+        PrecinctFeature targetData2 = pem.findPrecinctFeatureById(precinctId2);
+        if (targetData1 != null && targetData2 != null) {
+            targetData1.addNeighbor(precinctId2);
+            targetData2.addNeighbor(precinctId1);
+            pem.cleanup(true);
             return ErrorGen.ok();
+        } else {
+            pem.cleanup(true);
+            if (targetData1 == null) {
+                return ErrorGen.create("unable to get precinct1");
+            } else {
+                return ErrorGen.create("unable to get precinct2");
+            }
         }
 
-        if (target1 == null) {
-            return ErrorGen.create("unable to get precinct1");
-        } else {
-            return ErrorGen.create("unable to get precinct2");
-        }
     }
 
     /**
      * Delete a neighbor of a precinct. Removes a precinct from the specified
      * precincts neighbor list.
      * 
-     * TODO: Return ControllerError
      * 
-     * NOTE: Tested
+     * TODO: need test
      * 
      * @param precinctId1
      * @param precinctId2
@@ -446,28 +450,31 @@ public class PrecinctController {
     @CrossOrigin
     @GetMapping("/deletePrecinctNeighbor")
     public ErrorJ deletePrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct target1 = precinctManager.getPrecinct(precinctId1);
-        Precinct target2 = precinctManager.getPrecinct(precinctId2);
-
-        if (target1 != null && target2 != null) {
-            target1.deleteNeighbor(precinctId2);
-            target2.deleteNeighbor(precinctId1);
-
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature targetData1 = pem.findPrecinctFeatureById(precinctId1);
+        PrecinctFeature targetData2 = pem.findPrecinctFeatureById(precinctId2);
+        if (targetData1 != null && targetData2 != null) {
+            targetData1.deleteNeighbor(precinctId2);
+            targetData2.deleteNeighbor(precinctId1);
+            pem.cleanup(true);
             return ErrorGen.ok();
+        } else {
+            pem.cleanup(true);
+            if (targetData1 == null) {
+                return ErrorGen.create("unable to get precinct1");
+            } else {
+                return ErrorGen.create("unable to get precinct2");
+            }
+
         }
 
-        if (target1 == null) {
-            return ErrorGen.create("unable to get precinct1");
-        } else {
-            return ErrorGen.create("unable to get precinct2");
-        }
     }
 
     /**
      * Create a new precinct object.
      * 
-     * TODO: Return ControllerError
+     * TODO: have to find a way to create a new precinct id
      * 
      * @param mp
      * @return
@@ -486,13 +493,11 @@ public class PrecinctController {
     }
 
     /**
-     * Merge two precincts together.
-     * 
-     * TODO: Return ControllerError
+     * Merge two precincts together. TODO: Need to update merged errorData
      * 
      * TODO: Have to merge polygon also (with sam's script)
      * 
-     * NOTE: Tested
+     * TODO: need test
      * 
      * @param precinctId1
      * @param precinctId2
@@ -501,15 +506,30 @@ public class PrecinctController {
     @CrossOrigin
     @GetMapping("/mergePrecinct")
     public ErrorJ mergePrecincts(@RequestParam String precinctId1, @RequestParam String precinctId2) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct precint1 = precinctManager.getPrecinct(precinctId1);
-        Precinct precint2 = precinctManager.getPrecinct(precinctId2);
-        Precinct mergedPrecinct = Precinct.mergePrecinct(precint1, precint2);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature targetData1 = pem.findPrecinctFeatureById(precinctId1);
+        PrecinctFeature targetData2 = pem.findPrecinctFeatureById(precinctId2);
+        if (targetData1 != null && targetData2 != null) {
+            Precinct target1 = new Precinct(targetData1);
+            Precinct target2 = new Precinct(targetData2);
+            Precinct mergedPrecinct = Precinct.mergePrecinct(target1, target2);
+            targetData1.update(mergedPrecinct);
+            if (mergedPrecinct.getDemographicData() != null) {
+                targetData1.getDemogrpahicTable().update(mergedPrecinct.getDemographicData(), precinctId1);
+            }
+            if (mergedPrecinct.getVotingData() != null) {
+                for (ElectionDataTable edt : targetData1.getElectionDataSet()) {
+                    edt.update(mergedPrecinct.getVotingData().getElectionData(edt.getElection()), precinctId1);
+                }
+            }
+            pem.cleanup(true);
+            return ErrorGen.ok();
+        } else {
+            pem.cleanup(true);
+            return ErrorGen.create("can't find precinct1 or precinct2");
+        }
 
-        precinctManager.deletePrecinct(precinctId2);
-        precinctManager.updatePrecinct(precinctId1, mergedPrecinct);
-
-        return ErrorGen.ok();
     }
 
     /**
