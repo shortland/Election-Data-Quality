@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.electiondataquality.restservice.index.Greeting;
+import com.electiondataquality.types.responses.ApiResponse;
+import com.electiondataquality.types.responses.ResponseGen;
+import com.electiondataquality.types.responses.enums.API_STATUS;
 
 @RestController
 @CrossOrigin
@@ -23,7 +26,8 @@ public class GreetingController {
      * @return
      */
     @GetMapping("/")
-    public Greeting greeting(@RequestParam(defaultValue = "World") String name) {
-        return new Greeting(counter.incrementAndGet(), String.format(template, name));
+    public ApiResponse greeting(@RequestParam(defaultValue = "World") String name) {
+        return ResponseGen.create(API_STATUS.OK,
+                new Greeting(counter.incrementAndGet(), String.format(template, name)));
     }
 }

@@ -1,6 +1,7 @@
 package com.electiondataquality.restservice.voting.elections;
 
 import java.util.EnumMap;
+import java.util.Map;
 
 import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.electiondataquality.restservice.voting.elections.enums.PARTIES;
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ElectionResults {
 
-    private EnumMap<PARTIES, Integer> resultsByParty;
+    private Map<PARTIES, Integer> resultsByParty;
 
     private PARTIES majorityParty;
 
@@ -79,7 +80,7 @@ public class ElectionResults {
         return this.majorityParty;
     }
 
-    public EnumMap<PARTIES, Integer> getResultsByParty() {
+    public Map<PARTIES, Integer> getResultsByParty() {
         return this.resultsByParty;
     }
 

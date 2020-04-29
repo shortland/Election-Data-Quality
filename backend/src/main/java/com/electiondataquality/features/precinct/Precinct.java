@@ -2,6 +2,9 @@ package com.electiondataquality.features.precinct;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.electiondataquality.features.Feature;
@@ -27,9 +30,9 @@ public class Precinct extends Feature {
 
     private DemographicData demographicData;
 
-    private HashSet<String> neighborsId;
+    private Set<String> neighborsId;
 
-    private HashMap<Integer, PrecinctError> precinctErrors;
+    private Map<Integer, PrecinctError> precinctErrors;
 
     private boolean isGhost;
 
@@ -43,9 +46,9 @@ public class Precinct extends Feature {
         VotingData vd = VotingData.mergeVotingData(p1.getVotingData(), p2.getVotingData());
         DemographicData dd = DemographicData.mergeDemographicData(p1.getDemographicData(), p2.getDemographicData());
 
-        HashSet<String> neighborsId1 = p1.getNeighborsId();
-        HashSet<String> neighborsId2 = p2.getNeighborsId();
-        HashSet<String> mergedNeighborsId = new HashSet<String>();
+        Set<String> neighborsId1 = p1.getNeighborsId();
+        Set<String> neighborsId2 = p2.getNeighborsId();
+        Set<String> mergedNeighborsId = new HashSet<String>();
 
         for (String neighborId : neighborsId1) {
             if (!mergedNeighborsId.contains(neighborId)) {
@@ -59,9 +62,9 @@ public class Precinct extends Feature {
             }
         }
 
-        HashMap<Integer, PrecinctError> errors1 = p1.getPrecinctErrors();
-        HashMap<Integer, PrecinctError> errors2 = p2.getPrecinctErrors();
-        HashSet<PrecinctError> mergedErrorSet = new HashSet<PrecinctError>();
+        Map<Integer, PrecinctError> errors1 = p1.getPrecinctErrors();
+        Map<Integer, PrecinctError> errors2 = p2.getPrecinctErrors();
+        Set<PrecinctError> mergedErrorSet = new HashSet<PrecinctError>();
 
         for (int errorId : errors1.keySet()) {
             errors1.get(errorId).setParentPrecinctId(id);
@@ -105,7 +108,7 @@ public class Precinct extends Feature {
     }
 
     public Precinct(String id, String canonicalName, String fullName, String parentDistrictId, VotingData votingData,
-            DemographicData demographicData, HashSet<String> neighborsId, HashSet<PrecinctError> errors,
+            DemographicData demographicData, Set<String> neighborsId, Set<PrecinctError> errors,
             MultiPolygon multiPolygon) {
         super(multiPolygon);
 
@@ -123,11 +126,11 @@ public class Precinct extends Feature {
         }
     }
 
-    private HashMap<Integer, PrecinctError> populateErrorsMap(HashSet<PrecinctError> errors) {
-        HashMap<Integer, PrecinctError> errorMap = new HashMap<Integer, PrecinctError>();
+    private Map<Integer, PrecinctError> populateErrorsMap(Set<PrecinctError> errors) {
+        Map<Integer, PrecinctError> errorMap = new HashMap<Integer, PrecinctError>();
 
         for (PrecinctError e : errors) {
-            HashSet<Comment> commentSet = e.getComments();
+            Set<Comment> commentSet = e.getComments();
 
             for (Comment c : commentSet) {
                 c.setParentPrecinctId(this.id);
@@ -171,11 +174,11 @@ public class Precinct extends Feature {
         this.fullName = fullname;
     }
 
-    public HashSet<String> getNeighborsId() {
+    public Set<String> getNeighborsId() {
         return this.neighborsId;
     }
 
-    public void setNeighborsId(HashSet<String> neighborsId) {
+    public void setNeighborsId(Set<String> neighborsId) {
         this.neighborsId = neighborsId;
     }
 
@@ -220,8 +223,8 @@ public class Precinct extends Feature {
     }
 
     @JsonIgnore
-    public HashSet<PrecinctError> getAllError() {
-        HashSet<PrecinctError> errorSet = new HashSet<PrecinctError>();
+    public Set<PrecinctError> getAllError() {
+        Set<PrecinctError> errorSet = new HashSet<PrecinctError>();
 
         for (Integer id : precinctErrors.keySet()) {
             errorSet.add(precinctErrors.get(id));
@@ -230,7 +233,7 @@ public class Precinct extends Feature {
         return errorSet;
     }
 
-    public HashMap<Integer, PrecinctError> getPrecinctErrors() {
+    public Map<Integer, PrecinctError> getPrecinctErrors() {
         return this.precinctErrors;
     }
 
@@ -238,7 +241,7 @@ public class Precinct extends Feature {
         return this.precinctErrors.get(errorId);
     }
 
-    public void setPrecinctErrors(HashMap<Integer, PrecinctError> precinctErrors) {
+    public void setPrecinctErrors(Map<Integer, PrecinctError> precinctErrors) {
         this.precinctErrors = precinctErrors;
     }
 
@@ -260,6 +263,7 @@ public class Precinct extends Feature {
 
     public String toString() {
         String str = "";
+
         str += "PrecinctId : " + this.getId() + "\n";
         str += "Name : " + this.getFullName() + " (" + this.getCanonicalName() + ")\n";
         str += "ParentId : " + this.getParentDistrictId() + "\n";
@@ -279,10 +283,10 @@ public class Precinct extends Feature {
         String infoCName = info.getCanonicalName();
         String infoFullName = info.getFullName();
         String infoParentId = info.getParentDistrictId();
-        HashSet<String> infoNeighborsId = info.getNeighborsId();
+        Set<String> infoNeighborsId = info.getNeighborsId();
         VotingData infoVD = info.getVotingData();
         DemographicData infoDD = info.getDemographicData();
-        HashMap<Integer, PrecinctError> infoErrors = info.getPrecinctErrors();
+        Map<Integer, PrecinctError> infoErrors = info.getPrecinctErrors();
 
         if (!infoId.equals("0"))
             this.setId(infoId);

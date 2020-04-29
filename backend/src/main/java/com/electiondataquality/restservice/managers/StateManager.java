@@ -1,15 +1,17 @@
 package com.electiondataquality.restservice.managers;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.ArrayList;
 
 import com.electiondataquality.features.state.State;
 
 public class StateManager {
 
-    private HashMap<String, State> stateMap;
+    private Map<String, State> stateMap;
 
     public StateManager() {
         this.stateMap = new HashMap<String, State>();
@@ -31,8 +33,8 @@ public class StateManager {
         }
     }
 
-    public ArrayList<State> getAllStates() {
-        ArrayList<State> allStates = new ArrayList<>();
+    public List<State> getAllStates() {
+        List<State> allStates = new ArrayList<>();
 
         for (Map.Entry<String, State> state : this.stateMap.entrySet()) {
             allStates.add(state.getValue());
@@ -49,7 +51,7 @@ public class StateManager {
         return null;
     }
 
-    public HashSet<String> getAllCounties(String stateId) {
+    public Set<String> getAllCounties(String stateId) {
         if (this.stateMap.containsKey(stateId)) {
             return this.stateMap.get(stateId).getCountyIds();
         }
@@ -57,7 +59,7 @@ public class StateManager {
         return null;
     }
 
-    public HashSet<String> getAllDistricts(String stateId) {
+    public Set<String> getAllDistricts(String stateId) {
         if (this.stateMap.containsKey(stateId)) {
             return this.stateMap.get(stateId).getCongressionalDistrictIds();
         }

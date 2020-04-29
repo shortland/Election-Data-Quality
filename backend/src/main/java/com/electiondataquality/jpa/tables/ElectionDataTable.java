@@ -39,7 +39,6 @@ public class ElectionDataTable {
     private String precinct_id;
 
     public ElectionDataTable() {
-
     }
 
     public ElectionDataTable(ElectionResults electionResults, String precinctId) {

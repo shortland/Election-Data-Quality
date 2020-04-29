@@ -1,6 +1,8 @@
 package com.electiondataquality.restservice.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +16,9 @@ import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.restservice.managers.CommentManager;
 import com.electiondataquality.restservice.managers.PrecinctManager;
-import com.electiondataquality.types.errors.ErrorGen;
-import com.electiondataquality.types.errors.ErrorJ;
+import com.electiondataquality.types.responses.ApiResponse;
+import com.electiondataquality.types.responses.ResponseGen;
+import com.electiondataquality.types.responses.enums.API_STATUS;
 
 @RestController
 @CrossOrigin
@@ -32,7 +35,7 @@ public class CommentController {
      * @return
      */
     @RequestMapping(value = "/createComment", method = RequestMethod.POST)
-    public ErrorJ createComment(@RequestBody String commentText, @RequestParam String precinctId,
+    public ApiResponse createComment(@RequestBody String commentText, @RequestParam String precinctId,
             @RequestParam int errorId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
@@ -50,13 +53,13 @@ public class CommentController {
                 parentError.addComment(newComment);
                 commentManager.addComment(newComment);
 
-                return ErrorGen.ok();
+                return ResponseGen.create(API_STATUS.OK, "successfully created comment");
             }
 
-            return ErrorGen.create("unable to get error");
+            return ResponseGen.create(API_STATUS.ERROR, "unable to get error for the precinct");
         }
 
-        return ErrorGen.create("unable to get precinct");
+        return ResponseGen.create(API_STATUS.ERROR, "unable to get the precinct");
     }
 
     /**
@@ -69,17 +72,17 @@ public class CommentController {
      * @return
      */
     @RequestMapping(value = "/updateComment", method = RequestMethod.PUT)
-    public ErrorJ updateComment(@RequestBody String commentText, @RequestParam int commentId) {
+    public ApiResponse updateComment(@RequestBody String commentText, @RequestParam int commentId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         Comment target = commentManager.getComment(commentId);
 
         if (target != null) {
             target.updateText(commentText);
 
-            return ErrorGen.ok();
+            return ResponseGen.create(API_STATUS.OK, "successfully updated comment");
         }
 
-        return ErrorGen.create("unable to update specified comment");
+        return ResponseGen.create(API_STATUS.ERROR, "unable to update specified comment");
     }
 
     /**
@@ -91,7 +94,7 @@ public class CommentController {
      * @return
      */
     @RequestMapping(value = "/deleteComment", method = RequestMethod.DELETE)
-    public ErrorJ deleteComment(@RequestParam int commentId) {
+    public ApiResponse deleteComment(@RequestParam int commentId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Comment target = commentManager.getComment(commentId);
@@ -108,16 +111,16 @@ public class CommentController {
                     parentError.deleteComment(commentId);
                     commentManager.deleteComment(commentId);
                 } else {
-                    return ErrorGen.create("unable to get parent error");
+                    return ResponseGen.create(API_STATUS.ERROR, "unable to get parent error");
                 }
             } else {
-                return ErrorGen.create("unable to get parent precinct");
+                return ResponseGen.create(API_STATUS.ERROR, "unable to get parent precinct");
             }
 
-            return ErrorGen.ok();
+            return ResponseGen.create(API_STATUS.OK, "successfully deleted comment");
         }
 
-        return ErrorGen.create("unable to delete specified comment");
+        return ResponseGen.create(API_STATUS.ERROR, "unable to delete specified comment");
     }
 
     /**
@@ -130,10 +133,10 @@ public class CommentController {
      * @return
      */
     @RequestMapping(value = "/commentByError", method = RequestMethod.GET)
-    public ArrayList<Comment> getAllCommentsOfError(@RequestParam int precinctId, @RequestParam int errorId) {
+    public ApiResponse getAllCommentsOfError(@RequestParam int precinctId, @RequestParam int errorId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
-        ArrayList<Comment> comments = new ArrayList<Comment>(commentManager.getCommentsByError(errorId));
+        List<Comment> comments = new ArrayList<>(commentManager.getCommentsByError(errorId));
 
-        return comments;
+        return ResponseGen.create(API_STATUS.OK, comments);
     }
 }
