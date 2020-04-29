@@ -1,19 +1,12 @@
 package com.electiondataquality.jpa.tables;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.electiondataquality.geometry.Geometry;
 import com.electiondataquality.geometry.util.RawGeometryToShape;
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 @Table(name = "features")

@@ -1,10 +1,11 @@
 package com.electiondataquality.geometry.util;
 
+import com.google.gson.Gson;
+
 import com.electiondataquality.geometry.Geometry;
 import com.electiondataquality.geometry.GeometryType;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.geometry.Polygon;
-import com.google.gson.Gson;
 
 public class RawGeometryToShape {
 

@@ -41,7 +41,6 @@ public class ErrorTable {
     private String precinctId;
 
     public ErrorTable() {
-
     }
 
     public ErrorTable(int errorId, int featureId, String text, int resolved, int valid) {

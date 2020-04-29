@@ -10,11 +10,11 @@ import javax.persistence.Table;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
 import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.electiondataquality.restservice.voting.elections.enums.PARTIES;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 
 @Entity
 @Table(name = "election_data")
 public class ElectionDataTable {
+
     @Id
     @Column(name = "data_id")
     private String dataId;
