@@ -38,22 +38,16 @@ public class ErrorController {
 
         if (targetPrecinct.isPresent()) {
             Set<ErrorTable> errors = targetPrecinct.get().getErrors();
-            if (errors != null) {
+            Set<Integer> errorsId = targetPrecinct.get().getErrorsId();
+            if (errorsId.contains(errorId)) {
                 for (ErrorTable et : errors) {
                     if (et.getErrorId() == errorId) {
-                        Optional<ErrorTable> targetError = pem.findErrorsByPrecinctId(errorId);
-                        if (targetError.isPresent()) {
-                            targetError.get().setResolved(true);
-                            pem.cleanup();
-                            return ErrorGen.ok();
-                        } else {
-                            pem.cleanup();
-                            return ErrorGen.create("cannot find error with the errorId");
-                        }
+                        et.setResolved(true);
                     }
                 }
+                targetPrecinct.get().setErrors(errors);
                 pem.cleanup();
-                return ErrorGen.create("error don't exist in this precinct");
+                return ErrorGen.ok();
             }
             pem.cleanup();
             return ErrorGen.create("there are no errors in this precinct");
@@ -69,22 +63,16 @@ public class ErrorController {
 
         if (targetPrecinct.isPresent()) {
             Set<ErrorTable> errors = targetPrecinct.get().getErrors();
-            if (errors != null) {
+            Set<Integer> errorsId = targetPrecinct.get().getErrorsId();
+            if (errorsId.contains(errorId)) {
                 for (ErrorTable et : errors) {
                     if (et.getErrorId() == errorId) {
-                        Optional<ErrorTable> targetError = pem.findErrorsByPrecinctId(errorId);
-                        if (targetError.isPresent()) {
-                            targetError.get().setResolved(false);
-                            pem.cleanup();
-                            return ErrorGen.ok();
-                        } else {
-                            pem.cleanup();
-                            return ErrorGen.create("cannot find error with the errorId");
-                        }
+                        et.setResolved(false);
                     }
                 }
+                targetPrecinct.get().setErrors(errors);
                 pem.cleanup();
-                return ErrorGen.create("error don't exist in this precinct");
+                return ErrorGen.ok();
             }
             pem.cleanup();
             return ErrorGen.create("there are no errors in this precinct");

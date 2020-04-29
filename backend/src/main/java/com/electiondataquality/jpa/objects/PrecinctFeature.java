@@ -174,6 +174,19 @@ public class PrecinctFeature {
         return this.errors;
     }
 
+    public void setErrors(Set<ErrorTable> errors) {
+        this.errors = errors;
+    }
+
+    public Set<Integer> getErrorsId() {
+        HashSet<Integer> errorsId = new HashSet<>();
+        for (ErrorTable et : this.errors) {
+            errorsId.add(et.getErrorId());
+        }
+
+        return errorsId;
+    }
+
     // public void addElecionalDataTable(ElectionDataTable electionDataTable) {
     // this.electionDataTableSet.add(electionDataTable);
     // }
@@ -186,6 +199,10 @@ public class PrecinctFeature {
     // }
     // }
     // }
+
+    public void setNeighbors(String newNeighbors) {
+        this.neighborsId = newNeighbors;
+    }
 
     public HashSet<String> getNeighborsIdSet() {
         String str = this.neighborsId.replaceAll("\\[|]", "");
@@ -201,12 +218,11 @@ public class PrecinctFeature {
 
     public void addNeighbor(String neighborId) {
         HashSet<String> neighborSet = this.getNeighborsIdSet();
-
+        System.out.println(neighborSet);
         if (!neighborSet.contains(neighborId)) {
             String newNeighborsId = this.neighborsId.replaceAll("\\]", "");
-
             newNeighborsId = newNeighborsId + "," + neighborId + "]";
-            this.neighborsId = newNeighborsId;
+            this.setNeighbors(newNeighborsId);
         }
     }
 
@@ -218,13 +234,17 @@ public class PrecinctFeature {
         }
 
         String newNeighborsId = "[";
-
+        int counter = 0;
         for (String nid : neighborSet) {
-            newNeighborsId = newNeighborsId + nid + ",";
+            if (counter == neighborSet.size() - 1) {
+                newNeighborsId = newNeighborsId + nid;
+            } else {
+                newNeighborsId = newNeighborsId + nid + ",";
+            }
+            counter += 1;
         }
-
         newNeighborsId += "]";
-        this.neighborsId = newNeighborsId;
+        this.setNeighbors(newNeighborsId);
     }
 
     public HashMap<Integer, PrecinctError> getPrecinctErrors() {
