@@ -14,14 +14,17 @@ public class VotingData {
     public static VotingData mergeVotingData(VotingData vd1, VotingData vd2) {
         HashSet<ELECTIONS> allElections;
         HashSet<ElectionResults> results = new HashSet<ElectionResults>();
+
         if (vd1.getAllElections().size() > vd2.getAllElections().size()) {
             allElections = vd1.getAllElections();
         } else {
             allElections = vd2.getAllElections();
         }
+
         for (ELECTIONS e : allElections) {
             ElectionResults er1 = vd1.getElectionData(e);
             ElectionResults er2 = vd2.getElectionData(e);
+
             if (er1 != null && er2 != null) {
                 results.add(ElectionResults.mergeElectionResults(er1, er2));
             } else if (er1 == null && er2 != null) {
@@ -30,8 +33,8 @@ public class VotingData {
                 results.add(er1);
             }
         }
-        VotingData mergedVD = new VotingData(results);
-        return mergedVD;
+
+        return new VotingData(results);
     }
 
     public VotingData() {
@@ -40,6 +43,7 @@ public class VotingData {
 
     public VotingData(HashSet<ElectionResults> erSet) {
         this.electionData = new EnumMap<ELECTIONS, ElectionResults>(ELECTIONS.class);
+
         for (ElectionResults er : erSet) {
             this.electionData.put(er.getElection(), er);
         }

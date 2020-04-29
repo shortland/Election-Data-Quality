@@ -96,10 +96,10 @@ public class Precinct extends Feature {
         this.parentDistrictId = precinctFeature.getParentDistrictId();
         this.geometry = RawGeometryToShape.convertRawToGeometry(precinctFeature.getFeature().getGeometry());
         this.neighborsId = precinctFeature.getNeighborsIdSet();
-
         this.demographicData = precinctFeature.getDemographicData();
         this.votingData = precinctFeature.getVotingData();
         this.isGhost = precinctFeature.isGhost();
+
         // TODO: Need to get these data from other table
         this.canonicalName = "";
         this.precinctErrors = null;

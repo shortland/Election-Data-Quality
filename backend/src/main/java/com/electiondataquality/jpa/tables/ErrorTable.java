@@ -6,10 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
 
 @Entity
@@ -42,7 +40,6 @@ public class ErrorTable {
     private String precinctId;
 
     public ErrorTable() {
-
     }
 
     public ErrorTable(int errorId, int featureId, String text, int resolved, int valid) {

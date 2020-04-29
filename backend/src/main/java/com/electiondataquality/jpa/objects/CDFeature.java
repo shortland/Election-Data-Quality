@@ -34,13 +34,6 @@ public class CDFeature {
     public CDFeature() {
     }
 
-    // public CDFeature(int cdId, String name) {
-    // this.cdId = cdId;
-    // this.name = name;
-    // this.feature = null;
-    // this.childrenStr = "";
-    // }
-
     public String getId() {
         return this.cdId;
     }

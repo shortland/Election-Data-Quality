@@ -32,7 +32,6 @@ public class DemographicTable {
     private int whitePopulation;
 
     public DemographicTable() {
-
     }
 
     public DemographicTable(DemographicData demographic_data, String precinctId) {
@@ -99,5 +98,4 @@ public class DemographicTable {
                 + " Other : " + Integer.toString(this.otherPopulation) + " White : "
                 + Integer.toString(this.whitePopulation);
     }
-
 }
