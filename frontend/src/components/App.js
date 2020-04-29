@@ -92,6 +92,7 @@ export default class App extends Component {
             features: {},
             selectedFeatureIndex: null,
             userMode: "View",
+            layers: { states: true, counties: true, congressional: true, precincts: true, parks: true }
         };
 
         this._editorRef = null;
@@ -593,34 +594,23 @@ export default class App extends Component {
      */
     renderLayers() {
         const { stateData, countyData, countyDataOutline, congressionalDistrictData, precinctData, stateFilter, countyFilter, precinctFilter, congressionalFilter } = this.state;
-
-        const states = () => {
-            if (this.checkboxes.States["get checked"]) {
-                return (
-                    <>
-                        {/* STATES DATA */}
-                        < Source type="geojson" data={stateData} >
-                            <Layer
-                                {...stateLayerFillHighlight}
-                                filter={stateFilter}
-                                maxzoom={5}
-                            />
-                            <Layer
-                                {...stateLayerFill}
-                                maxzoom={5}
-                            />
-                        </Source >
-                    </>
-                );
-            }
-            else {
-                console.log(this.checkboxes.States);
-            }
-        }
+        const { layers } = this.state;
 
         return (
             <>
-                {states()}
+                {layers.states &&
+                    < Source type="geojson" data={stateData} >
+                        <Layer
+                            {...stateLayerFillHighlight}
+                            filter={stateFilter}
+                            maxzoom={5}
+                        />
+                        <Layer
+                            {...stateLayerFill}
+                            maxzoom={5}
+                        />
+                    </Source >
+                }
 
                 {/* NY COUNTY DATA */}
                 {/* < Source type="geojson" data={countyData} >
@@ -784,6 +774,29 @@ export default class App extends Component {
         );
     }
 
+    toggleLayer = (layer) => {
+        const { layers } = this.state;
+        switch (layer) {
+            case "States":
+                layers.states = !layers.states;
+                break;
+            case "Counties":
+                layers.counties = !layers.counties;
+                break;
+            case "Congressional Districts":
+                layers.congressional = !layers.congressional;
+                break;
+            case "Precincts":
+                layers.precincts = !layers.precincts;
+                break;
+            case "National Parks":
+                layers.parks = !layers.parks;
+                break;
+            default:
+        }
+        this.setState({ layers: layers })
+    }
+
     _renderCheckboxes = () => {
         return (
             <div>
@@ -791,9 +804,9 @@ export default class App extends Component {
                     <Card.Header>Layers</Card.Header>
                     <Card.Body>
                         <Form>
-                            {['States', 'Counties', 'CongressionalDistricts', 'Precincts', 'NationalParks'].map((name) => (
+                            {['States', 'Counties', 'Congressional Districts', 'Precincts', 'National Parks'].map((name) => (
                                 <div key={"checkbox-".concat(name)}>
-                                    <Form.Check inline label={name} type={'checkbox'} defaultChecked={true} ref={this.checkboxes[name]} />
+                                    <Form.Check inline label={name} type={'checkbox'} defaultChecked={true} onChange={this.toggleLayer.bind(this, name)} />
                                 </div>
                             ))}
                         </Form>
