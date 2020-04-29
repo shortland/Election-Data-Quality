@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+kill -9 $(lsof -t -i:1234)
+
+sleep 2
+
+echo "starting upgrade"
+
+cd /home/ilankleiman/ElectionDataQuality/ && git pull origin master && cd backend && ./gradlew build && java -jar build/libs/rest-service-0.0.1-SNAPSHOT.jar &
+
