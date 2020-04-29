@@ -72,6 +72,13 @@ public class PrecinctEntityManager {
         return results;
     }
 
+    public Optional<ErrorTable> findErrorsByPrecinctId(int errorId) {
+        ErrorTable result = em.createQuery("Select a from ErrorTable a where idn = " + errorId, ErrorTable.class)
+                .getSingleResult();
+
+        return Optional.of(result);
+    }
+
     public void removePrecinct(PrecinctFeature precinctFeature) {
         em.remove(precinctFeature);
     }

@@ -31,8 +31,8 @@ public class ElectionDataTable {
     @Column(name = "other_vote")
     private int other_vote;
 
-    // @Column(name = "election")
     @Enumerated(EnumType.STRING)
+    @Column(name = "election")
     private ELECTIONS election;
 
     @Column(name = "precinct_idn")

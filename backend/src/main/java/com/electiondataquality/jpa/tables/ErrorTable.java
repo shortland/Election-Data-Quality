@@ -23,6 +23,7 @@ public class ErrorTable {
     private int featureId;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type")
     private ERROR_TYPE errorType;
 
     @Column(name = "text")
@@ -107,13 +108,13 @@ public class ErrorTable {
         this.featureId = featureId;
     }
 
-    // public ERROR_TYPE getErrorType() {
-    // return errorType;
-    // }
+    public ERROR_TYPE getErrorType() {
+        return errorType;
+    }
 
-    // public void setErrorType(ERROR_TYPE errorType) {
-    // this.errorType = errorType;
-    // }
+    public void setErrorType(ERROR_TYPE errorType) {
+        this.errorType = errorType;
+    }
 
     public String getText() {
         return text;
@@ -131,8 +132,12 @@ public class ErrorTable {
         this.created = created;
     }
 
-    public int getResolved() {
-        return resolved;
+    public boolean getResolved() {
+        if (this.resolved == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public void setResolved(boolean isResolved) {

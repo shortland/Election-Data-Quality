@@ -1,5 +1,6 @@
 package com.electiondataquality.jpa.objects;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import com.electiondataquality.features.precinct.Precinct;
+import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.jpa.tables.DemographicTable;
 import com.electiondataquality.jpa.tables.ErrorTable;
 import com.electiondataquality.jpa.tables.ElectionDataTable;
@@ -225,15 +227,15 @@ public class PrecinctFeature {
         this.neighborsId = newNeighborsId;
     }
 
-    // public HashSet<Integer> getErrorIdSet() {
-    // String str = this.errorsId.replaceAll("\\[|]", "");
-    // String[] errors = str.split(",");
-    // HashSet<Integer> errorIdSet = new HashSet<Integer>();
-    // for (String idString : errors) {
-    // errorIdSet.add(Integer.parseInt(idString));
-    // }
-    // return errorIdSet;
-    // }
+    public HashMap<Integer, PrecinctError> getPrecinctErrors() {
+        HashMap<Integer, PrecinctError> precinctErrors = new HashMap<>();
+        for (ErrorTable et : this.errors) {
+            PrecinctError error = new PrecinctError(et);
+            et.setPrecinctId(this.id);
+            precinctErrors.put(error.getId(), error);
+        }
+        return precinctErrors;
+    }
 
     public DemographicData getDemographicData() {
         if (demographic != null) {

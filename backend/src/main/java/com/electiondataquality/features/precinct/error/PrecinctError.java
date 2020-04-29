@@ -3,6 +3,7 @@ package com.electiondataquality.features.precinct.error;
 import java.util.HashSet;
 
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
+import com.electiondataquality.jpa.tables.ErrorTable;
 import com.electiondataquality.restservice.comments.Comment;
 
 public class PrecinctError {
@@ -28,6 +29,16 @@ public class PrecinctError {
         this.comments = comments;
         this.parentPrecinctId = "0";
         this.assignCommentParentId();
+    }
+
+    // Constructor for JPA
+    public PrecinctError(ErrorTable et) {
+        this.errorType = et.getErrorType();
+        this.errorId = et.getErrorId();
+        this.errorText = et.getText();
+        this.isResolved = et.getResolved();
+        this.parentPrecinctId = "0";
+        // TODO: need to get comments
     }
 
     private void assignCommentParentId() {
