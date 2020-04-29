@@ -104,6 +104,10 @@ export default class App extends Component {
             stateFilter: ['==', 'name', ''],
             congressionalFilter: ['==', 'NAMELSAD', '']
         }
+
+        this.checkboxes = {
+            States: React.createRef(), Counties: React.createRef(), CongressionalDistricts: React.createRef(), Precincts: React.createRef(), NationalParks: React.createRef()
+        }
     }
 
     /**
@@ -589,20 +593,34 @@ export default class App extends Component {
      */
     renderLayers() {
         const { stateData, countyData, countyDataOutline, congressionalDistrictData, precinctData, stateFilter, countyFilter, precinctFilter, congressionalFilter } = this.state;
+
+        const states = () => {
+            if (this.checkboxes.States["get checked"]) {
+                return (
+                    <>
+                        {/* STATES DATA */}
+                        < Source type="geojson" data={stateData} >
+                            <Layer
+                                {...stateLayerFillHighlight}
+                                filter={stateFilter}
+                                maxzoom={5}
+                            />
+                            <Layer
+                                {...stateLayerFill}
+                                maxzoom={5}
+                            />
+                        </Source >
+                    </>
+                );
+            }
+            else {
+                console.log(this.checkboxes.States);
+            }
+        }
+
         return (
             <>
-                {/* STATES DATA */}
-                < Source type="geojson" data={stateData} >
-                    <Layer
-                        {...stateLayerFillHighlight}
-                        filter={stateFilter}
-                        maxzoom={5}
-                    />
-                    <Layer
-                        {...stateLayerFill}
-                        maxzoom={5}
-                    />
-                </Source >
+                {states()}
 
                 {/* NY COUNTY DATA */}
                 {/* < Source type="geojson" data={countyData} >
@@ -773,9 +791,9 @@ export default class App extends Component {
                     <Card.Header>Layers</Card.Header>
                     <Card.Body>
                         <Form>
-                            {['States', 'Counties', 'Congressional Districts', 'Precincts', 'National Parks'].map((name) => (
+                            {['States', 'Counties', 'CongressionalDistricts', 'Precincts', 'NationalParks'].map((name) => (
                                 <div key={"checkbox-".concat(name)}>
-                                    <Form.Check inline label={name} type={'checkbox'} defaultChecked={true} />
+                                    <Form.Check inline label={name} type={'checkbox'} defaultChecked={true} ref={this.checkboxes[name]} />
                                 </div>
                             ))}
                         </Form>
