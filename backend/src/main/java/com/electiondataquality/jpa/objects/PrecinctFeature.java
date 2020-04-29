@@ -22,6 +22,9 @@ import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
 import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 @Entity
 @Table(name = "precincts")
 public class PrecinctFeature {
@@ -43,20 +46,26 @@ public class PrecinctFeature {
     @Column(name = "errors_idn")
     private String errorsId;
 
+    @Column(name = "is_ghost")
+    private int isGhost;
+
     @OneToOne
     @JoinColumn(name = "feature_idn")
     private FeatureTable feature;
 
     @OneToOne
     @JoinColumn(name = "precinct_idn")
+    @NotFound(action = NotFoundAction.IGNORE)
     private DemographicTable demographic;
 
     @OneToMany
     @JoinColumn(name = "precinct_idn")
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<ElectionDataTable> electionDataTableSet;
 
     @OneToMany
     @JoinColumn(name = "precinct_idn")
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<ErrorTable> errors;
 
     public PrecinctFeature() {
@@ -81,6 +90,45 @@ public class PrecinctFeature {
         // }
         // feature
         // errorsId
+    }
+
+    // TODO: Need to update features
+    public void update(Precinct precinct) {
+        if (!precinct.getId().equals("0")) {
+            this.id = precinct.getId();
+        }
+
+        if (precinct.getFullName() != null) {
+            this.fullName = precinct.getFullName();
+        }
+
+        if (!precinct.getParentDistrictId().equals("0")) {
+            this.parentDistrictId = precinct.getParentDistrictId();
+        }
+
+        if (precinct.getNeighborsId() != null) {
+            String newNeighborId = "[";
+            for (String neighbors : precinct.getNeighborsId()) {
+                newNeighborId += neighbors + ",";
+            }
+            newNeighborId += "]";
+            this.neighborsId = newNeighborId;
+        }
+
+        // if (precinct.getVotingData() != null) {
+        // this.electionDataTableSet.clear();
+        // for (ELECTIONS e : precinct.getVotingData().getAllElections()) {
+        // ElectionDataTable edt = new
+        // ElectionDataTable(precinct.getVotingData().getElectionData(e),
+        // precinct.getId());
+        // this.electionDataTableSet.add(edt);
+        // }
+        // }
+
+        // if (precinct.getDemographicData() != null) {
+        // this.demographic = new DemographicTable(precinct.getDemographicData(),
+        // precinct.getId());
+        // }
     }
 
     public PrecinctFeature(String id, String fullName) {
@@ -134,17 +182,18 @@ public class PrecinctFeature {
         return this.electionDataTableSet;
     }
 
-    public void addElecionalDataTable(ElectionDataTable electionDataTable) {
-        this.electionDataTableSet.add(electionDataTable);
-    }
+    // public void addElecionalDataTable(ElectionDataTable electionDataTable) {
+    // this.electionDataTableSet.add(electionDataTable);
+    // }
 
-    public void removeElectionalDataTable(String election, String precicnt_idn) {
-        for (ElectionDataTable edt : this.electionDataTableSet) {
-            if (edt.getElection().equals(election) && edt.getPrecinctId().equals(precicnt_idn)) {
-                this.electionDataTableSet.remove(edt);
-            }
-        }
-    }
+    // public void removeElectionalDataTable(String election, String precicnt_idn) {
+    // for (ElectionDataTable edt : this.electionDataTableSet) {
+    // if (edt.getElection().equals(election) &&
+    // edt.getPrecinctId().equals(precicnt_idn)) {
+    // this.electionDataTableSet.remove(edt);
+    // }
+    // }
+    // }
 
     public HashSet<String> getNeighborsIdSet() {
         String str = this.neighborsId.replaceAll("\\[|]", "");
@@ -154,6 +203,28 @@ public class PrecinctFeature {
             neighborsIdSet.add(idString);
         }
         return neighborsIdSet;
+    }
+
+    public void addNeighbor(String neighborId) {
+        HashSet<String> neighborSet = this.getNeighborsIdSet();
+        if (!neighborSet.contains(neighborId)) {
+            String newNeighborsId = this.neighborsId.replaceAll("\\]", "");
+            newNeighborsId = newNeighborsId + "," + neighborId + "]";
+            this.neighborsId = newNeighborsId;
+        }
+    }
+
+    public void deleteNeighbor(String neighborId) {
+        HashSet<String> neighborSet = this.getNeighborsIdSet();
+        if (neighborSet.contains(neighborId)) {
+            neighborSet.remove(neighborId);
+        }
+        String newNeighborsId = "[";
+        for (String nid : neighborSet) {
+            newNeighborsId = newNeighborsId + nid + ",";
+        }
+        newNeighborsId += "]";
+        this.neighborsId = newNeighborsId;
     }
 
     public HashSet<Integer> getErrorIdSet() {
@@ -177,32 +248,26 @@ public class PrecinctFeature {
         }
     }
 
-    public void printErrorTable() {
-        for (ErrorTable et : this.errors) {
-            System.out.println(et.toString());
+    public boolean isGhost() {
+        if (this.isGhost == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void setIsGhost(boolean isGhost) {
+        if (isGhost) {
+            this.isGhost = 1;
+        } else {
+            this.isGhost = 0;
         }
     }
 
     private ElectionResults convertToElectionResult(ElectionDataTable electionDataTable) {
-        String election = electionDataTable.getElection();
-        if (election.equals("PRES2016")) {
-            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
-                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
-                    ELECTIONS.PRES2016);
-            return result;
-        } else if (election.equals("CONG2016")) {
-            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
-                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
-                    ELECTIONS.CONG2016);
-            return result;
-        } else if (election.equals("CONG2018")) {
-            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
-                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
-                    ELECTIONS.CONG2018);
-            return result;
-        } else {
-            return null;
-        }
+        ElectionResults result = new ElectionResults(electionDataTable.getRepulican(), electionDataTable.getDemocrat(),
+                electionDataTable.getLibertarian(), electionDataTable.getOther(), electionDataTable.getElection());
+        return result;
     }
 
     public VotingData getVotingData() {

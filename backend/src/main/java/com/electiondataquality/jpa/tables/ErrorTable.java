@@ -3,10 +3,13 @@ package com.electiondataquality.jpa.tables;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
 
 @Entity
@@ -20,8 +23,8 @@ public class ErrorTable {
     @Column(name = "feature_idn", insertable = false, updatable = false)
     private int featureId;
 
-    // @Column(name = "type")
-    // private ERROR_TYPE errorType;
+    @Enumerated(EnumType.STRING)
+    private ERROR_TYPE errorType;
 
     @Column(name = "text")
     private String text;
@@ -35,6 +38,9 @@ public class ErrorTable {
     @Column(name = "valid")
     private int valid;
 
+    @Column(name = "precinct_idn")
+    private String precinctId;
+
     public ErrorTable() {
 
     }
@@ -46,6 +52,18 @@ public class ErrorTable {
         this.resolved = resolved;
         this.valid = valid;
     }
+
+    // public void updateErrorTable(PrecinctError pError, String precinctId) {
+    // if (pError.getId() != 0) {
+    // this.errorId = pError.getId();
+    // }
+    // if (pError.getText() != null) {
+    // this.text = pError.getText();
+    // }
+    // this.resolved = pError.isResolved();
+    // if(pError.getParentPrecinctId().equals("0"))
+
+    // }
 
     // public ErrorTable(int errorId, int featureId, String text, Date created, int
     // resolved, int valid) {
@@ -102,8 +120,12 @@ public class ErrorTable {
         return resolved;
     }
 
-    public void setResolved(int resolved) {
-        this.resolved = resolved;
+    public void setResolved(boolean isResolved) {
+        if (isResolved) {
+            this.resolved = 1;
+        } else {
+            this.resolved = 0;
+        }
     }
 
     public int getValid() {
@@ -112,6 +134,14 @@ public class ErrorTable {
 
     public void setValid(int valid) {
         this.valid = valid;
+    }
+
+    public String getPrecinctId() {
+        return this.precinctId;
+    }
+
+    public void setPrecinctId(String precinctId) {
+        this.precinctId = precinctId;
     }
 
     @Override

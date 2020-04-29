@@ -30,17 +30,9 @@ public class RawGeometryToShape {
         return geo;
     }
 
-    // public static MultiPolygon convertGeometryToString(Geometry geometry) {
-    // Gson gson = new Gson();
-    // GeometryType geoType = gson.fromJson(rawGeometry, GeometryType.class);
+    public static String convertGeometryToRaw(Geometry geo) {
+        Gson gson = new Gson();
 
-    // if (geoType.type.equals("Polygon")) {
-    // Polygon shapeP = gson.fromJson(rawGeometry, Polygon.class);
-    // return shapeP.toMultiPolygon();
-    // } else if (geoType.type.equals("MultiPolygon")) {
-    // return gson.fromJson(rawGeometry, MultiPolygon.class);
-    // }
-
-    // return new MultiPolygon();
-    // }
+        return gson.toJson(geo);
+    }
 }

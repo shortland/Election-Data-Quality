@@ -34,7 +34,7 @@ public class PrecinctError {
         for (Comment c : this.comments) {
             c.setParentErrorId(this.errorId);
 
-            if (!this.parentPrecinctId.equals(0)) {
+            if (!this.parentPrecinctId.equals("0")) {
                 c.setParentPrecinctId(this.parentPrecinctId);
             }
         }
