@@ -13,6 +13,7 @@ import com.electiondataquality.restservice.managers.CongressionalManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 
 @RestController
+@CrossOrigin
 public class CongDistrictController {
 
     /**
@@ -21,11 +22,11 @@ public class CongDistrictController {
      * @param stateId
      * @return
      */
-    @CrossOrigin
     @GetMapping("/congressionalDistrictsForState")
     public ArrayList<CongressionalDistrict> getCongDistrictForState(@RequestParam String stateId) {
         StateManager stateManager = RestServiceApplication.serverManager.getStateManager();
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
+
         HashSet<String> congDistrictIds = stateManager.getAllDistricts(stateId);
         ArrayList<CongressionalDistrict> cdList = new ArrayList<>();
 
@@ -48,12 +49,10 @@ public class CongDistrictController {
      * @param cid
      * @return
      */
-    @CrossOrigin
     @GetMapping("/congressionalDistrict")
     public CongressionalDistrict x(@RequestParam String cid) {
         CongressionalManager cdManager = RestServiceApplication.serverManager.getCongressionalManager();
-        CongressionalDistrict c = cdManager.getCongDistrict(cid);
 
-        return c;
+        return cdManager.getCongDistrict(cid);
     }
 }
