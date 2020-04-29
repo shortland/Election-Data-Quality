@@ -1,22 +1,13 @@
 package com.electiondataquality.restservice.controllers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
+import java.util.HashMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.electiondataquality.restservice.RestServiceApplication;
-import com.electiondataquality.restservice.managers.StateManager;
-import com.electiondataquality.restservice.managers.CongressionalManager;
 import com.electiondataquality.features.congressional_district.CongressionalDistrict;
 import com.electiondataquality.jpa.managers.CDEntityManager;
 import com.electiondataquality.jpa.objects.CDFeature;
@@ -37,12 +28,15 @@ public class CongDistrictController {
     public HashMap<String, CongressionalDistrict> getCongDistrictForState(@RequestParam String stateId) {
         CDEntityManager cdem = new CDEntityManager(RestServiceApplication.emFactoryCDistrict);
         List<CDFeature> targetCDs = cdem.findAllCongressionalDistrictsByStateId(stateId);
-        // ArrayList<CongressionalDistrict> cdList = new ArrayList<>();
+
         HashMap<String, CongressionalDistrict> cdMap = new HashMap<>();
+
         for (CDFeature cdFeature : targetCDs) {
             CongressionalDistrict cd = new CongressionalDistrict(cdFeature);
+
             cdMap.put(cd.getId(), cd);
         }
+
         cdem.cleanup();
 
         return cdMap;

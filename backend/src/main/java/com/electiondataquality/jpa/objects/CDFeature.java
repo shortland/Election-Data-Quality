@@ -1,6 +1,5 @@
 package com.electiondataquality.jpa.objects;
 
-import java.util.HashSet;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,27 +9,9 @@ import javax.persistence.OneToOne;
 
 import com.electiondataquality.jpa.tables.FeatureTable;
 
-// @Table(name = "congressional_districts")
 @Entity
 @Table(name = "new_congressional_districts")
 public class CDFeature {
-
-    // @Id
-    // @Column(name = "fips_code")
-    // private String cdId;
-
-    // @Column(name = "county_name")
-    // private String name;
-
-    // @Column(name = "parent_state_idn")
-    // private String parentStateId;
-
-    // @Column(name = "children_precinct_idn")
-    // private String childrenStr;
-
-    // @OneToOne
-    // @JoinColumn(name = "feature_idn")
-    // private FeatureTable feature;
 
     @Id
     @Column(name = "idn")
@@ -58,14 +39,6 @@ public class CDFeature {
     public CDFeature() {
     }
 
-    // public String getId() {
-    // return this.cdId;
-    // }
-
-    // public void setId(String cdId) {
-    // this.cdId = cdId;
-    // }
-
     public int getId() {
         return this.cdId;
     }
@@ -81,14 +54,6 @@ public class CDFeature {
     public void setName(String name) {
         this.name = name;
     }
-
-    // public String getParentId() {
-    // return this.parentStateId;
-    // }
-
-    // public void setParentId(String id) {
-    // this.parentStateId = id;
-    // }
 
     public int getParentId() {
         return this.stateFips;

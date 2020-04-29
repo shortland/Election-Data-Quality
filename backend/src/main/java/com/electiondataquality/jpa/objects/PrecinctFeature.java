@@ -184,6 +184,7 @@ public class PrecinctFeature {
 
     public Set<Integer> getErrorsId() {
         HashSet<Integer> errorsId = new HashSet<>();
+
         for (ErrorTable et : this.errors) {
             errorsId.add(et.getErrorId());
         }
@@ -222,7 +223,7 @@ public class PrecinctFeature {
 
     public void addNeighbor(String neighborId) {
         HashSet<String> neighborSet = this.getNeighborsIdSet();
-        System.out.println(neighborSet);
+
         if (!neighborSet.contains(neighborId)) {
             String newNeighborsId = this.neighborsId.replaceAll("\\]", "");
             newNeighborsId = newNeighborsId + "," + neighborId + "]";
@@ -253,11 +254,13 @@ public class PrecinctFeature {
 
     public HashMap<Integer, PrecinctError> getPrecinctErrors() {
         HashMap<Integer, PrecinctError> precinctErrors = new HashMap<>();
+
         for (ErrorTable et : this.errors) {
             PrecinctError error = new PrecinctError(et);
             et.setPrecinctId(this.id);
             precinctErrors.put(error.getId(), error);
         }
+
         return precinctErrors;
     }
 
@@ -284,6 +287,8 @@ public class PrecinctFeature {
     public void setIsGhost(boolean isGhost) {
         if (isGhost) {
             this.isGhost = 1;
+
+            return;
         }
 
         this.isGhost = 0;

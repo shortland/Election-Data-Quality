@@ -1,15 +1,11 @@
 package com.electiondataquality.restservice.controllers;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.Optional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
-import java.util.Optional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -253,18 +249,24 @@ public class PrecinctController {
     public ErrorJ updateShapeOfPrecicnt(@RequestParam String precinctId, @RequestParam Geometry geometry) {
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
+
         if (targetData.isPresent()) {
             int featureId = targetData.get().getFeature().getFeatureId();
             Optional<FeatureTable> targetFeature = pem.findFeatureByFeatureId(featureId);
+
             if (targetFeature.isPresent()) {
                 targetFeature.get().update(geometry);
+
                 pem.cleanup();
+
                 return ErrorGen.ok();
-            } else {
-                pem.cleanup();
-                return ErrorGen.create("cannot find Feature with featureID");
             }
+
+            pem.cleanup();
+
+            return ErrorGen.create("cannot find Feature with featureID");
         }
+
         return ErrorGen.create("unable to get precinct");
     }
 
@@ -286,6 +288,8 @@ public class PrecinctController {
             pem.removePrecinct(targetData.get());
         }
 
+        pem.cleanup();
+
         return ErrorGen.ok();
     }
 
@@ -306,8 +310,12 @@ public class PrecinctController {
         if (targetData.isPresent()) {
             targetData.get().setIsGhost(isGhost);
 
+            pem.cleanup();
+
             return ErrorGen.ok();
         }
+
+        pem.cleanup();
 
         return ErrorGen.create("unable to get precinct");
     }
@@ -357,23 +365,29 @@ public class PrecinctController {
         if (targetData.isPresent()) {
             Set<ElectionDataTable> electionDataSet = targetData.get().getElectionDataSet();
             Set<ELECTIONS> elections = votingData.getAllElections();
+
             if (electionDataSet != null) {
                 for (ElectionDataTable edt : targetData.get().getElectionDataSet()) {
                     ELECTIONS e = edt.getElection();
+
                     if (elections.contains(e)) {
                         edt.update(votingData.getElectionData(e), precinctId);
                         elections.remove(e);
                     }
                 }
             }
+
             for (ELECTIONS remainElections : elections) {
                 ElectionDataTable electionDataTable = new ElectionDataTable(votingData.getElectionData(remainElections),
                         precinctId);
+
                 pem.persistElectionData(electionDataTable);
                 electionDataSet.add(electionDataTable);
             }
+
             targetData.get().setElectionData(electionDataSet);
             pem.cleanup();
+
             return ErrorGen.ok();
         }
 
@@ -396,17 +410,21 @@ public class PrecinctController {
     public ErrorJ updatePreinctError(@RequestParam String precinctId, @RequestParam PrecinctError precinctError) {
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
+
         if (targetData.isPresent()) {
             Set<ErrorTable> errors = targetData.get().getErrors();
             int errorId = precinctError.getId();
+
             if (targetData.get().getErrorsId().contains(errorId)) {
                 for (ErrorTable et : errors) {
                     if (et.getErrorId() == errorId) {
                         et.update(precinctError, precinctId);
                     }
                 }
+
                 targetData.get().setErrors(errors);
                 pem.cleanup();
+
                 return ErrorGen.ok();
             } else {
                 ErrorTable newError = new ErrorTable(precinctError);
@@ -415,10 +433,12 @@ public class PrecinctController {
                 targetData.get().setErrors(errors);
                 pem.persistError(newError);
                 pem.cleanup();
+
                 return ErrorGen.ok();
             }
         } else {
             pem.cleanup();
+
             return ErrorGen.create("cannot find precinct");
         }
     }

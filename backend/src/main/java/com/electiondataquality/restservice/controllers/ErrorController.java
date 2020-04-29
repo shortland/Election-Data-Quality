@@ -1,17 +1,13 @@
 package com.electiondataquality.restservice.controllers;
 
+import java.util.Set;
+import java.util.Optional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.electiondataquality.restservice.RestServiceApplication;
-import com.electiondataquality.restservice.managers.PrecinctManager;
-
-import java.util.Optional;
-import java.util.Set;
-
-import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.jpa.managers.PrecinctEntityManager;
 import com.electiondataquality.jpa.objects.PrecinctFeature;
 import com.electiondataquality.jpa.tables.ErrorTable;
