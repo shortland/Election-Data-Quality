@@ -92,10 +92,6 @@ export default class App extends Component {
             features: {},
             selectedFeatureIndex: null,
             userMode: "View",
-            //countyFilter: ['==', 'NAME', ''],
-            //precinctFilter: ['==', 'GEOID10', ''],
-            //stateFilter: ['==', 'name', ''],
-            //congressionalFilter: ['==', 'NAMELSAD', '']
         };
 
         this._editorRef = null;
@@ -779,13 +775,13 @@ export default class App extends Component {
                         <Form>
                             {['States', 'Counties', 'Congressional Districts', 'Precincts', 'National Parks'].map((name) => (
                                 <div key={"checkbox-".concat(name)}>
-                                    <Form.Check inline label={name} type={'checkbox'} />
+                                    <Form.Check inline label={name} type={'checkbox'} defaultChecked={true} />
                                 </div>
                             ))}
                         </Form>
                     </Card.Body>
-                    <Card.Footer style={{ fontSize: '8pt' }}>
-                        Note: some layers will only show at certain zoom levels
+                    <Card.Footer style={{ lineHeight: '1.0' }}>
+                        <small className="text-muted">Note: some layers will only show at certain zoom levels</small>
                     </Card.Footer>
                 </Card>
             </div>
