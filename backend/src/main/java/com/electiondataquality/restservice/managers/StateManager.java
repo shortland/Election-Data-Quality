@@ -23,7 +23,6 @@ public class StateManager {
         }
     }
 
-    // NOTE: this clears the map and populate the map with the stateSet
     public void populate(HashSet<State> stateSet) {
         this.stateMap.clear();
 
@@ -52,7 +51,7 @@ public class StateManager {
 
     public HashSet<String> getAllCounties(String stateId) {
         if (this.stateMap.containsKey(stateId)) {
-            return this.stateMap.get(stateId).getCountiesId();
+            return this.stateMap.get(stateId).getCountyIds();
         }
 
         return null;
@@ -60,7 +59,7 @@ public class StateManager {
 
     public HashSet<String> getAllDistricts(String stateId) {
         if (this.stateMap.containsKey(stateId)) {
-            return this.stateMap.get(stateId).getDistrictsId();
+            return this.stateMap.get(stateId).getCongressionalDistrictIds();
         }
 
         return null;
