@@ -69,4 +69,8 @@ public class PrecinctEntityManager {
 
         return results;
     }
+
+    public void persistPrecinct(PrecinctFeature precinctFeature) {
+        em.persist(precinctFeature);
+    }
 }
