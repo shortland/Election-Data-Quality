@@ -60,4 +60,13 @@ public class PrecinctEntityManager {
 
         return results;
     }
+
+    public List<PrecinctFeature> findAllPrecinctFeaturesByCountyId(String countyId) {
+        List<PrecinctFeature> results = em
+                .createQuery("Select a from PrecinctFeature a where county_fips_code = '" + countyId + "'",
+                        PrecinctFeature.class)
+                .getResultList();
+
+        return results;
+    }
 }

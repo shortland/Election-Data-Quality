@@ -34,11 +34,6 @@ class LeftSidebar extends Component {
         return list;
     }
 
-    //For data correction page
-    // data_correct_selected() {
-    //     this.setState({ mode: "data_correction" });
-    // }
-
     //For data correction page to return page_status
     get_data_correction_page_status = (page_status) => {
         if (page_status === "done") {
@@ -56,6 +51,15 @@ class LeftSidebar extends Component {
         this.props.showErrorPins();
     }
 
+    makeHeader(){
+        const feature = this.props.selected;
+
+        if(feature && feature.properties && feature.properties.type){
+            //let name = feature.properties.name || feature.properties.NAME || feature.properties.GEOID10 || feature.properties.NAMELSAD
+            let type = feature.properties.type;
+        }
+    }
+
     render() {
         const { mode } = this.state;
         const { comment_data } = this.state;
@@ -66,6 +70,7 @@ class LeftSidebar extends Component {
             if (mode === "data_display") {
                 return (
                     <div >
+                        <h5></h5>
                         <Collapsible trigger="View General Info" open={true}>
                             {list}
                         </Collapsible>

@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +22,9 @@ import com.electiondataquality.restservice.managers.PrecinctManager;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.geometry.MultiPolygon;
+import com.electiondataquality.jpa.managers.PrecinctEntityManager;
+import com.electiondataquality.jpa.objects.PrecinctFeature;
+import com.electiondataquality.jpa.tables.PrecinctTable;
 import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
 
@@ -89,9 +96,16 @@ public class PrecinctController {
     @CrossOrigin
     @GetMapping("/precinctInfo")
     public HashMap<String, Object> getPrecinctInfo(@RequestParam String precinctId) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
+
         HashMap<String, Object> result = new HashMap<String, Object>();
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct target = precinctManager.getPrecinct(precinctId);
+        // PrecinctManager precinctManager =
+        // RestServiceApplication.serverManager.getPrecinctManager();
+        // Precinct target = precinctManager.getPrecinct(precinctId);
+
+        Precinct target = new Precinct(targetData);
 
         if (target != null) {
             result.put("id", target.getId());
@@ -105,9 +119,10 @@ public class PrecinctController {
             result.put("isGhost", target.getIsGhost());
 
             return result;
+        } else {
+            return null;
         }
 
-        return null;
     }
 
     /**
