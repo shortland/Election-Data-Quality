@@ -311,9 +311,7 @@ public class PrecinctController {
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
         if (targetData.isPresent()) {
-            targetData.get().updatePrecinctFeature(info);
-
-            // targetData.update(info);
+            targetData.get().update(info);
 
             return ErrorGen.ok();
         }
@@ -392,14 +390,14 @@ public class PrecinctController {
     @GetMapping("/addPrecinctNeighbor")
     public ErrorJ addPrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
-        
+
         Optional<PrecinctFeature> targetData1 = pem.findPrecinctFeatureById(precinctId1);
         Optional<PrecinctFeature> targetData2 = pem.findPrecinctFeatureById(precinctId2);
-      
+
         if (targetData1.isPresent() && targetData2.isPresent()) {
             targetData1.get().addNeighbor(precinctId2);
             targetData2.get().addNeighbor(precinctId1);
-          
+
             return ErrorGen.ok();
         }
 
@@ -420,13 +418,13 @@ public class PrecinctController {
     @GetMapping("/deletePrecinctNeighbor")
     public ErrorJ deletePrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
-      
+
         Optional<PrecinctFeature> targetData1 = pem.findPrecinctFeatureById(precinctId1);
         Optional<PrecinctFeature> targetData2 = pem.findPrecinctFeatureById(precinctId2);
-      
+
         if (targetData1.isPresent() && targetData2.isPresent()) {
-            targetData1.deleteNeighbor(precinctId2);
-            targetData2.deleteNeighbor(precinctId1);
+            targetData1.get().deleteNeighbor(precinctId2);
+            targetData2.get().deleteNeighbor(precinctId1);
 
             return ErrorGen.ok();
         }
@@ -468,10 +466,10 @@ public class PrecinctController {
     @GetMapping("/mergePrecinct")
     public ErrorJ mergePrecincts(@RequestParam String precinctId1, @RequestParam String precinctId2) {
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
-      
+
         Optional<PrecinctFeature> targetData1 = pem.findPrecinctFeatureById(precinctId1);
         Optional<PrecinctFeature> targetData2 = pem.findPrecinctFeatureById(precinctId2);
-      
+
         if (targetData1.isPresent() && targetData2.isPresent()) {
             Precinct target1 = new Precinct(targetData1.get());
             Precinct target2 = new Precinct(targetData2.get());
@@ -482,13 +480,13 @@ public class PrecinctController {
             if (mergedPrecinct.getDemographicData() != null) {
                 targetData1.get().getDemogrpahicTable().update(mergedPrecinct.getDemographicData(), precinctId1);
             }
-          
+
             if (mergedPrecinct.getVotingData() != null) {
                 for (ElectionDataTable edt : targetData1.get().getElectionDataSet()) {
                     edt.update(mergedPrecinct.getVotingData().getElectionData(edt.getElection()), precinctId1);
                 }
             }
-            
+
             return ErrorGen.ok();
         }
 
