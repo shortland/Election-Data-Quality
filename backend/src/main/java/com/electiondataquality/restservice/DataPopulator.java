@@ -81,8 +81,8 @@ public class DataPopulator {
         PrecinctEntityManager pem = new PrecinctEntityManager(emf);
         System.out.println("----------------------------------------");
         HashSet<Precinct> precinctSet = new HashSet<Precinct>();
-        List<PrecinctFeature> allPrecinct = pem.findAllPrecinctFeature();
-
+        // List<PrecinctFeature> allPrecinct = pem.findAllPrecinctFeature();
+        List<PrecinctFeature> allPrecinct = pem.findAllPrecinctFeaturesByCountyId("49001");
         System.out.println("----------------------------------------");
 
         for (PrecinctFeature precinctFeature : allPrecinct) {
