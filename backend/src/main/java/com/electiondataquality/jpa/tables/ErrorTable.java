@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.electiondataquality.features.precinct.error.PrecinctError;
@@ -53,17 +52,34 @@ public class ErrorTable {
         this.valid = valid;
     }
 
-    // public void updateErrorTable(PrecinctError pError, String precinctId) {
-    // if (pError.getId() != 0) {
-    // this.errorId = pError.getId();
-    // }
-    // if (pError.getText() != null) {
-    // this.text = pError.getText();
-    // }
-    // this.resolved = pError.isResolved();
-    // if(pError.getParentPrecinctId().equals("0"))
+    public ErrorTable(PrecinctError pError) {
+        this.errorId = pError.getId();
+        this.text = pError.getText();
+        if (pError.isResolved()) {
+            this.resolved = 1;
+        } else {
+            this.resolved = 0;
+        }
+        this.errorType = pError.getErrorType();
+    }
 
-    // }
+    public void update(PrecinctError pError, String precinctId) {
+        if (pError.getId() != 0) {
+            this.errorId = pError.getId();
+        }
+        if (pError.getText() != null) {
+            this.text = pError.getText();
+        }
+        if (pError.isResolved()) {
+            this.resolved = 1;
+        } else {
+            this.resolved = 0;
+        }
+        if (pError.getErrorType() != null) {
+            this.errorType = pError.getErrorType();
+        }
+        this.precinctId = precinctId;
+    }
 
     // public ErrorTable(int errorId, int featureId, String text, Date created, int
     // resolved, int valid) {

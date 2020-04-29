@@ -6,6 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import com.electiondataquality.jpa.objects.PrecinctFeature;
+import com.electiondataquality.jpa.tables.ElectionDataTable;
+import com.electiondataquality.jpa.tables.ErrorTable;
 
 public class PrecinctEntityManager {
 
@@ -77,4 +79,13 @@ public class PrecinctEntityManager {
     public void persistPrecinct(PrecinctFeature precinctFeature) {
         em.persist(precinctFeature);
     }
+
+    public void persistErrorTable(ErrorTable errorTable) {
+        em.persist(errorTable);
+    }
+
+    public void persistElectionDataTable(ElectionDataTable electionDataTable) {
+        em.persist(electionDataTable);
+    }
+
 }

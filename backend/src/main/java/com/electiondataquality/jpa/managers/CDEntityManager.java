@@ -58,4 +58,12 @@ public class CDEntityManager {
 
         return results;
     }
+
+    public List<CDFeature> findAllCongressionalDistrictsByStateId(String stateId) {
+        List<CDFeature> results = em
+                .createQuery("Select a from CDFeature a where state_fips = '" + stateId + "'", CDFeature.class)
+                .getResultList();
+
+        return results;
+    }
 }

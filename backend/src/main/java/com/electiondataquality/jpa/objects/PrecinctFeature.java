@@ -114,21 +114,6 @@ public class PrecinctFeature {
             newNeighborId += "]";
             this.neighborsId = newNeighborId;
         }
-
-        // if (precinct.getVotingData() != null) {
-        // this.electionDataTableSet.clear();
-        // for (ELECTIONS e : precinct.getVotingData().getAllElections()) {
-        // ElectionDataTable edt = new
-        // ElectionDataTable(precinct.getVotingData().getElectionData(e),
-        // precinct.getId());
-        // this.electionDataTableSet.add(edt);
-        // }
-        // }
-
-        // if (precinct.getDemographicData() != null) {
-        // this.demographic = new DemographicTable(precinct.getDemographicData(),
-        // precinct.getId());
-        // }
     }
 
     public PrecinctFeature(String id, String fullName) {
@@ -182,6 +167,10 @@ public class PrecinctFeature {
         return this.electionDataTableSet;
     }
 
+    public Set<ErrorTable> getErrors() {
+        return this.errors;
+    }
+
     // public void addElecionalDataTable(ElectionDataTable electionDataTable) {
     // this.electionDataTableSet.add(electionDataTable);
     // }
@@ -227,15 +216,15 @@ public class PrecinctFeature {
         this.neighborsId = newNeighborsId;
     }
 
-    public HashSet<Integer> getErrorIdSet() {
-        String str = this.errorsId.replaceAll("\\[|]", "");
-        String[] errors = str.split(",");
-        HashSet<Integer> errorIdSet = new HashSet<Integer>();
-        for (String idString : errors) {
-            errorIdSet.add(Integer.parseInt(idString));
-        }
-        return errorIdSet;
-    }
+    // public HashSet<Integer> getErrorIdSet() {
+    // String str = this.errorsId.replaceAll("\\[|]", "");
+    // String[] errors = str.split(",");
+    // HashSet<Integer> errorIdSet = new HashSet<Integer>();
+    // for (String idString : errors) {
+    // errorIdSet.add(Integer.parseInt(idString));
+    // }
+    // return errorIdSet;
+    // }
 
     public DemographicData getDemographicData() {
         if (demographic != null) {

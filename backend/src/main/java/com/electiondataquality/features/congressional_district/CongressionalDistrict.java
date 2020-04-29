@@ -20,10 +20,16 @@ public class CongressionalDistrict extends Feature {
     private HashSet<String> childrenPrecincts;
 
     public CongressionalDistrict(CDFeature cdFeature) {
-        this.cdId = cdFeature.getId();
+        // this.cdId = cdFeature.getId();
+        // this.name = cdFeature.getName();
+        // this.parentStateId = cdFeature.getParentId();
+        // this.childrenPrecincts = cdFeature.childrenStrToArray();
+        // this.geometry =
+        // RawGeometryToShape.convertRawToGeometry(cdFeature.getFeature().getGeometry());
+        this.cdId = Integer.toString(cdFeature.getId());
         this.name = cdFeature.getName();
-        this.parentStateId = cdFeature.getParentId();
-        this.childrenPrecincts = cdFeature.childrenStrToArray();
+        this.parentStateId = Integer.toString(cdFeature.getParentId());
+        // this.childrenPrecincts = cdFeature.childrenStrToArray();
         this.geometry = RawGeometryToShape.convertRawToGeometry(cdFeature.getFeature().getGeometry());
     }
 

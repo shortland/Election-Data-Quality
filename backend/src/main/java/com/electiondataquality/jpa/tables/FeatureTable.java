@@ -9,6 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.electiondataquality.geometry.Geometry;
+import com.electiondataquality.geometry.util.RawGeometryToShape;
+
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -60,6 +63,10 @@ public class FeatureTable {
     // public void setErrors(Set<ErrorTable> errors) {
     // this.errors = errors;
     // }
+
+    public void update(Geometry geometry) {
+        this.geometry = RawGeometryToShape.convertGeometryToRaw(geometry);
+    }
 
     @Override
     public String toString() {

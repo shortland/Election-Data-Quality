@@ -3,12 +3,15 @@ package com.electiondataquality.restservice.controllers;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,11 +22,15 @@ import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.managers.PrecinctManager;
 import com.electiondataquality.restservice.voting.VotingData;
+import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.electiondataquality.features.precinct.Precinct;
+import com.electiondataquality.features.precinct.error.PrecinctError;
+import com.electiondataquality.geometry.Geometry;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.jpa.managers.PrecinctEntityManager;
 import com.electiondataquality.jpa.objects.PrecinctFeature;
 import com.electiondataquality.jpa.tables.ElectionDataTable;
+import com.electiondataquality.jpa.tables.ErrorTable;
 import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
 
@@ -251,14 +258,13 @@ public class PrecinctController {
      */
     @CrossOrigin
     @GetMapping("/shapesOfPrecinct")
-    public ErrorJ updateShapeOfPrecicnt(@RequestParam String precinctId,
-            @RequestParam ArrayList<ArrayList<ArrayList<double[]>>> shape) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct targetPrecinct = precinctManager.getPrecinct(precinctId);
-
-        if (targetPrecinct != null) {
-            targetPrecinct.setShape(new MultiPolygon(shape));
-
+    public ErrorJ updateShapeOfPrecicnt(@RequestParam String precinctId, @RequestParam Geometry geometry) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
+        if (targetData != null) {
+            targetData.getFeature().update(geometry);
+            pem.cleanup(true);
             return ErrorGen.ok();
         }
 
@@ -363,8 +369,17 @@ public class PrecinctController {
 
         if (targetData != null) {
             if (targetData.getElectionDataSet() != null) {
+                Set<ELECTIONS> elections = votingData.getAllElections();
                 for (ElectionDataTable edt : targetData.getElectionDataSet()) {
-                    edt.update(votingData.getElectionData(edt.getElection()), precinctId);
+                    if (elections.contains(edt.getElection())) {
+                        edt.update(votingData.getElectionData(edt.getElection()), precinctId);
+                        elections.remove(edt.getElection());
+                    }
+                }
+                for (ELECTIONS remainElections : elections) {
+                    ElectionDataTable electionDataTable = new ElectionDataTable(
+                            votingData.getElectionData(remainElections), precinctId);
+                    pem.persistElectionDataTable(electionDataTable);
                 }
             }
             pem.cleanup(true);
@@ -372,6 +387,40 @@ public class PrecinctController {
         }
 
         return ErrorGen.create("unable to get precinct");
+    }
+
+    /**
+     * Update the precinctErrors of a precinct.
+     * 
+     * 
+     * TODO: need test
+     * 
+     * 
+     * @param precinctId
+     * @param precinctError
+     * @return
+     */
+    @CrossOrigin
+    @PutMapping("/updatePrecinctError")
+    public ErrorJ updatePreinctError(@RequestParam String precinctId, @RequestParam PrecinctError precinctError) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
+        if (targetData != null) {
+            if (targetData.getErrors() != null) {
+                int errorId = precinctError.getId();
+                for (ErrorTable et : targetData.getErrors()) {
+                    if (et.getErrorId() == errorId) {
+                        et.update(precinctError, precinctId);
+                    }
+                }
+                return ErrorGen.ok();
+            } else {
+                return ErrorGen.create("cannot find precinct error");
+            }
+        } else {
+            return ErrorGen.create("cannot find precinct");
+        }
     }
 
     /**
@@ -514,15 +563,43 @@ public class PrecinctController {
             Precinct target1 = new Precinct(targetData1);
             Precinct target2 = new Precinct(targetData2);
             Precinct mergedPrecinct = Precinct.mergePrecinct(target1, target2);
+            String mergedPrecinctId = mergedPrecinct.getId();
             targetData1.update(mergedPrecinct);
             if (mergedPrecinct.getDemographicData() != null) {
-                targetData1.getDemogrpahicTable().update(mergedPrecinct.getDemographicData(), precinctId1);
+                targetData1.getDemogrpahicTable().update(mergedPrecinct.getDemographicData(), mergedPrecinctId);
             }
             if (mergedPrecinct.getVotingData() != null) {
+                VotingData mergedVotingData = mergedPrecinct.getVotingData();
+                Set<ELECTIONS> mergedElections = mergedVotingData.getAllElections();
                 for (ElectionDataTable edt : targetData1.getElectionDataSet()) {
-                    edt.update(mergedPrecinct.getVotingData().getElectionData(edt.getElection()), precinctId1);
+                    if (mergedElections.contains(edt.getElection())) {
+                        edt.update(mergedVotingData.getElectionData(edt.getElection()), mergedPrecinctId);
+                        mergedElections.remove(edt.getElection());
+                    }
+                }
+                for (ELECTIONS remainElections : mergedElections) {
+                    ElectionDataTable electionDataTable = new ElectionDataTable(
+                            mergedVotingData.getElectionData(remainElections), mergedPrecinctId);
+                    pem.persistElectionDataTable(electionDataTable);
                 }
             }
+            if (mergedPrecinct.getPrecinctErrors() != null) {
+                Map<Integer, PrecinctError> mergedErrors = mergedPrecinct.getPrecinctErrors();
+                Set<Integer> mergedErrorIds = mergedErrors.keySet();
+                for (ErrorTable et : targetData1.getErrors()) {
+                    if (mergedErrorIds.contains(et.getErrorId())) {
+                        et.update(mergedErrors.get(et.getErrorId()), mergedPrecinctId);
+                        mergedErrorIds.remove(et.getErrorId());
+                    }
+                }
+
+                for (int remainErrorId : mergedErrorIds) {
+                    ErrorTable errorTable = new ErrorTable(mergedErrors.get(remainErrorId));
+                    errorTable.setPrecinctId(mergedPrecinctId);
+                    pem.persistErrorTable(errorTable);
+                }
+            }
+
             pem.cleanup(true);
             return ErrorGen.ok();
         } else {

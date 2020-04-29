@@ -11,41 +11,66 @@ import javax.persistence.OneToOne;
 import com.electiondataquality.jpa.tables.FeatureTable;
 
 @Entity
-@Table(name = "congressional_districts")
+// @Table(name = "congressional_districts")
+@Table(name = "new_congressional_districts")
 public class CDFeature {
 
-    @Id
-    @Column(name = "fips_code")
-    private String cdId;
+    // @Id
+    // @Column(name = "fips_code")
+    // private String cdId;
 
-    @Column(name = "county_name")
+    // @Column(name = "county_name")
+    // private String name;
+
+    // @Column(name = "parent_state_idn")
+    // private String parentStateId;
+
+    // @Column(name = "children_precinct_idn")
+    // private String childrenStr;
+
+    // @OneToOne
+    // @JoinColumn(name = "feature_idn")
+    // private FeatureTable feature;
+
+    @Id
+    @Column(name = "idn")
+    private int cdId;
+
+    @Column(name = "name_lsad")
     private String name;
+
+    @Column(name = "feature_idn")
+    private int featureId;
+
+    @Column(name = "state_fips")
+    private int stateFips;
+
+    @Column(name = "congressional_fips")
+    private String congressionalFips;
+
+    @Column(name = "geo_id")
+    private String geoId;
 
     @OneToOne
     @JoinColumn(name = "feature_idn")
     private FeatureTable feature;
 
-    @Column(name = "parent_state_idn")
-    private String parentStateId;
-
-    @Column(name = "children_precinct_idn")
-    private String childrenStr;
-
     public CDFeature() {
     }
 
-    // public CDFeature(int cdId, String name) {
-    // this.cdId = cdId;
-    // this.name = name;
-    // this.feature = null;
-    // this.childrenStr = "";
+    // public String getId() {
+    // return this.cdId;
     // }
 
-    public String getId() {
+    // public void setId(String cdId) {
+    // this.cdId = cdId;
+    // }
+
+    public int getId() {
         return this.cdId;
     }
 
-    public void setId(String cdId) {
+    public void setId(int cdId) {
         this.cdId = cdId;
     }
 
@@ -57,12 +82,20 @@ public class CDFeature {
         this.name = name;
     }
 
-    public String getParentId() {
-        return this.parentStateId;
+    // public String getParentId() {
+    // return this.parentStateId;
+    // }
+
+    // public void setParentId(String id) {
+    // this.parentStateId = id;
+    // }
+
+    public int getParentId() {
+        return this.stateFips;
     }
 
-    public void setParentId(String id) {
-        this.parentStateId = id;
+    public void setParentId(int id) {
+        this.stateFips = id;
     }
 
     public FeatureTable getFeature() {
@@ -73,24 +106,26 @@ public class CDFeature {
         this.feature = feature;
     }
 
-    public HashSet<String> childrenStrToArray() {
-        String str = this.childrenStr.replaceAll("\\[|]", "");
-        String[] childrens = str.split(",");
-        HashSet<String> childrenPrecinctIds = new HashSet<String>();
+    // public HashSet<String> childrenStrToArray() {
+    // String str = this.childrenStr.replaceAll("\\[|]", "");
+    // String[] childrens = str.split(",");
+    // HashSet<String> childrenPrecinctIds = new HashSet<String>();
 
-        for (String idString : childrens) {
-            childrenPrecinctIds.add(idString);
-        }
+    // for (String idString : childrens) {
+    // childrenPrecinctIds.add(idString);
+    // }
 
-        return childrenPrecinctIds;
-    }
+    // return childrenPrecinctIds;
+    // }
 
-    public String toString() {
-        if (this.feature != null) {
-            return "Id: " + this.cdId + ", Name : " + this.name + "Parent Id : " + this.parentStateId + "Feature : {\n"
-                    + this.feature.toString() + "}";
-        } else {
-            return "Id: " + this.cdId + ", Name : " + this.name + "Parent Id : " + this.parentStateId;
-        }
-    }
+    // public String toString() {
+    // if (this.feature != null) {
+    // return "Id: " + this.cdId + ", Name : " + this.name + "Parent Id : " +
+    // this.parentStateId + "Feature : {\n"
+    // + this.feature.toString() + "}";
+    // } else {
+    // return "Id: " + this.cdId + ", Name : " + this.name + "Parent Id : " +
+    // this.parentStateId;
+    // }
+    // }
 }
