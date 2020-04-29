@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.electiondataquality.restservice.index.Greeting;
 
 @RestController
+@CrossOrigin
 public class GreetingController {
 
     private static final String template = "Hello, %s! Please specify an endpoint.";
@@ -21,7 +22,6 @@ public class GreetingController {
      * @param name
      * @return
      */
-    @CrossOrigin
     @GetMapping("/")
     public Greeting greeting(@RequestParam(defaultValue = "World") String name) {
         return new Greeting(counter.incrementAndGet(), String.format(template, name));

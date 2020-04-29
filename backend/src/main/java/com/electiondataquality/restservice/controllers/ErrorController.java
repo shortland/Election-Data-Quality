@@ -12,6 +12,7 @@ import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
 
 @RestController
+@CrossOrigin
 public class ErrorController {
 
     /**
@@ -21,7 +22,6 @@ public class ErrorController {
      * @param errorId
      * @return
      */
-    @CrossOrigin
     @GetMapping("/correctError")
     public ErrorJ setErrorAsCorrected(@RequestParam String precinctId, @RequestParam int errorId) {
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
