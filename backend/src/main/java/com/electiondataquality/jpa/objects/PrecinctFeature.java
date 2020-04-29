@@ -170,6 +170,10 @@ public class PrecinctFeature {
         return this.electionDataTableSet;
     }
 
+    public void setElectionData(Set<ElectionDataTable> electionData) {
+        this.electionDataTableSet = electionData;
+    }
+
     public Set<ErrorTable> getErrors() {
         return this.errors;
     }
