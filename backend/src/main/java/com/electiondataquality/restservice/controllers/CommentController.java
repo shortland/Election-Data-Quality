@@ -18,6 +18,7 @@ import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
 
 @RestController
+@CrossOrigin
 public class CommentController {
 
     /**
@@ -30,7 +31,6 @@ public class CommentController {
      * @param errorId
      * @return
      */
-    @CrossOrigin
     @RequestMapping(value = "/createComment", method = RequestMethod.POST)
     public ErrorJ createComment(@RequestBody String commentText, @RequestParam String precinctId,
             @RequestParam int errorId) {
@@ -68,7 +68,6 @@ public class CommentController {
      * @param commentId
      * @return
      */
-    @CrossOrigin
     @RequestMapping(value = "/updateComment", method = RequestMethod.PUT)
     public ErrorJ updateComment(@RequestBody String commentText, @RequestParam int commentId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
@@ -91,7 +90,6 @@ public class CommentController {
      * @param commentId
      * @return
      */
-    @CrossOrigin
     @RequestMapping(value = "/deleteComment", method = RequestMethod.DELETE)
     public ErrorJ deleteComment(@RequestParam int commentId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
@@ -131,7 +129,6 @@ public class CommentController {
      * @param errorId
      * @return
      */
-    @CrossOrigin
     @RequestMapping(value = "/commentByError", method = RequestMethod.GET)
     public ArrayList<Comment> getAllCommentsOfError(@RequestParam int precinctId, @RequestParam int errorId) {
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
