@@ -84,6 +84,15 @@ public class DemographicTable {
         this.whitePopulation = whitePopulation;
     }
 
+    public void update(DemographicData demographicData, String precinctId) {
+        this.asianPopulation = demographicData.getDemographicByRace(RACE.ASIAN);
+        this.blackPopulation = demographicData.getDemographicByRace(RACE.BLACK);
+        this.hispanicPopulation = demographicData.getDemographicByRace(RACE.HISPANIC);
+        this.otherPopulation = demographicData.getDemographicByRace(RACE.OTHER);
+        this.whitePopulation = demographicData.getDemographicByRace(RACE.WHITE);
+        this.precicntId = precinctId;
+    }
+
     public String toString() {
         return "Asian : " + Integer.toString(this.asianPopulation) + " Black : "
                 + Integer.toString(this.blackPopulation) + " Hispanic : " + Integer.toString(this.hispanicPopulation)

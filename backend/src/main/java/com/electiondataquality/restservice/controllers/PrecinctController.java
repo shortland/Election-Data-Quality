@@ -23,6 +23,7 @@ import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.jpa.managers.PrecinctEntityManager;
 import com.electiondataquality.jpa.objects.PrecinctFeature;
+import com.electiondataquality.jpa.tables.ElectionDataTable;
 import com.electiondataquality.types.errors.ErrorGen;
 import com.electiondataquality.types.errors.ErrorJ;
 
@@ -312,7 +313,7 @@ public class PrecinctController {
      * Update the information of a precinct (not it's shape and it's
      * voting,demographic,error).
      * 
-     * NOTE: Tested
+     * TODO: need test
      * 
      * @param precinctId
      * @param info
@@ -328,6 +329,7 @@ public class PrecinctController {
 
         if (targetData != null) {
             targetData.updatePrecinctFeature(info);
+            pem.cleanup(true);
             return ErrorGen.ok();
         }
 
@@ -337,13 +339,12 @@ public class PrecinctController {
     /**
      * Update the voting data of a precinct.
      * 
-     * TODO: Return ControllerError
      * 
      * '{"electionData": {"PRES2016": {"resultsByParty": {"REPUBLICAN":
      * 0,"DEMOCRAT": 50,"LIBRATARIAN": 0,"OTHER": 50},"majorityParty":
      * "OTHER","election": "PRES2016"}}}'
      * 
-     * NOTE: Tested
+     * TODO: need test
      * 
      * @param precinctId
      * @param votingData
@@ -352,12 +353,17 @@ public class PrecinctController {
     @CrossOrigin
     @GetMapping("/updateVotingData")
     public ErrorJ updateVotingData(@RequestParam String precinctId, @RequestBody VotingData votingData) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct target = precinctManager.getPrecinct(precinctId);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
 
-        if (target != null) {
-            target.setVotingData(votingData);
-
+        if (targetData != null) {
+            if (targetData.getElectionDataSet() != null) {
+                for (ElectionDataTable edt : targetData.getElectionDataSet()) {
+                    edt.update(votingData.getElectionData(edt.getElection()), precinctId);
+                }
+            }
+            pem.cleanup(true);
             return ErrorGen.ok();
         }
 
@@ -367,9 +373,8 @@ public class PrecinctController {
     /**
      * Update the demographic data of a precinct.
      * 
-     * TODO: Return ControllerError
      * 
-     * NOTE: Tested.
+     * TODO: need test
      * 
      * '{"demographicByRace": {"ASIAN": 100,"BLACK":100,"HISPANIC": 100,"OTHER":
      * 100,"WHITE": 100}}'
@@ -381,15 +386,13 @@ public class PrecinctController {
     @CrossOrigin
     @GetMapping("/updateDemographicData")
     public ErrorJ updateDemographicData(@RequestParam String precinctId, @RequestBody DemographicData demographicData) {
-        PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
-        Precinct target = precinctManager.getPrecinct(precinctId);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PrecinctTable");
+        PrecinctEntityManager pem = new PrecinctEntityManager(emf);
+        PrecinctFeature targetData = pem.findPrecinctFeatureById(precinctId);
 
-        demographicData.calculateTotal();
-        // System.out.println(demographicData.toString());
-
-        if (target != null) {
-            target.setDemographicData(demographicData);
-
+        if (targetData != null) {
+            targetData.getDemogrpahicTable().update(demographicData, precinctId);
+            pem.cleanup(true);
             return ErrorGen.ok();
         }
 

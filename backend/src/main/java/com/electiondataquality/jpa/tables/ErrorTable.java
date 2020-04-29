@@ -3,6 +3,8 @@ package com.electiondataquality.jpa.tables;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,7 +23,7 @@ public class ErrorTable {
     @Column(name = "feature_idn", insertable = false, updatable = false)
     private int featureId;
 
-    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     private ERROR_TYPE errorType;
 
     @Column(name = "text")
@@ -51,17 +53,17 @@ public class ErrorTable {
         this.valid = valid;
     }
 
-    public void updateErrorTable(PrecinctError pError, String precinctId) {
-        if (pError.getId() != 0) {
-            this.errorId = pError.getId();
-        }
-        if (pError.getText() != null) {
-            this.text = pError.getText();
-        }
-        this.resolved = pError.isResolved();
-        if(pError.getParentPrecinctId().equals("0"))
+    // public void updateErrorTable(PrecinctError pError, String precinctId) {
+    // if (pError.getId() != 0) {
+    // this.errorId = pError.getId();
+    // }
+    // if (pError.getText() != null) {
+    // this.text = pError.getText();
+    // }
+    // this.resolved = pError.isResolved();
+    // if(pError.getParentPrecinctId().equals("0"))
 
-    }
+    // }
 
     // public ErrorTable(int errorId, int featureId, String text, Date created, int
     // resolved, int valid) {

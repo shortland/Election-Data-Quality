@@ -248,25 +248,9 @@ public class PrecinctFeature {
     }
 
     private ElectionResults convertToElectionResult(ElectionDataTable electionDataTable) {
-        String election = electionDataTable.getElection();
-        if (election.equals("PRES2016")) {
-            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
-                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
-                    ELECTIONS.PRES2016);
-            return result;
-        } else if (election.equals("CONG2016")) {
-            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
-                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
-                    ELECTIONS.CONG2016);
-            return result;
-        } else if (election.equals("CONG2018")) {
-            ElectionResults result = new ElectionResults(electionDataTable.getRepulican(),
-                    electionDataTable.getDemocrat(), electionDataTable.getLibertarian(), electionDataTable.getOther(),
-                    ELECTIONS.CONG2018);
-            return result;
-        } else {
-            return null;
-        }
+        ElectionResults result = new ElectionResults(electionDataTable.getRepulican(), electionDataTable.getDemocrat(),
+                electionDataTable.getLibertarian(), electionDataTable.getOther(), electionDataTable.getElection());
+        return result;
     }
 
     public VotingData getVotingData() {

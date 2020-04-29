@@ -2,10 +2,13 @@ package com.electiondataquality.jpa.tables;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
+import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 import com.electiondataquality.restservice.voting.elections.enums.PARTIES;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 
@@ -28,8 +31,9 @@ public class ElectionDataTable {
     @Column(name = "other_vote")
     private int other_vote;
 
-    @Column(name = "election")
-    private String election;
+    // @Column(name = "election")
+    @Enumerated(EnumType.STRING)
+    private ELECTIONS election;
 
     @Column(name = "precinct_idn")
     private String precinct_id;
@@ -39,9 +43,9 @@ public class ElectionDataTable {
     }
 
     public ElectionDataTable(ElectionResults electionResults, String precinctId) {
-        this.election = electionResults.getElection().name();
+        this.election = electionResults.getElection();
         this.precinct_id = precinctId;
-        this.dataId = precinctId + "_" + this.election;
+        this.dataId = precinctId + "_" + this.election.name();
         this.republican_vote = electionResults.getResultByParty(PARTIES.REPUBLICAN);
         this.democrat_vote = electionResults.getResultByParty(PARTIES.DEMOCRAT);
         this.libratarian_vote = electionResults.getResultByParty(PARTIES.LIBRATARIAN);
@@ -80,11 +84,11 @@ public class ElectionDataTable {
         this.other_vote = other_vote;
     }
 
-    public String getElection() {
+    public ELECTIONS getElection() {
         return this.election;
     }
 
-    public void setElection(String election) {
+    public void setElection(ELECTIONS election) {
         this.election = election;
     }
 
@@ -94,6 +98,16 @@ public class ElectionDataTable {
 
     public void setPrecicntId(String precinct_id) {
         this.precinct_id = precinct_id;
+    }
+
+    public void update(ElectionResults electionResults, String precinctId) {
+        this.democrat_vote = electionResults.getResultByParty(PARTIES.DEMOCRAT);
+        this.republican_vote = electionResults.getResultByParty(PARTIES.REPUBLICAN);
+        this.libratarian_vote = electionResults.getResultByParty(PARTIES.LIBRATARIAN);
+        this.other_vote = electionResults.getResultByParty(PARTIES.OTHER);
+        this.election = electionResults.getElection();
+        this.precinct_id = precinctId;
+        this.dataId = precinctId + "_" + electionResults.getElection().name();
     }
 
     public String toString() {
