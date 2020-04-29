@@ -10,8 +10,8 @@ import javax.persistence.OneToOne;
 
 import com.electiondataquality.jpa.tables.FeatureTable;
 
-@Entity
 // @Table(name = "congressional_districts")
+@Entity
 @Table(name = "new_congressional_districts")
 public class CDFeature {
 
@@ -52,7 +52,7 @@ public class CDFeature {
     private String geoId;
 
     @OneToOne
-    @JoinColumn(name = "feature_idn")
+    @JoinColumn(name = "feature_idn", insertable = false, updatable = false)
     private FeatureTable feature;
 
     public CDFeature() {

@@ -53,6 +53,13 @@ public class CDEntityManager {
         return Optional.of(result);
     }
 
+    public Optional<CDFeature> findCDFeatureById(String id) {
+        CDFeature result = em.createQuery("Select a from CDFeature a where fips_code = '" + id + "'", CDFeature.class)
+                .getSingleResult();
+
+        return Optional.of(result);
+    }
+
     public List<CDFeature> findAllCDFeature() {
         List<CDFeature> results = em.createQuery("Select a from CDFeature a", CDFeature.class).getResultList();
 

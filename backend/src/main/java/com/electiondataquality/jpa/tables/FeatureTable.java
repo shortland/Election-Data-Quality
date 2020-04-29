@@ -20,7 +20,7 @@ import org.hibernate.annotations.NotFoundAction;
 public class FeatureTable {
 
     @Id
-    @Column(name = "idn")
+    @Column(name = "idn", insertable = false, updatable = false)
     private int featureId;
 
     @Column(name = "geometry")
