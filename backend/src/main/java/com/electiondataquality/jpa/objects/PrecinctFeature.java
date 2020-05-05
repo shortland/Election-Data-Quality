@@ -284,9 +284,9 @@ public class PrecinctFeature {
     public void setIsGhost(boolean isGhost) {
         if (isGhost) {
             this.isGhost = 1;
+        } else {
+            this.isGhost = 0;
         }
-
-        this.isGhost = 0;
     }
 
     private ElectionResults convertToElectionResult(ElectionDataTable electionDataTable) {

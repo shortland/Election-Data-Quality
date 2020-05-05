@@ -305,10 +305,11 @@ public class PrecinctController {
 
         if (targetData.isPresent()) {
             targetData.get().setIsGhost(isGhost);
-
+            pem.cleanup();
             return ErrorGen.ok();
         }
 
+        pem.cleanup();
         return ErrorGen.create("unable to get precinct");
     }
 
