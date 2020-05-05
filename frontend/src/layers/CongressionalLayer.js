@@ -19,7 +19,7 @@ export const congressionalLayerOutline = {
     id: 'congressionalOutline',
     type: 'line',
     paint: {
-        'line-color': 'rgba(196, 14, 14, 1.0)',
+        'line-color': 'rgba(14, 14, 14, 0.5)',
         'line-width': 2,
     },
 };
