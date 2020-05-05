@@ -380,7 +380,7 @@ export default class App extends Component {
                 hoveredFeature && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h5>{stateHovered.properties.name}</h5>
-                        <div>Counties: {stateHovered.properties.amount_counties}</div>
+                        <div>Congressional Districts: {(stateHovered.properties.congressional_districts).length}</div>
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
@@ -509,23 +509,37 @@ export default class App extends Component {
 
     showErrorPins() {
         const { shouldShowPins } = this.state;
+
         if (shouldShowPins) {
-            this.setState({ shouldShowPins: false });
+            this.setState({
+                shouldShowPins: false,
+            });
         } else {
-            this.setState({ shouldShowPins: true });
+            this.setState({
+                shouldShowPins: true,
+            });
         }
     }
 
     componentDidMount() {
-        this.appData.fetchAllStates().then(result => {
-            console.log(result);
-            this.setState({ stateData: result });
+        /**
+         * Get all the states
+         */
+        this.appData.fetchAllStates().then(data => {
+            this.setState({
+                stateData: data.featureCollection,
+            });
         });
 
-        this.appData.fetchCongressionalDistrictByCID(36005).then(result => {
-            console.log(result);
-            this.setState({ congressionalDistrictData: result });
-        })
+        /**
+         * Get all the congressional districts
+         */
+        this.appData.fetchAllCongressionalDistricts().then(cdData => {
+            this.setState({
+                congressionalDistrictData: cdData,
+            });
+        });
+
         /**
          * State data
          */
@@ -561,15 +575,15 @@ export default class App extends Component {
             }
         );
         */
-        json(
-            NY_CONGRESSIONAL_DATA,
-            (error, response) => {
-                if (!error) {
-                    console.log(response);
-                    this.setState({ congressionalDistrictData: response });
-                }
-            }
-        );
+        // json(
+        //     NY_CONGRESSIONAL_DATA,
+        //     (error, response) => {
+        //         if (!error) {
+        //             console.log(response);
+        //             this.setState({ congressionalDistrictData: response });
+        //         }
+        //     }
+        // );
 
         /* json(
             NY_PRECINCT_DATA,
@@ -592,24 +606,9 @@ export default class App extends Component {
         const { stateData, countyData, countyDataOutline, congressionalDistrictData, precinctData, stateFilter, countyFilter, precinctFilter, congressionalFilter } = this.state;
         const { layers } = this.state;
 
-        return (
-            <>
-                {layers.states &&
-                    < Source type="geojson" data={stateData} >
-                        <Layer
-                            {...stateLayerFillHighlight}
-                            filter={stateFilter}
-                            maxzoom={5}
-                        />
-                        <Layer
-                            {...stateLayerFill}
-                            maxzoom={5}
-                        />
-                    </Source >
-                }
-
-                {/* NY COUNTY DATA */}
-                {/* < Source type="geojson" data={countyData} >
+        return (<>
+            {/* NY COUNTY DATA */}
+            {/* < Source type="geojson" data={countyData} >
                     <Layer
                         {...countyDataLayerFillableHighlight}
                         filter={countyFilter}
@@ -623,8 +622,8 @@ export default class App extends Component {
                     />
                 </Source > */}
 
-                {/* NY COUNTY DATA (OUTLINE) */}
-                {/* < Source type="geojson" data={countyDataOutline} >
+            {/* NY COUNTY DATA (OUTLINE) */}
+            {/* < Source type="geojson" data={countyDataOutline} >
                     <Layer
                         {...countyDataLayerOutline}
                         minzoom={5}
@@ -632,27 +631,9 @@ export default class App extends Component {
                     />
                 </Source > */}
 
-                {/* CONGRESSIONAL DATA */}
-                {layers.congressional &&
-                    < Source type="geojson" data={congressionalDistrictData} >
-                        <Layer
-                            {...congressionalLayerFillHighlight}
-                            //filter={congressionalFilter}
-                            minzoom={5}
-                        />
-                        <Layer
-                            {...congressionalLayerOutline}
-                            minzoom={5}
-                        />
-                        <Layer
-                            {...congressionalLayerFill}
-                            minzoom={5}
-                        />
-                    </Source >
-                }
-
-                {/* NY PRECINCT DATA */}
-                {layers.precinct &&
+            {/* NY PRECINCT DATA */}
+            {/* {
+                    layers.precinct &&
                     < Source type="geojson" data={precinctData} >
                         <Layer
                             {...precinctLayerFillHighlight}
@@ -668,9 +649,88 @@ export default class App extends Component {
                             minzoom={8}
                         />
                     </Source >
-                }
-            </>
-        );
+                } */}
+        </>);
+    }
+
+    /**
+     * Render state data
+     */
+    renderStateLayers() {
+        const { layers, stateData, stateFilter } = this.state;
+
+        return (<>
+            {
+                layers.states &&
+                < Source type="geojson" data={stateData} >
+                    <Layer
+                        {...stateLayerFillHighlight}
+                        filter={stateFilter}
+                        maxzoom={5}
+                    />
+                    <Layer
+                        {...stateLayerFill}
+                        maxzoom={5}
+                    />
+                </Source >
+            }
+        </>);
+    }
+
+    /**
+     * Render congressional data
+     */
+    renderCongressionalLayers() {
+        const { layers, congressionalDistrictData, } = this.state;
+
+        return (<>
+            {
+                layers.congressional &&
+                < Source type="geojson" data={congressionalDistrictData} >
+                    <Layer
+                        {...congressionalLayerFillHighlight}
+                        //filter={congressionalFilter}
+                        minzoom={5}
+                    />
+                    <Layer
+                        {...congressionalLayerOutline}
+                        minzoom={5}
+                    />
+                    <Layer
+                        {...congressionalLayerFill}
+                        minzoom={5}
+                    />
+                </Source >
+            }
+        </>);
+    }
+
+    /**
+     * Render precinct data
+     */
+    renderPrecinctLayers() {
+        const { layers, precinctData, } = this.state;
+
+        return (<>
+            {
+                layers.precinct &&
+                < Source type="geojson" data={precinctData} >
+                    <Layer
+                        {...precinctLayerFillHighlight}
+                        // filter={precinctFilter}
+                        minzoom={8}
+                    />
+                    <Layer
+                        {...precinctLayerOutline}
+                        minzoom={8}
+                    />
+                    <Layer
+                        {...precinctLayerFill}
+                        minzoom={8}
+                    />
+                </Source >
+            }
+        </>);
     }
 
     render() {
@@ -753,7 +813,13 @@ export default class App extends Component {
                             <ScaleControl />
                         </div>
 
-                        {this.renderLayers()}
+                        {/* {this.renderLayers()} */}
+
+                        {this.renderStateLayers()}
+
+                        {this.renderCongressionalLayers()}
+
+                        {this.renderPrecinctLayers()}
 
                         {this._renderTooltip()}
 

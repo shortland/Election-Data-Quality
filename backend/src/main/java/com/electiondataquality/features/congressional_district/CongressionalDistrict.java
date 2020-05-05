@@ -19,6 +19,10 @@ public class CongressionalDistrict extends Feature {
 
     private Set<String> childrenPrecincts;
 
+    private Object properties;
+
+    private static String type = "Feature";
+
     public CongressionalDistrict(CDFeature cdFeature) {
         // this.cdId = cdFeature.getId();
         // this.name = cdFeature.getName();
@@ -41,6 +45,22 @@ public class CongressionalDistrict extends Feature {
         this.parentStateId = parentStateId;
         this.cdId = cdId;
         this.childrenPrecincts = childrenPrecincts;
+    }
+
+    public Object getProperties() {
+        return this.properties;
+    }
+
+    public void setProperties(Object props) {
+        this.properties = props;
+    }
+
+    public String getType() {
+        return CongressionalDistrict.type;
+    }
+
+    public void setType(String type) {
+        CongressionalDistrict.type = type;
     }
 
     public String getName() {

@@ -36,6 +36,8 @@ public class StateController {
             stateSet.add(stateObj);
         }
 
+        stateTableEm.cleanup();
+
         return ResponseGen.create(API_STATUS.OK, stateSet);
     }
 }
