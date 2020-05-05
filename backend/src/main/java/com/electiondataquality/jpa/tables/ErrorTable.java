@@ -1,15 +1,22 @@
 package com.electiondataquality.jpa.tables;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
+import com.electiondataquality.restservice.comments.Comment;
 
 @Entity
 @Table(name = "errors")
@@ -38,8 +45,13 @@ public class ErrorTable {
     @Column(name = "valid")
     private int valid;
 
+    // TODO: for changing features this should be updated also
     @Column(name = "precinct_idn")
     private String precinctId;
+
+    @OneToMany
+    @JoinColumn(name = "error_idn")
+    private List<CommentTable> comments;
 
     public ErrorTable() {
     }
@@ -80,17 +92,6 @@ public class ErrorTable {
         }
         this.precinctId = precinctId;
     }
-
-    // public ErrorTable(int errorId, int featureId, String text, Date created, int
-    // resolved, int valid) {
-    // this.errorId = errorId;
-    // this.featureId = featureId;
-    // // this.errorType = errorType;
-    // this.text = text;
-    // this.created = created;
-    // this.resolved = resolved;
-    // this.valid = valid;
-    // }
 
     public int getErrorId() {
         return errorId;
@@ -162,6 +163,25 @@ public class ErrorTable {
 
     public void setPrecinctId(String precinctId) {
         this.precinctId = precinctId;
+    }
+
+    public List<CommentTable> getComments() {
+        return this.comments;
+    }
+
+    public void setComments(List<CommentTable> comments) {
+        this.comments = comments;
+    }
+
+    // for constructing PrecincError Object
+    public Set<Comment> getCommentForPrecinctError() {
+        Set<Comment> precinctErrorComments = new HashSet<>();
+        for (CommentTable ct : this.comments) {
+            Comment comment = new Comment(ct);
+            comment.setParentPrecinctId(this.precinctId);
+            precinctErrorComments.add(comment);
+        }
+        return precinctErrorComments;
     }
 
     @Override

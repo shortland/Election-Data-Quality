@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
 	id 'org.springframework.boot' version '2.2.0.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
@@ -37,10 +40,6 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
 }
 
-test {
-	useJUnitPlatform()
-}
-
 tasks.register("deploy") { 
     group = 'Deploy'
 
@@ -55,4 +54,12 @@ tasks.register("deploy") {
 
         println 'Server has pulled latest code.\nPlease allow a few moments for the server to compile & run the latest build.\nServer: http://67.80.171.107:1234/'
     }
+}
+
+// Prevent ./gradlew build from running tests
+apply plugin: 'java' 
+test.enabled = gradle.startParameter.taskNames.contains('test')
+
+test {
+    useJUnitPlatform()
 }

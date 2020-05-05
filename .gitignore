@@ -35,3 +35,5 @@ backend/.classpath
 backend/.gradle/
 backend/bin/
 backend/build/
+backend/node_modules/
+backend/.vscode/

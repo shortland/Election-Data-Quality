@@ -1,6 +1,6 @@
 package com.electiondataquality.features.congressional_district;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
@@ -17,7 +17,7 @@ public class CongressionalDistrict extends Feature {
 
     private String cdId;
 
-    private HashSet<String> childrenPrecincts;
+    private Set<String> childrenPrecincts;
 
     public CongressionalDistrict(CDFeature cdFeature) {
         // this.cdId = cdFeature.getId();
@@ -33,7 +33,7 @@ public class CongressionalDistrict extends Feature {
         this.geometry = RawGeometryToShape.convertRawToGeometry(cdFeature.getFeature().getGeometry());
     }
 
-    public CongressionalDistrict(String name, String parentStateId, String cdId, HashSet<String> childrenPrecincts,
+    public CongressionalDistrict(String name, String parentStateId, String cdId, Set<String> childrenPrecincts,
             MultiPolygon multiPolygon) {
         super(multiPolygon);
 
@@ -59,7 +59,7 @@ public class CongressionalDistrict extends Feature {
         this.parentStateId = newParentId;
     }
 
-    public HashSet<String> getChildrenId() {
+    public Set<String> getChildrenId() {
         return this.childrenPrecincts;
     }
 

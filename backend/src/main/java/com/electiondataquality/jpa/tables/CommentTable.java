@@ -15,7 +15,7 @@ public class CommentTable {
     @Column(name = "idn")
     private int commentId;
 
-    @Column(name = "error_idn")
+    @Column(name = "error_idn", insertable = false, updatable = false)
     private int errorId;
 
     @Column(name = "text")

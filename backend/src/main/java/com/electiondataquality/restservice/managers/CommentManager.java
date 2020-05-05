@@ -2,24 +2,26 @@ package com.electiondataquality.restservice.managers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import com.electiondataquality.restservice.comments.Comment;
 
 public class CommentManager {
 
-    private HashMap<Integer, Comment> commentMap;
+    private Map<Integer, Comment> commentMap;
 
     public CommentManager() {
         this.commentMap = new HashMap<Integer, Comment>();
     }
 
-    public CommentManager(HashSet<Comment> commentSet) {
+    public CommentManager(Set<Comment> commentSet) {
         for (Comment c : commentSet) {
             this.commentMap.put(c.getId(), c);
         }
     }
 
-    public void populate(HashSet<Comment> commentSet) {
+    public void populate(Set<Comment> commentSet) {
         this.commentMap.clear();
 
         for (Comment c : commentSet) {
@@ -27,8 +29,8 @@ public class CommentManager {
         }
     }
 
-    public HashSet<Comment> getAllComments() {
-        HashSet<Comment> allC = new HashSet<Comment>();
+    public Set<Comment> getAllComments() {
+        Set<Comment> allC = new HashSet<Comment>();
 
         for (int cid : this.commentMap.keySet()) {
             allC.add(this.commentMap.get(cid));
@@ -37,8 +39,8 @@ public class CommentManager {
         return allC;
     }
 
-    public HashSet<Comment> getCommentsByError(int errorId) {
-        HashSet<Comment> result = new HashSet<Comment>();
+    public Set<Comment> getCommentsByError(int errorId) {
+        Set<Comment> result = new HashSet<Comment>();
 
         for (int cid : this.commentMap.keySet()) {
             if (this.commentMap.get(cid).getParentErrorId() == errorId) {

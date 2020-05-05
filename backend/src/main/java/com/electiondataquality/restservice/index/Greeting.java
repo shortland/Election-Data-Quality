@@ -4,18 +4,18 @@ public class Greeting {
 
     private final long requests;
 
-    private final String content;
+    private final String message;
 
-    public Greeting(long requests, String content) {
+    public Greeting(long requests, String message) {
         this.requests = requests;
-        this.content = content;
+        this.message = message;
     }
 
     public long getRequests() {
         return requests;
     }
 
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
 }

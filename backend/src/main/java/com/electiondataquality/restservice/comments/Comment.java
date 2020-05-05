@@ -1,5 +1,7 @@
 package com.electiondataquality.restservice.comments;
 
+import com.electiondataquality.jpa.tables.CommentTable;
+
 public class Comment {
 
     private int commentId;
@@ -17,6 +19,13 @@ public class Comment {
         this.commentId = id;
         this.commentText = text;
         this.parentErrorId = 0;
+        this.parentPrecinctId = "0";
+    }
+
+    public Comment(CommentTable commentTable) {
+        this.commentId = commentTable.getCommentId();
+        this.commentText = commentTable.getText();
+        this.parentErrorId = commentTable.getErrorId();
         this.parentPrecinctId = "0";
     }
 

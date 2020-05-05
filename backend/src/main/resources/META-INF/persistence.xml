@@ -12,6 +12,8 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
         <class>com.electiondataquality.jpa.tables.StateTable</class> 
         <class>com.electiondataquality.jpa.tables.FeatureTable</class>
         <class>com.electiondataquality.jpa.objects.StateFeature</class>
+        <class>com.electiondataquality.jpa.tables.ErrorTable</class>
+        <class>com.electiondataquality.jpa.tables.CommentTable</class>
 
         <properties>  
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
@@ -22,11 +24,13 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
         </properties>  
     </persistence-unit>  
 
-     <persistence-unit name="CongressionalTable" transaction-type="RESOURCE_LOCAL">  
+     <!-- <persistence-unit name="CongressionalTable" transaction-type="RESOURCE_LOCAL">  
         <description>congressionalTables</description>
  
         <class>com.electiondataquality.jpa.objects.CDFeature</class>
         <class>com.electiondataquality.jpa.tables.FeatureTable</class>
+        <class>com.electiondataquality.jpa.tables.ErrorTable</class>
+        <class>com.electiondataquality.jpa.tables.CommentTable</class>
 
         <properties>  
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
@@ -35,7 +39,7 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
             <property name="javax.persistence.jdbc.user" value="jerryman"/>  
             <property name="javax.persistence.jdbc.password" value="JerryManderingIsBad123!"/>  
         </properties>  
-    </persistence-unit> 
+    </persistence-unit>  -->
 
     <persistence-unit name="PrecinctTable" transaction-type="RESOURCE_LOCAL">  
         <description>precinctTable</description>
@@ -45,6 +49,7 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
         <class>com.electiondataquality.jpa.tables.FeatureTable</class>
         <class>com.electiondataquality.jpa.tables.DemographicTable</class>
         <class>com.electiondataquality.jpa.tables.ElectionDataTable</class>
+        <class>com.electiondataquality.jpa.tables.CommentTable</class>
 
         <properties>  
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
@@ -75,6 +80,8 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
         <class>com.electiondataquality.jpa.tables.CongressionalDistrictTable</class>
         <class>com.electiondataquality.jpa.objects.CDFeature</class>
         <class>com.electiondataquality.jpa.tables.FeatureTable</class>
+        <class>com.electiondataquality.jpa.tables.ErrorTable</class>
+        <class>com.electiondataquality.jpa.tables.CommentTable</class>
 
         <properties>  
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
