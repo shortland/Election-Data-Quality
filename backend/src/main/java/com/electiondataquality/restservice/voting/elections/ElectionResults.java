@@ -11,9 +11,9 @@ public class ElectionResults {
 
     private Map<PARTIES, Integer> resultsByParty;
 
-    private PARTIES majorityParty;
+    // private PARTIES majorityParty;
 
-    private int totalVoters;
+    // private int totalVoters;
 
     private ELECTIONS election;
 
@@ -35,7 +35,7 @@ public class ElectionResults {
     }
 
     public ElectionResults() {
-        System.out.println("con");
+
     }
 
     public ElectionResults(int rVotes, int dVotes, int lVotes, int others, ELECTIONS election) {
@@ -45,20 +45,20 @@ public class ElectionResults {
         this.resultsByParty.put(PARTIES.LIBRATARIAN, lVotes);
         this.resultsByParty.put(PARTIES.OTHER, others);
 
-        this.majorityParty = this.findMajorityParty();
-        this.calculateTotalVoters();
+        // this.majorityParty = this.findMajorityParty();
+        // this.calculateTotalVoters();
         this.election = election;
     }
 
-    public void calculateTotalVoters() {
-        int total = 0;
+    // public void calculateTotalVoters() {
+    // int total = 0;
 
-        for (PARTIES p : this.resultsByParty.keySet()) {
-            total += resultsByParty.get(p);
-        }
+    // for (PARTIES p : this.resultsByParty.keySet()) {
+    // total += resultsByParty.get(p);
+    // }
 
-        this.totalVoters = total;
-    }
+    // this.totalVoters = total;
+    // }
 
     public PARTIES findMajorityParty() {
         PARTIES maxP = null;
@@ -76,9 +76,9 @@ public class ElectionResults {
         return maxP;
     }
 
-    public PARTIES getMajorityParty() {
-        return this.majorityParty;
-    }
+    // public PARTIES getMajorityParty() {
+    // return this.majorityParty;
+    // }
 
     public Map<PARTIES, Integer> getResultsByParty() {
         return this.resultsByParty;
@@ -93,9 +93,9 @@ public class ElectionResults {
     }
 
     @JsonIgnore
-    public int getTotalVoters() {
-        return this.totalVoters;
-    }
+    // public int getTotalVoters() {
+    // return this.totalVoters;
+    // }
 
     public int getResultByParty(PARTIES p) {
         if (this.resultsByParty.containsKey(p)) {
@@ -105,15 +105,16 @@ public class ElectionResults {
         return 0;
     }
 
-    public double getResultPercentage(PARTIES p) {
-        if (this.resultsByParty.containsKey(p)) {
-            double percentage = Double.valueOf(this.resultsByParty.get(p)) / Double.valueOf(this.totalVoters);
+    // public double getResultPercentage(PARTIES p) {
+    // if (this.resultsByParty.containsKey(p)) {
+    // double percentage = Double.valueOf(this.resultsByParty.get(p)) /
+    // Double.valueOf(this.totalVoters);
 
-            return percentage;
-        }
+    // return percentage;
+    // }
 
-        return 0.0;
-    }
+    // return 0.0;
+    // }
 
     public void setVotes(PARTIES parties, int newVotes) {
         if (this.resultsByParty.containsKey(parties)) {
@@ -121,21 +122,22 @@ public class ElectionResults {
         }
 
         this.resultsByParty.put(parties, newVotes);
-        this.calculateTotalVoters();
-        this.majorityParty = this.findMajorityParty();
+        // this.calculateTotalVoters();
+        // this.majorityParty = this.findMajorityParty();
     }
 
-    public String toString() {
-        String str = "";
+    // public String toString() {
+    // String str = "";
 
-        str += "\tMajority : " + this.getMajorityParty() + "\n";
-        str += "\tTotal : " + this.getTotalVoters() + "\n";
+    // str += "\tMajority : " + this.getMajorityParty() + "\n";
+    // str += "\tTotal : " + this.getTotalVoters() + "\n";
 
-        for (PARTIES party : this.resultsByParty.keySet()) {
-            str = str + "\t\t" + party.name() + " : " + this.getResultByParty(party) + " ["
-                    + this.getResultPercentage(party) + "]\n";
-        }
+    // for (PARTIES party : this.resultsByParty.keySet()) {
+    // str = str + "\t\t" + party.name() + " : " + this.getResultByParty(party) + "
+    // ["
+    // + this.getResultPercentage(party) + "]\n";
+    // }
 
-        return str;
-    }
+    // return str;
+    // }
 }

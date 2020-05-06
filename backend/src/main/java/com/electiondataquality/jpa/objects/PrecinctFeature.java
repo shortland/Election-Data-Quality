@@ -94,29 +94,36 @@ public class PrecinctFeature {
     // // errorsId
     // }
 
-    // TODO: Need to update features
     public void update(Precinct precinct) {
-        if (!precinct.getId().equals("0")) {
-            this.id = precinct.getId();
+        // String newId = precinct.getId();
+        String newFullName = precinct.getFullName();
+        String newParentId = precinct.getParentDistrictId();
+        Set<String> newNeighbors = precinct.getNeighborsId();
+        // if (!newId.equals("0")) {
+        // // this.id = precinct.getId();
+        // this.setId(newId);
+        // }
+
+        if (newFullName != null) {
+            // this.fullName = precinct.getFullName();
+            this.setFullName(newFullName);
         }
 
-        if (precinct.getFullName() != null) {
-            this.fullName = precinct.getFullName();
+        if (!newParentId.equals("0")) {
+            // this.parentDistrictId = precinct.getParentDistrictId();
+            this.setParentDistrictId(newParentId);
         }
 
-        if (!precinct.getParentDistrictId().equals("0")) {
-            this.parentDistrictId = precinct.getParentDistrictId();
-        }
-
-        if (precinct.getNeighborsId() != null) {
+        if (newNeighbors != null) {
             String newNeighborId = "[";
 
             for (String neighbors : precinct.getNeighborsId()) {
                 newNeighborId += neighbors + ",";
             }
-
+            newNeighborId = newNeighborId.substring(0, newNeighborId.length() - 1);
             newNeighborId += "]";
-            this.neighborsId = newNeighborId;
+            // this.neighborsId = newNeighborId;
+            this.setNeighbors(newNeighborId);
         }
     }
 
@@ -241,8 +248,9 @@ public class PrecinctFeature {
     public DemographicData getDemographicData() {
         if (demographic != null) {
             DemographicData data = new DemographicData(this.demographic.getAsianPopulation(),
-                    this.demographic.getBlackPopulation(), this.demographic.getHispanicPopulation(),
-                    this.demographic.getOtherPopulation(), this.demographic.getWhitePopulation());
+                    this.demographic.getBlackPopulation(), this.demographic.getNativeAmericanPopulation(),
+                    this.demographic.getNativeHawaiianPopulation(), this.demographic.getOtherPopulation(),
+                    this.demographic.getWhitePopulation());
 
             return data;
         }

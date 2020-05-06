@@ -1,5 +1,7 @@
 package com.electiondataquality.jpa.tables;
 
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,8 +24,11 @@ public class DemographicTable {
     @Column(name = "black")
     private int blackPopulation;
 
-    @Column(name = "hispanic")
-    private int hispanicPopulation;
+    @Column(name = "native_american")
+    private int naPopulation;
+
+    @Column(name = "native_hawaiian")
+    private int nhPopulation;
 
     @Column(name = "other")
     private int otherPopulation;
@@ -38,7 +43,8 @@ public class DemographicTable {
         this.precicntId = precinctId;
         this.asianPopulation = demographic_data.getDemographicByRace(RACE.ASIAN);
         this.blackPopulation = demographic_data.getDemographicByRace(RACE.BLACK);
-        this.hispanicPopulation = demographic_data.getDemographicByRace(RACE.HISPANIC);
+        this.naPopulation = demographic_data.getDemographicByRace(RACE.NATIVE_AMERICAN);
+        this.nhPopulation = demographic_data.getDemographicByRace(RACE.NATIVE_HAWAIIAN);
         this.otherPopulation = demographic_data.getDemographicByRace(RACE.OTHER);
         this.whitePopulation = demographic_data.getDemographicByRace(RACE.WHITE);
     }
@@ -59,12 +65,20 @@ public class DemographicTable {
         this.blackPopulation = blackPopulation;
     }
 
-    public int getHispanicPopulation() {
-        return this.hispanicPopulation;
+    public int getNativeAmericanPopulation() {
+        return this.naPopulation;
     }
 
-    public void setHispanicPopulation(int hispanicPopulation) {
-        this.hispanicPopulation = hispanicPopulation;
+    public void setNativeAmericanPopulation(int naPopulation) {
+        this.naPopulation = naPopulation;
+    }
+
+    public int getNativeHawaiianPopulation() {
+        return this.nhPopulation;
+    }
+
+    public void setNativeHawaiianPopulation(int nhPopulation) {
+        this.nhPopulation = nhPopulation;
     }
 
     public int getOtherPopulation() {
@@ -79,23 +93,51 @@ public class DemographicTable {
         return this.whitePopulation;
     }
 
-    public void getWhitePopulation(int whitePopulation) {
+    public void setWhitePopulation(int whitePopulation) {
         this.whitePopulation = whitePopulation;
     }
 
-    public void update(DemographicData demographicData, String precinctId) {
-        this.asianPopulation = demographicData.getDemographicByRace(RACE.ASIAN);
-        this.blackPopulation = demographicData.getDemographicByRace(RACE.BLACK);
-        this.hispanicPopulation = demographicData.getDemographicByRace(RACE.HISPANIC);
-        this.otherPopulation = demographicData.getDemographicByRace(RACE.OTHER);
-        this.whitePopulation = demographicData.getDemographicByRace(RACE.WHITE);
+    public void setPrecinctId(String precinctId) {
         this.precicntId = precinctId;
     }
 
-    public String toString() {
-        return "Asian : " + Integer.toString(this.asianPopulation) + " Black : "
-                + Integer.toString(this.blackPopulation) + " Hispanic : " + Integer.toString(this.hispanicPopulation)
-                + " Other : " + Integer.toString(this.otherPopulation) + " White : "
-                + Integer.toString(this.whitePopulation);
+    public void update(DemographicData demographicData, String precinctId) {
+        this.setAsianPopulation(demographicData.getDemographicByRace(RACE.ASIAN));
+        this.setBlackPopulation(demographicData.getDemographicByRace(RACE.BLACK));
+        this.setNativeAmericanPopulation(demographicData.getDemographicByRace(RACE.NATIVE_AMERICAN));
+        this.setNativeHawaiianPopulation(demographicData.getDemographicByRace(RACE.NATIVE_HAWAIIAN));
+        this.setOtherPopulation(demographicData.getDemographicByRace(RACE.OTHER));
+        this.setWhitePopulation(demographicData.getDemographicByRace(RACE.WHITE));
+        this.setPrecinctId(precinctId);
     }
+
+    public void update(Map<String, Integer> demographicData, String precinctId) {
+        if (demographicData.containsKey("ASIAN")) {
+            this.setAsianPopulation(demographicData.get("ASIAN"));
+        }
+        if (demographicData.containsKey("BLACK")) {
+            this.setBlackPopulation(demographicData.get("BLACK"));
+        }
+        if (demographicData.containsKey("NATIVE_AMERICAN")) {
+            this.setNativeAmericanPopulation(demographicData.get("NATIVE_AMERICAN"));
+        }
+        if (demographicData.containsKey("NATIVE_HAWAIIAN")) {
+            this.setNativeHawaiianPopulation(demographicData.get("NATIVE_HAWAIIAN"));
+        }
+        if (demographicData.containsKey("OTHER")) {
+            this.setOtherPopulation(demographicData.get("OTHER"));
+        }
+        if (demographicData.containsKey("WHITE")) {
+            this.setWhitePopulation(demographicData.get("WHITE"));
+        }
+        this.setPrecinctId(precinctId);
+    }
+
+    // public String toString() {
+    // return "Asian : " + Integer.toString(this.asianPopulation) + " Black : "
+    // + Integer.toString(this.blackPopulation) + " Hispanic : " +
+    // Integer.toString(this.hispanicPopulation)
+    // + " Other : " + Integer.toString(this.otherPopulation) + " White : "
+    // + Integer.toString(this.whitePopulation);
+    // }
 }
