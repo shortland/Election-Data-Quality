@@ -126,18 +126,13 @@ public class ElectionResults {
         // this.majorityParty = this.findMajorityParty();
     }
 
-    // public String toString() {
-    // String str = "";
+    public String toString() {
+        String str = "";
 
-    // str += "\tMajority : " + this.getMajorityParty() + "\n";
-    // str += "\tTotal : " + this.getTotalVoters() + "\n";
+        for (PARTIES party : this.resultsByParty.keySet()) {
+            str = str + "\t\t" + party.name() + " : " + this.getResultByParty(party) + "\n";
+        }
 
-    // for (PARTIES party : this.resultsByParty.keySet()) {
-    // str = str + "\t\t" + party.name() + " : " + this.getResultByParty(party) + "
-    // ["
-    // + this.getResultPercentage(party) + "]\n";
-    // }
-
-    // return str;
-    // }
+        return str;
+    }
 }

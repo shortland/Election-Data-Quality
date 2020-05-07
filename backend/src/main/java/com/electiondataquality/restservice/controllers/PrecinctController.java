@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.demographics.DemographicData;
-import com.electiondataquality.restservice.demographics.enums.RACE;
 import com.electiondataquality.restservice.managers.PrecinctManager;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
@@ -398,7 +397,8 @@ public class PrecinctController {
 
                 return ResponseGen.create(API_STATUS.OK, "successfully updated precinct error");
             } else {
-                ErrorTable newError = new ErrorTable(precinctError);
+                ErrorTable newError = new ErrorTable(precinctError, targetData.get().getFeature().getFeatureId(),
+                        precinctId);
 
                 newError.setPrecinctId(precinctId);
                 newError.setFeatureId(targetData.get().getFeature().getFeatureId());
@@ -423,8 +423,8 @@ public class PrecinctController {
      * 
      * NOTE: tested 5/6
      * 
-     * '{"demographicByRace": {"ASIAN": 100,"BLACK":100,"NATIVE_AMERICAN":
-     * 300,"NATIVE_HAWAIIAN" : 600,"OTHER": 100,"WHITE": 100}}'
+     * '{"ASIAN": 100,"BLACK":100,"NATIVE_AMERICAN": 300,"NATIVE_HAWAIIAN" :
+     * 600,"OTHER": 100,"WHITE": 100}'
      * 
      * @param precinctId
      * @param demographicData Map<String,Integer>
@@ -514,11 +514,11 @@ public class PrecinctController {
     /**
      * Merge two precincts together.
      * 
-     * TODO: Need to update merged errorData
+     * TODO: need to discuss about how to deal with the oldData (delete or keep ?)
      * 
      * TODO: Have to merge polygon also (with sam's script)
      * 
-     * TODO: need test
+     * NOTE: tested 5/7
      * 
      * @param precinctId1
      * @param precinctId2
@@ -578,28 +578,33 @@ public class PrecinctController {
                 }
 
                 targetData1.get().setElectionData(electionData);
-                pem.cleanup();
             }
 
-            // if (mergedPrecinct.getPrecinctErrors() != null) {
-            // Map<Integer, PrecinctError> mergedErrors =
-            // mergedPrecinct.getPrecinctErrors();
-            // Set<Integer> mergedErrorIds = mergedErrors.keySet();
+            // TODO: errors are under features so after mergeing the precincts make sure the
+            // new feature has to have the same id as the precinct1's feature_idn
+            if (mergedPrecinct.getPrecinctErrors() != null) {
+                Map<Integer, PrecinctError> mergedErrors = mergedPrecinct.getPrecinctErrors();
+                Set<Integer> mergedErrorIds = mergedErrors.keySet();
+                Set<ErrorTable> oldErrors = targetData1.get().getFeature().getErrors();
 
-            // for (ErrorTable et : targetData1.get().getErrors()) {
-            // if (mergedErrorIds.contains(et.getErrorId())) {
-            // et.update(mergedErrors.get(et.getErrorId()), mergedPrecinctId);
-            // mergedErrorIds.remove(et.getErrorId());
-            // }
-            // }
-
-            // for (int remainErrorId : mergedErrorIds) {
-            // ErrorTable errorTable = new ErrorTable(mergedErrors.get(remainErrorId));
-
-            // errorTable.setPrecinctId(mergedPrecinctId);
-            // pem.persistError(errorTable);
-            // }
-            // }
+                // update targetData1's errors
+                for (ErrorTable et : oldErrors) {
+                    if (mergedErrorIds.contains(et.getErrorId())) {
+                        et.update(mergedErrors.get(et.getErrorId()), mergedPrecinctId);
+                        mergedErrorIds.remove(et.getErrorId());
+                    }
+                }
+                // TODO: delete the error's under targetData2 and recreate them
+                for (int remainErrorId : mergedErrorIds) {
+                    int featureId = targetData1.get().getFeature().getFeatureId();
+                    ErrorTable oldErrorTable = targetData2.get().getFeature().getErrorById(remainErrorId);
+                    pem.removeError(oldErrorTable);
+                    ErrorTable newErrorTable = new ErrorTable(mergedErrors.get(remainErrorId), featureId,
+                            mergedPrecinctId);
+                    newErrorTable.setFeatureId(featureId);
+                    pem.persistError(newErrorTable);
+                }
+            }
 
             pem.cleanup();
 

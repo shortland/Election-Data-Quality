@@ -88,15 +88,13 @@ public class DemographicData {
         // this.calculateTotal();
     }
 
-    // public String toString() {
-    // String str = "Demographic : ";
+    public String toString() {
+        String str = "Demographic : ";
 
-    // for (RACE r : this.demographicByRace.keySet()) {
-    // str = str + "\t" + r.name() + " : " +
-    // Integer.toString(this.getDemographicByRace(r)) + " ["
-    // + Double.toString(this.getDemogaphicPercentage(r)) + "]\n";
-    // }
+        for (RACE r : this.demographicByRace.keySet()) {
+            str = str + "\t" + r.name() + " : " + Integer.toString(this.getDemographicByRace(r)) + "\n";
+        }
 
-    // return str;
-    // }
+        return str;
+    }
 }

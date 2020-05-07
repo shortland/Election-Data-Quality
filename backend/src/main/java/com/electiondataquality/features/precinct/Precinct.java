@@ -62,6 +62,13 @@ public class Precinct extends Feature {
             }
         }
 
+        if (mergedNeighborsId.contains(p1.getId())) {
+            mergedNeighborsId.remove(p1.getId());
+        }
+        if (mergedNeighborsId.contains(p2.getId())) {
+            mergedNeighborsId.remove(p2.getId());
+        }
+
         Map<Integer, PrecinctError> errors1 = p1.getPrecinctErrors();
         Map<Integer, PrecinctError> errors2 = p2.getPrecinctErrors();
         Set<PrecinctError> mergedErrorSet = new HashSet<PrecinctError>();

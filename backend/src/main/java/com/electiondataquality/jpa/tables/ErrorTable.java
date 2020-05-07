@@ -26,7 +26,7 @@ public class ErrorTable {
     @Column(name = "idn")
     private int errorId;
 
-    @Column(name = "feature_idn", insertable = false, updatable = false)
+    @Column(name = "feature_idn")
     private int featureId;
 
     @Enumerated(EnumType.STRING)
@@ -64,7 +64,7 @@ public class ErrorTable {
         this.valid = valid;
     }
 
-    public ErrorTable(PrecinctError pError) {
+    public ErrorTable(PrecinctError pError, int featureId, String precinctId) {
         this.errorId = pError.getId();
         this.text = pError.getText();
         if (pError.isResolved()) {
@@ -73,6 +73,8 @@ public class ErrorTable {
             this.resolved = 0;
         }
         this.errorType = pError.getErrorType();
+        this.featureId = featureId;
+        this.precinctId = precinctId;
     }
 
     public void update(PrecinctError pError, String precinctId) {

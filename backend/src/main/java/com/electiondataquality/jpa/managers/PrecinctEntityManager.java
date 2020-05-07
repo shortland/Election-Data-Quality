@@ -110,6 +110,10 @@ public class PrecinctEntityManager {
         em.remove(precinctFeature);
     }
 
+    public void removeError(ErrorTable errorTable) {
+        em.remove(errorTable);
+    }
+
     public void persistPrecinct(PrecinctFeature precinctFeature) {
         em.persist(precinctFeature);
     }

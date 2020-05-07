@@ -64,6 +64,15 @@ public class FeatureTable {
         this.errors = errors;
     }
 
+    public ErrorTable getErrorById(int errorId) {
+        for (ErrorTable et : this.errors) {
+            if (et.getErrorId() == errorId) {
+                return et;
+            }
+        }
+        return null;
+    }
+
     public Set<Integer> getErrorsId() {
         Set<Integer> errorsId = new HashSet<>();
 

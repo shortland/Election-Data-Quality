@@ -16,7 +16,6 @@ public class VotingData {
     public static VotingData mergeVotingData(VotingData vd1, VotingData vd2) {
         Set<ELECTIONS> allElections;
         Set<ElectionResults> results = new HashSet<ElectionResults>();
-
         if (vd1.getAllElections().size() > vd2.getAllElections().size()) {
             allElections = vd1.getAllElections();
         } else {
@@ -31,7 +30,7 @@ public class VotingData {
                 results.add(ElectionResults.mergeElectionResults(er1, er2));
             } else if (er1 == null && er2 != null) {
                 results.add(er2);
-            } else if (er1 == null && er2 != null) {
+            } else if (er1 != null && er2 == null) {
                 results.add(er1);
             }
         }
