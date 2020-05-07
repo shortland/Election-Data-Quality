@@ -8,10 +8,10 @@ class AppData {
         this.allStates = null;
 
         // For development
-        // this.baseUrl = "http://0.0.0.0:1234/";
+        // this.baseUrl = "//0.0.0.0:1234/";
 
         // For production
-        this.baseUrl = "http://67.80.171.107:1234/";
+        this.baseUrl = "//ElectionDataQuality.com:1234/";
     }
 
     asyncFetch = async (url) => {

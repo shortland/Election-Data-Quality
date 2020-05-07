@@ -26,6 +26,9 @@ frontend/yarn-error.log*
 /.vscode
 .idea/
 
+# frontend
+frontend/build/
+
 # backend ignore gradle files - changes
 backend/.project
 backend/.settings/org.eclipse.buildship.core.prefs

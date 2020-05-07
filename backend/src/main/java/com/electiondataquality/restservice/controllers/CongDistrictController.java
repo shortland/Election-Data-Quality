@@ -26,9 +26,6 @@ public class CongDistrictController {
     /**
      * Get the shape data for all of the congressional districts.
      * 
-     * NOTE: Returns about 5.5mb at once & takes ~14s locally. (So it's not really
-     * used~)
-     * 
      * NOTE: Tested 5/5/2020
      * 
      * @param stateId
@@ -54,8 +51,6 @@ public class CongDistrictController {
 
     /**
      * Get the shape data for all of the congressional districts of a state.
-     * 
-     * NOTE: NY data returns 1.8mb at once & takes 4s.
      * 
      * NOTE: Tested 5/5/2020
      * 
