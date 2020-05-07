@@ -3,6 +3,8 @@ package com.electiondataquality.jpa.tables;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,6 +20,10 @@ public class CountyTable {
 
     @Column(name = "county_name")
     private String countyName;
+
+    @OneToOne
+    @JoinColumn(name = "feature_idn", referencedColumnName = "idn")
+    private FeatureTable feature;
 
     public CountyTable() {
     }
@@ -50,6 +56,14 @@ public class CountyTable {
 
     public void setCountyName(String countyName) {
         this.countyName = countyName;
+    }
+
+    public FeatureTable getFeature() {
+        return this.feature;
+    }
+
+    public void setFeature(FeatureTable feature) {
+        this.feature = feature;
     }
 
     @Override

@@ -601,7 +601,7 @@ public class PrecinctController {
             // }
             // }
 
-            pem.cleanup(true);
+            pem.cleanup();
 
             return ResponseGen.create(API_STATUS.OK, "successfully merged precincts");
         }

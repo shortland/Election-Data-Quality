@@ -64,6 +64,9 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
         <description>countyTable</description>
 
         <class>com.electiondataquality.jpa.tables.CountyTable</class>
+        <class>com.electiondataquality.jpa.tables.FeatureTable</class>
+        <class>com.electiondataquality.jpa.tables.ErrorTable</class>
+        <class>com.electiondataquality.jpa.tables.CommentTable</class>
 
         <properties>  
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
