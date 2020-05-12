@@ -129,5 +129,4 @@ public class PrecinctEntityManager {
     public void persistElectionData(ElectionDataTable electionDataTable) {
         em.persist(electionDataTable);
     }
-
 }

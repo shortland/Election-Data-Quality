@@ -1,17 +1,18 @@
 package com.electiondataquality.geometry;
 
+import java.util.List;
 import java.util.ArrayList;
 
 public class Polygon {
 
-    public ArrayList<ArrayList<double[]>> coordinates;
+    public List<List<double[]>> coordinates;
 
-    public Polygon(ArrayList<ArrayList<double[]>> coordinates) {
+    public Polygon(List<List<double[]>> coordinates) {
         this.coordinates = coordinates;
     }
 
     public MultiPolygon toMultiPolygon() {
-        ArrayList<ArrayList<ArrayList<double[]>>> multi = new ArrayList<ArrayList<ArrayList<double[]>>>();
+        List<List<List<double[]>>> multi = new ArrayList<List<List<double[]>>>();
 
         multi.add(this.coordinates);
 

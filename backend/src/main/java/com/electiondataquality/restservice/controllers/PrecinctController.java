@@ -2,21 +2,22 @@ package com.electiondataquality.restservice.controllers;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.Optional;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.ArrayList;
+import java.math.BigInteger;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.demographics.DemographicData;
@@ -27,6 +28,7 @@ import com.electiondataquality.features.precinct.Precinct;
 import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.geometry.Geometry;
 import com.electiondataquality.geometry.MultiPolygon;
+import com.electiondataquality.geometry.util.RawGeometryToShape;
 import com.electiondataquality.jpa.managers.PrecinctEntityManager;
 import com.electiondataquality.jpa.objects.PrecinctFeature;
 import com.electiondataquality.jpa.tables.DemographicTable;
@@ -598,11 +600,9 @@ public class PrecinctController {
     /**
      * Merge two precincts together.
      * 
-     * TODO: need to discuss about how to deal with the oldData (delete or keep ?)
+     * http://0.0.0.0:1234/mergePrecinct?precinctId1=11790&precinctId2=11791
      * 
-     * TODO: Have to merge polygon also (with sam's script)
-     * 
-     * NOTE: tested 5/7
+     * NOTE: tested 5/12
      * 
      * @param precinctId1
      * @param precinctId2
@@ -610,7 +610,7 @@ public class PrecinctController {
      */
     @GetMapping("/mergePrecinct")
     public ApiResponse mergePrecincts(@RequestParam String precinctId1, @RequestParam String precinctId2) {
-        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+        RestServiceApplication.logger.info("Method: " + Thread.currentThread().getStackTrace()[1].getMethodName());
 
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
 
@@ -627,22 +627,86 @@ public class PrecinctController {
             String mergedPrecinctId = mergedPrecinct.getId();
 
             // update precinct Info
-            RestServiceApplication.logger.info("Original PrecinctFeature:" + targetData1.get());
+            RestServiceApplication.logger.info("Original PrecinctFeature: " + targetData1.get());
 
             targetData1.get().update(mergedPrecinct);
 
-            RestServiceApplication.logger.info("Updated PrecinctFeature:" + targetData1.get());
+            RestServiceApplication.logger.info("Updated PrecinctFeature: " + targetData1.get());
+
+            /**
+             * Merge the precinct geo data with same technique pre-processing uses; thus via
+             * python script.
+             */
+            Geometry geo1 = RawGeometryToShape.convertRawToGeometry(targetData1.get().getFeature().getGeometry());
+            Geometry geo2 = RawGeometryToShape.convertRawToGeometry(targetData2.get().getFeature().getGeometry());
+
+            /** Log original data */
+            RestServiceApplication.logger.info("Original Geometry1: " + geo1.toString());
+            RestServiceApplication.logger.info("Original Geometry2: " + geo2.toString());
+
+            /** Begin execution of python script to merge the polygons */
+            String s;
+            Process p;
+            BufferedReader stdInput;
+            BufferedReader stdError;
+            StringBuilder mergeScriptOutput = new StringBuilder();
+            boolean hasError = false;
+
+            try {
+                // TODO: Not hardcode path to server scripts
+                String mergeScript = "python3 ../preprocessing/serverScripts/mergePrecincts.py " + "\""
+                        + geo1.rawCoordsAsString() + "\"" + " " + "\"" + geo2.rawCoordsAsString() + "\"";
+
+                RestServiceApplication.logger.info("Executing Script: " + mergeScript);
+
+                p = Runtime.getRuntime().exec(mergeScript);
+
+                stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+                while ((s = stdInput.readLine()) != null) {
+                    mergeScriptOutput.append(s);
+                }
+
+                while ((s = stdError.readLine()) != null) {
+                    hasError = true;
+                    mergeScriptOutput.append(s);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Always log script output, even when error
+            RestServiceApplication.logger.info("Merge Polygon Script output: " + mergeScriptOutput.toString());
+
+            if (hasError) {
+                pem.cleanup();
+
+                return ResponseGen.create(API_STATUS.ERROR,
+                        "running merge polygon script resulted in error: " + mergeScriptOutput.toString());
+            }
+
+            Geometry newGeo = RawGeometryToShape.convertPolygonRawCoordsToGeometry(mergeScriptOutput.toString());
+            String rawNewGeo = RawGeometryToShape.convertGeometryToRaw(newGeo);
+
+            /**
+             * Update the raw new geometry
+             */
+            targetData1.get().getFeature().setGeometry(rawNewGeo);
+
+            RestServiceApplication.logger.info("Updated Merged Geometry: "
+                    + RawGeometryToShape.convertRawToGeometry(targetData1.get().getFeature().getGeometry()));
 
             // update precinct demogrphic
             if (mergedPrecinct.getDemographicData() != null) {
                 DemographicTable demographic = targetData1.get().getDemogrpahicTable();
                 DemographicData mergedDemogrphic = mergedPrecinct.getDemographicData();
 
-                RestServiceApplication.logger.info("Original DemographicTable:" + demographic);
+                RestServiceApplication.logger.info("Original DemographicTable: " + demographic.toString());
 
                 demographic.update(mergedDemogrphic, mergedPrecinctId);
 
-                RestServiceApplication.logger.info("Updated DemographicTable:" + demographic);
+                RestServiceApplication.logger.info("Updated DemographicTable: " + demographic.toString());
 
                 targetData1.get().setDemographicTable(demographic);
             }
@@ -699,6 +763,7 @@ public class PrecinctController {
                         mergedErrorIds.remove(et.getErrorId());
                     }
                 }
+
                 // TODO: delete the error's under targetData2 and recreate them
                 for (int remainErrorId : mergedErrorIds) {
                     int featureId = targetData1.get().getFeature().getFeatureId();

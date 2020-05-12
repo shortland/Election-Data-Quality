@@ -1,23 +1,23 @@
 package com.electiondataquality.features.util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.electiondataquality.features.Feature;
 
 public class CompareFeatureShape {
     public static boolean CompareFeatures(Feature f1, Feature f2) {
-        ArrayList<ArrayList<ArrayList<double[]>>> shape1 = f1.getShape();
-        ArrayList<ArrayList<ArrayList<double[]>>> shape2 = f2.getShape();
+        List<List<List<double[]>>> shape1 = f1.getShape();
+        List<List<List<double[]>>> shape2 = f2.getShape();
 
         if (shape1.size() == shape2.size()) {
             for (int i = 0; i < shape1.size(); i++) {
-                ArrayList<ArrayList<double[]>> secondLayer1 = shape1.get(i);
-                ArrayList<ArrayList<double[]>> secondLayer2 = shape2.get(i);
+                List<List<double[]>> secondLayer1 = shape1.get(i);
+                List<List<double[]>> secondLayer2 = shape2.get(i);
 
                 if (secondLayer1.size() == secondLayer2.size()) {
                     for (int j = 0; j < secondLayer1.size(); j++) {
-                        ArrayList<double[]> thirdLayer1 = secondLayer1.get(j);
-                        ArrayList<double[]> thirdLayer2 = secondLayer2.get(j);
+                        List<double[]> thirdLayer1 = secondLayer1.get(j);
+                        List<double[]> thirdLayer2 = secondLayer2.get(j);
 
                         if (thirdLayer1.size() == thirdLayer2.size()) {
                             for (int k = 0; k < thirdLayer1.size(); k++) {
