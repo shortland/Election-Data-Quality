@@ -51,6 +51,8 @@ public class PrecinctController {
      */
     @GetMapping("/shapeOfPrecinct")
     public ApiResponse getShapeOfPrecinct(@RequestParam String precinctId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
@@ -60,10 +62,14 @@ public class PrecinctController {
 
             result.put("id", target.getId());
             result.put("geometry", target.geometry);
+
             pem.cleanup();
+
             return ResponseGen.create(API_STATUS.OK, result);
         }
+
         pem.cleanup();
+
         return ResponseGen.create(API_STATUS.ERROR, "unable to get the specified precinct shape");
     }
 
@@ -77,22 +83,31 @@ public class PrecinctController {
      */
     @GetMapping("/shapeOfPrecinctByCounty")
     public ApiResponse getShapeOfPrecinctByCountyId(@RequestParam String countyId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         List<PrecinctFeature> targetPrecincts = pem.findAllPrecinctFeaturesByCountyId(countyId);
+
         if (targetPrecincts != null) {
             Set<Object> precinctsShape = new HashSet<>();
+
             for (PrecinctFeature pf : targetPrecincts) {
                 Map<String, Object> result = new HashMap<>();
                 Precinct target = new Precinct(pf);
 
                 result.put("id", target.getId());
                 result.put("geometry", target.geometry);
+
                 precinctsShape.add(result);
             }
+
             pem.cleanup();
+
             return ResponseGen.create(API_STATUS.OK, precinctsShape);
         }
+
         pem.cleanup();
+
         return ResponseGen.create(API_STATUS.ERROR, "unable to get the specified precinct shape");
     }
 
@@ -106,6 +121,8 @@ public class PrecinctController {
      */
     @GetMapping("/multiplePrecinctShapes")
     public ApiResponse getMultipleprecincts(@RequestParam(value = "precinctIdList") String[] precinctIds) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         List<HashMap<String, Object>> pList = new ArrayList<HashMap<String, Object>>();
 
@@ -120,6 +137,7 @@ public class PrecinctController {
                 pList.add(geometry);
             }
         }
+
         pem.cleanup();
 
         return ResponseGen.create(API_STATUS.OK, pList);
@@ -135,6 +153,8 @@ public class PrecinctController {
      */
     @GetMapping("/precinctInfo")
     public ApiResponse getPrecinctInfo(@RequestParam String precinctId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
@@ -157,6 +177,7 @@ public class PrecinctController {
             result.put("isGhost", target.getIsGhost());
 
             pem.cleanup();
+
             return ResponseGen.create(API_STATUS.OK, result);
         }
 
@@ -190,6 +211,7 @@ public class PrecinctController {
 
             return ResponseGen.create(API_STATUS.OK, neighbors);
         }
+
         pem.cleanup();
 
         return ResponseGen.create(API_STATUS.ERROR, "unable to get the specified precinct");
@@ -206,9 +228,10 @@ public class PrecinctController {
      * @param shape
      * @return
      */
-    // @PutMapping("/updateShape")
     @RequestMapping(value = "/updateShape", method = RequestMethod.PUT)
-    public ApiResponse updateShapeOfPrecicnt(@RequestParam String precinctId, @RequestParam Geometry geometry) {
+    public ApiResponse updateShapeOfPrecicnt(@RequestParam String precinctId, @RequestBody Geometry geometry) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
@@ -217,7 +240,11 @@ public class PrecinctController {
             Optional<FeatureTable> targetFeature = pem.findFeatureByFeatureId(featureId);
 
             if (targetFeature.isPresent()) {
+                RestServiceApplication.logger.info("Original FeatureTable:" + targetFeature.get());
+
                 targetFeature.get().update(geometry);
+
+                RestServiceApplication.logger.info("Updated FeatureTable:" + targetFeature.get());
 
                 pem.cleanup();
 
@@ -243,6 +270,8 @@ public class PrecinctController {
      */
     @GetMapping("/deletePrecinct")
     public ApiResponse deletePrecinct(@RequestParam String precinctId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
@@ -266,6 +295,8 @@ public class PrecinctController {
      */
     @GetMapping("/defineGhostPrecinct")
     public ApiResponse setGhost(@RequestParam String precinctId, @RequestParam boolean isGhost) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
@@ -295,11 +326,17 @@ public class PrecinctController {
      */
     @RequestMapping(value = "/updatePrecinctInfo", method = RequestMethod.PUT)
     public ApiResponse updatePrecinctInfo(@RequestParam String precinctId, @RequestBody Precinct info) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
         if (targetData.isPresent()) {
+            RestServiceApplication.logger.info("Original PrecinctFeature:" + targetData.get());
+
             targetData.get().update(info);
+
+            RestServiceApplication.logger.info("Updated PrecinctFeature:" + targetData.get());
 
             pem.cleanup();
 
@@ -325,9 +362,10 @@ public class PrecinctController {
      * @param votingData
      * @return
      */
-    // @GetMapping("/updateVotingData")
     @RequestMapping(value = "/updateVotingData", method = RequestMethod.PUT)
     public ApiResponse updateVotingData(@RequestParam String precinctId, @RequestBody VotingData votingData) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
@@ -340,7 +378,12 @@ public class PrecinctController {
                     ELECTIONS e = edt.getElection();
 
                     if (elections.contains(e)) {
+                        RestServiceApplication.logger.info("Original ElectionDataTable:" + edt);
+
                         edt.update(votingData.getElectionData(e), precinctId);
+
+                        RestServiceApplication.logger.info("Updated ElectionDataTable:" + edt);
+
                         elections.remove(e);
                     }
                 }
@@ -351,14 +394,17 @@ public class PrecinctController {
                         precinctId);
 
                 pem.persistElectionData(electionDataTable);
+
                 electionDataSet.add(electionDataTable);
             }
 
             targetData.get().setElectionData(electionDataSet);
+
             pem.cleanup();
 
             return ResponseGen.create(API_STATUS.OK, "successfully updated voting data");
         }
+
         pem.cleanup();
 
         return ResponseGen.create(API_STATUS.ERROR, "unable to get the specified precinct");
@@ -378,6 +424,8 @@ public class PrecinctController {
     @CrossOrigin
     @PutMapping("/updatePrecinctError")
     public ApiResponse updatePreinctError(@RequestParam String precinctId, @RequestParam PrecinctError precinctError) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
@@ -388,7 +436,11 @@ public class PrecinctController {
             if (targetData.get().getFeature().getErrorsId().contains(errorId)) {
                 for (ErrorTable et : errors) {
                     if (et.getErrorId() == errorId) {
+                        RestServiceApplication.logger.info("Original ErrorTable:" + et);
+
                         et.update(precinctError, precinctId);
+
+                        RestServiceApplication.logger.info("Updated ErrorTable:" + et);
                     }
                 }
 
@@ -396,20 +448,20 @@ public class PrecinctController {
                 pem.cleanup();
 
                 return ResponseGen.create(API_STATUS.OK, "successfully updated precinct error");
-            } else {
-                ErrorTable newError = new ErrorTable(precinctError, targetData.get().getFeature().getFeatureId(),
-                        precinctId);
-
-                newError.setPrecinctId(precinctId);
-                newError.setFeatureId(targetData.get().getFeature().getFeatureId());
-                errors.add(newError);
-                targetData.get().getFeature().setErrors(errors);
-
-                pem.persistError(newError);
-                pem.cleanup();
-
-                return ResponseGen.create(API_STATUS.OK, "successfully updated precinct error");
             }
+
+            ErrorTable newError = new ErrorTable(precinctError, targetData.get().getFeature().getFeatureId(),
+                    precinctId);
+
+            newError.setPrecinctId(precinctId);
+            newError.setFeatureId(targetData.get().getFeature().getFeatureId());
+            errors.add(newError);
+            targetData.get().getFeature().setErrors(errors);
+
+            pem.persistError(newError);
+            pem.cleanup();
+
+            return ResponseGen.create(API_STATUS.OK, "successfully updated precinct error");
         }
 
         pem.cleanup();
@@ -434,12 +486,20 @@ public class PrecinctController {
     @RequestMapping(value = "/updateDemographicData", method = RequestMethod.PUT)
     public ApiResponse updateDemographicData(@RequestParam String precinctId,
             @RequestBody Map<String, Integer> demographicData) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
         if (targetData.isPresent()) {
             DemographicTable newDemographic = targetData.get().getDemogrpahicTable();
+
+            RestServiceApplication.logger.info("Original DemographicTable:" + newDemographic);
+
             newDemographic.update(demographicData, precinctId);
+
+            RestServiceApplication.logger.info("Original DemographicTable:" + newDemographic);
+
             targetData.get().setDemographicTable(newDemographic);
 
             pem.cleanup();
@@ -462,14 +522,26 @@ public class PrecinctController {
      */
     @GetMapping("/addPrecinctNeighbor")
     public ApiResponse addPrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
 
         Optional<PrecinctFeature> targetData1 = pem.findPrecinctFeatureById(precinctId1);
         Optional<PrecinctFeature> targetData2 = pem.findPrecinctFeatureById(precinctId2);
 
         if (targetData1.isPresent() && targetData2.isPresent()) {
+            RestServiceApplication.logger
+                    .info("Original PrecinctFeature 1 Neighbors:" + targetData1.get().getNeighborsIdSet());
+            RestServiceApplication.logger
+                    .info("Original PrecinctFeature 2 Neighbors:" + targetData2.get().getNeighborsIdSet());
+
             targetData1.get().addNeighbor(precinctId2);
             targetData2.get().addNeighbor(precinctId1);
+
+            RestServiceApplication.logger
+                    .info("Updated PrecinctFeature 1 Neighbors:" + targetData1.get().getNeighborsIdSet());
+            RestServiceApplication.logger
+                    .info("Updated PrecinctFeature 2 Neighbors:" + targetData2.get().getNeighborsIdSet());
 
             pem.cleanup();
 
@@ -494,14 +566,26 @@ public class PrecinctController {
      */
     @GetMapping("/deletePrecinctNeighbor")
     public ApiResponse deletePrecinctAsNeighbor(@RequestParam String precinctId1, @RequestParam String precinctId2) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
 
         Optional<PrecinctFeature> targetData1 = pem.findPrecinctFeatureById(precinctId1);
         Optional<PrecinctFeature> targetData2 = pem.findPrecinctFeatureById(precinctId2);
 
         if (targetData1.isPresent() && targetData2.isPresent()) {
+            RestServiceApplication.logger
+                    .info("Original PrecinctFeature 1 Neighbors:" + targetData1.get().getNeighborsIdSet());
+            RestServiceApplication.logger
+                    .info("Original PrecinctFeature 2 Neighbors:" + targetData2.get().getNeighborsIdSet());
+
             targetData1.get().deleteNeighbor(precinctId2);
             targetData2.get().deleteNeighbor(precinctId1);
+
+            RestServiceApplication.logger
+                    .info("Updated PrecinctFeature 1 Neighbors:" + targetData1.get().getNeighborsIdSet());
+            RestServiceApplication.logger
+                    .info("Updated PrecinctFeature 2 Neighbors:" + targetData2.get().getNeighborsIdSet());
 
             pem.cleanup();
 
@@ -526,6 +610,8 @@ public class PrecinctController {
      */
     @GetMapping("/mergePrecinct")
     public ApiResponse mergePrecincts(@RequestParam String precinctId1, @RequestParam String precinctId2) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
 
         Optional<PrecinctFeature> targetData1 = pem.findPrecinctFeatureById(precinctId1);
@@ -541,14 +627,23 @@ public class PrecinctController {
             String mergedPrecinctId = mergedPrecinct.getId();
 
             // update precinct Info
+            RestServiceApplication.logger.info("Original PrecinctFeature:" + targetData1.get());
+
             targetData1.get().update(mergedPrecinct);
+
+            RestServiceApplication.logger.info("Updated PrecinctFeature:" + targetData1.get());
 
             // update precinct demogrphic
             if (mergedPrecinct.getDemographicData() != null) {
                 DemographicTable demographic = targetData1.get().getDemogrpahicTable();
                 DemographicData mergedDemogrphic = mergedPrecinct.getDemographicData();
 
+                RestServiceApplication.logger.info("Original DemographicTable:" + demographic);
+
                 demographic.update(mergedDemogrphic, mergedPrecinctId);
+
+                RestServiceApplication.logger.info("Updated DemographicTable:" + demographic);
+
                 targetData1.get().setDemographicTable(demographic);
             }
 
@@ -563,7 +658,12 @@ public class PrecinctController {
                         ELECTIONS e = edt.getElection();
 
                         if (electionsAfterMerged.contains(e)) {
+                            RestServiceApplication.logger.info("Original ElectionDataTable:" + edt);
+
                             edt.update(votingAfterMerged.getElectionData(e), mergedPrecinctId);
+
+                            RestServiceApplication.logger.info("Updated ElectionDataTable:" + edt);
+
                             electionsAfterMerged.remove(e);
                         }
                     }
@@ -590,7 +690,12 @@ public class PrecinctController {
                 // update targetData1's errors
                 for (ErrorTable et : oldErrors) {
                     if (mergedErrorIds.contains(et.getErrorId())) {
+                        RestServiceApplication.logger.info("Original ErrorTable:" + et);
+
                         et.update(mergedErrors.get(et.getErrorId()), mergedPrecinctId);
+
+                        RestServiceApplication.logger.info("Updated ErrorTable:" + et);
+
                         mergedErrorIds.remove(et.getErrorId());
                     }
                 }
@@ -599,8 +704,10 @@ public class PrecinctController {
                     int featureId = targetData1.get().getFeature().getFeatureId();
                     ErrorTable oldErrorTable = targetData2.get().getFeature().getErrorById(remainErrorId);
                     pem.removeError(oldErrorTable);
+
                     ErrorTable newErrorTable = new ErrorTable(mergedErrors.get(remainErrorId), featureId,
                             mergedPrecinctId);
+
                     newErrorTable.setFeatureId(featureId);
                     pem.persistError(newErrorTable);
                 }
@@ -626,6 +733,8 @@ public class PrecinctController {
      */
     @GetMapping("/originalPrecinctInfo")
     public ApiResponse getOriginalPrecinctInfo(@RequestParam String precinctId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         Map<String, Object> result = new HashMap<>();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getOriginalPrecinct(precinctId);
@@ -657,6 +766,8 @@ public class PrecinctController {
      */
     @GetMapping("/originalPrecinctShape")
     public ApiResponse getOriginalPrecinctShape(@RequestParam String precinctId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         Map<String, Object> result = new HashMap<>();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Precinct target = precinctManager.getOriginalPrecinct(precinctId);
@@ -681,6 +792,8 @@ public class PrecinctController {
      */
     @GetMapping("/originalMultPrecinctShapes")
     public ApiResponse getMultipleOriginalprecincts(@RequestParam(value = "precinctIdList") String[] precinctIds) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         List<HashMap<String, Object>> pList = new ArrayList<HashMap<String, Object>>();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
 
@@ -708,6 +821,8 @@ public class PrecinctController {
      */
     @GetMapping("/createNewPrecinct")
     public ApiResponse createNewPrecinct(@RequestParam MultiPolygon mp) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         BigInteger bigintId = new BigInteger(precinctManager.getLargestPrecinctId());
 

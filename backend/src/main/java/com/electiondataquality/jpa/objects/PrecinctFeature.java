@@ -23,7 +23,6 @@ import com.electiondataquality.jpa.tables.FeatureTable;
 import com.electiondataquality.restservice.demographics.DemographicData;
 import com.electiondataquality.restservice.voting.VotingData;
 import com.electiondataquality.restservice.voting.elections.ElectionResults;
-import com.electiondataquality.restservice.voting.elections.enums.ELECTIONS;
 
 @Entity
 @Table(name = "precincts")

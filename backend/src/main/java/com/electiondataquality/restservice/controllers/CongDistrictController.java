@@ -1,9 +1,7 @@
 package com.electiondataquality.restservice.controllers;
 
 import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
-import java.util.HashMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +31,8 @@ public class CongDistrictController {
      */
     @GetMapping("/allCongressionalDistricts")
     public ApiResponse getCongDistrictForState() {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         CDEntityManager cdem = new CDEntityManager(RestServiceApplication.emFactoryCDistrict);
         List<CDFeature> targetCDs = cdem.findAllCDFeature();
 
@@ -59,6 +59,8 @@ public class CongDistrictController {
      */
     @GetMapping("/congressionalDistrictsForState")
     public ApiResponse getCongDistrictForState(@RequestParam String stateId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         CDEntityManager cdem = new CDEntityManager(RestServiceApplication.emFactoryCDistrict);
         List<CDFeature> targetCDs = cdem.findAllCongressionalDistrictsByStateId(stateId);
 

@@ -24,6 +24,8 @@ public class StateController {
      */
     @GetMapping("/allStates")
     public ApiResponse getAllStates() {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         StateEntityManager stateTableEm = new StateEntityManager(RestServiceApplication.emFactoryState,
                 RestServiceApplication.emFactoryCounty, RestServiceApplication.emFactoryCDistrict);
 

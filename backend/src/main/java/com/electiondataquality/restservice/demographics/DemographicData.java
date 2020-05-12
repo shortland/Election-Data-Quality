@@ -4,7 +4,6 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.electiondataquality.restservice.demographics.enums.RACE;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class DemographicData {
 
