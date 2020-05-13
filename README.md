@@ -6,7 +6,7 @@ CSE 416 course project. The goal of the project is to provide users with an easi
 
 There is currently no mainstream reference in gathering and visualizing election data in the U.S. at the detailed level of a precinct/election ward. The hopeful goal of this project is to provide something that can be the start of exactly that.
 
-Live site: https://shortland.github.io/Election-Data-Quality/
+Live site: https://ElectionDataQuality.com
 
 ### Project Members
 
