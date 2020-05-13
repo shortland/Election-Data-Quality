@@ -89,12 +89,12 @@
 }
 
 #leftCol {
-    top: 56px;
+    top: 0px;
     left: 0px;
     position: fixed;
     width: 250px;
     /* max-width: 20%; */
-    height: calc(100% - 56px);
+    height: calc(100% - 0px);
     z-index: 3;
     background-color: rgba(255, 255, 255, 0.9);
 }
