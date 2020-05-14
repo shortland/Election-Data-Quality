@@ -1,11 +1,11 @@
 package com.electiondataquality.types.responses;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.electiondataquality.types.responses.enums.API_STATUS;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonIgnoreProperties
 public class ApiResponse {
@@ -16,13 +16,11 @@ public class ApiResponse {
 
     public ApiResponse(Object content, API_STATUS status) {
         this.status = status.name().toLowerCase();
-
         this.content = content;
     }
 
     public ApiResponse(Object content, String status) {
         this.status = status;
-
         this.content = content;
     }
 

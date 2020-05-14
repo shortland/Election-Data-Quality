@@ -9,7 +9,7 @@ import com.electiondataquality.geometry.Geometry;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.geometry.Polygon;
 
-public abstract class Feature {
+public class Feature {
 
     public Geometry geometry;
 
@@ -21,6 +21,36 @@ public abstract class Feature {
 
     @JsonIgnore
     public boolean isMultiPolygon = false;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String name;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String properties;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String id;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String parentId;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String childrenId;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String type;
 
     public static boolean CompareShape(Feature f1, Feature f2) {
         return CompareFeatureShape.CompareFeatures(f1, f2);

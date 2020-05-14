@@ -10,6 +10,18 @@ public class FeatureCollectionWrapper {
 
     private List<Feature> features;
 
+    public FeatureCollectionWrapper(String type, List<Feature> features) {
+        this.type = type;
+        this.features = features;
+    }
+
+    public FeatureCollectionWrapper(List<Feature> features) {
+        this.features = features;
+    }
+
+    public FeatureCollectionWrapper() {
+    }
+
     public String getType() {
         return type;
     }
