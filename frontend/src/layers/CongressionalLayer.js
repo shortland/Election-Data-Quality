@@ -2,7 +2,8 @@ export const congressionalLayerFill = {
     id: 'congressionalFill',
     type: 'fill',
     paint: {
-        'fill-color': 'rgba(0, 0, 0, 0.0)',
+        'fill-color': '#27496d',
+        'fill-opacity': 0.5
     },
 };
 
@@ -19,7 +20,11 @@ export const congressionalLayerOutline = {
     id: 'congressionalOutline',
     type: 'line',
     paint: {
-        'line-color': 'rgba(14, 14, 14, 0.5)',
-        'line-width': 2,
+        'line-color': '#FFFFFF',
+        'line-width': 4,
+        'line-dasharray': [1, 0.5, 1],
     },
+    layout: {
+        'line-join': 'round'
+    }
 };

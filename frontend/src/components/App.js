@@ -11,7 +11,7 @@ import MapGL, {
     WebMercatorViewport,
 } from "react-map-gl";
 import { Nav, Navbar, Form } from "react-bootstrap";
-import { json } from "d3-request";
+//import { json } from "d3-request";
 import bbox from "@turf/bbox";
 import { ToastContainer, toast } from "react-toastify";
 import { GeoJsonLayer } from "@deck.gl/layers";
@@ -119,9 +119,9 @@ export default class App extends Component {
             layers: {
                 states: true,
                 counties: true,
-                congressional: true,
+                congressional: false,
                 precincts: true,
-                parks: true,
+                parks: false,
             },
         };
 
@@ -676,11 +676,11 @@ export default class App extends Component {
             <>
                 {layers.congressional && (
                     <Source type="geojson" data={congressionalDistrictData}>
-                        <Layer
-                            {...congressionalLayerFillHighlight}
+                        {/* <Layer
+                           {...congressionalLayerFillHighlight}
                             //filter={congressionalFilter}
                             minzoom={5}
-                        />
+                        /> */}
                         <Layer {...congressionalLayerOutline} minzoom={5} />
                         <Layer {...congressionalLayerFill} minzoom={5} />
                     </Source>
@@ -883,8 +883,8 @@ export default class App extends Component {
                         <Form>
                             {[
                                 "States",
-                                "Counties",
                                 "Congressional Districts",
+                                "Counties",
                                 "Precincts",
                                 "National Parks",
                             ].map((name) => (
@@ -892,7 +892,8 @@ export default class App extends Component {
                                     <Form.Check
                                         label={name}
                                         type={"checkbox"}
-                                        defaultChecked={true}
+                                        defaultChecked={name != "Congressional Districts"
+                                            && name != "National Parks" ? true : false}
                                         onChange={this.toggleLayer.bind(this, name)}
                                     />
                                 </div>
@@ -902,7 +903,7 @@ export default class App extends Component {
                     <Card.Footer style={{ lineHeight: "1.0" }}>
                         <small className="text-muted">
                             Note: some layers will only show at certain zoom levels
-            </small>
+                        </small>
                     </Card.Footer>
                 </Card>
             </div>

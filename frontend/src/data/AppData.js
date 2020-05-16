@@ -1,4 +1,3 @@
-import { json } from 'd3-request';
 /**
  * A class to access all our fetch API calls through
  */
