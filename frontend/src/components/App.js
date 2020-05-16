@@ -270,8 +270,15 @@ export default class App extends Component {
      */
     onStateSelected(stateFeature) {
         const { layers } = this.state;
-
         console.log(stateFeature.properties)
+        let stateID = stateFeature.properties.id
+
+
+        this.appData.fetchCountiesByState(stateID).then((data) => {
+            this.setState({
+                countyData: data,
+            });
+        });
 
         this.setState({ selectedFeature: stateFeature });
     }
@@ -293,6 +300,7 @@ export default class App extends Component {
                 if (this.state.selectedFeature) {
                     if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
                         this._zoomToFeature(event);
+                        this.onStateSelected(stateFeature);
                         return;
                     }
                 } else {
@@ -410,12 +418,8 @@ export default class App extends Component {
         if (features) {
             const stateHovered = features.find((f) => f.layer.id === "stateFill");
             const countyHovered = features.find((f) => f.layer.id === "countyFill");
-            const congressionalHovered = features.find(
-                (f) => f.layer.id === "congressionalFill"
-            );
-            const precinctHovered = features.find(
-                (f) => f.layer.id === "precinctFill"
-            );
+            const congressionalHovered = features.find((f) => f.layer.id === "congressionalFill");
+            const precinctHovered = features.find((f) => f.layer.id === "precinctFill");
 
             const hovered =
                 stateHovered ||
@@ -432,6 +436,7 @@ export default class App extends Component {
             } else if (precinctHovered) {
                 hovered.isPrecinct = true;
             }
+
             const filter = this.getFeatureFilter(hovered);
 
             this.setState({
@@ -616,6 +621,11 @@ export default class App extends Component {
             });
         });
 
+        console.log(this.mapRef.current.getMap())
+
+        const map = this.mapRef.current.getMap()
+        //this.map = this.mapRef.current.getMap()
+
     }
 
     /**
@@ -657,6 +667,26 @@ export default class App extends Component {
                         />
                         <Layer {...congressionalLayerOutline} minzoom={5} />
                         <Layer {...congressionalLayerFill} minzoom={5} />
+                    </Source>
+                )}
+            </>
+        );
+    }
+
+    renderCountyLayers() {
+        const { layers, countyData } = this.state;
+
+        return (
+            <>
+                {layers.county && (
+                    <Source type="geojson" data={countyData}>
+                        <Layer
+                            {...countyDataLayerFillableHighlight}
+                            //filter={congressionalFilter}
+                            minzoom={5}
+                        />
+                        <Layer {...countyDataLayerOutline} minzoom={5} />
+                        <Layer {...countyDataLayerFillable} minzoom={5} />
                     </Source>
                 )}
             </>
@@ -773,6 +803,8 @@ export default class App extends Component {
                         {this.renderStateLayers()}
 
                         {this.renderCongressionalLayers()}
+
+                        {this.renderCountyLayers()}
 
                         {this.renderPrecinctLayers()}
 

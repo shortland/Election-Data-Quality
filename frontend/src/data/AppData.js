@@ -7,10 +7,10 @@ class AppData {
         this.allStates = null;
 
         // For development
-        this.baseUrl = "//0.0.0.0:1234/";
+        //this.baseUrl = "//0.0.0.0:1234/";
 
         // For production
-        //this.baseUrl = "//ElectionDataQuality.com:1234/";
+        this.baseUrl = "https://ElectionDataQuality.com:1234/";
     }
 
     asyncFetch = async (url) => {
@@ -47,7 +47,7 @@ class AppData {
             features.features.push(feature);
         }
 
-        console.log(data.content)
+        //console.log(data.content)
         return {
             featureCollection: features,
         };
@@ -79,7 +79,7 @@ class AppData {
 
     //-------------- * COUNTIES * ------------------
     async fetchCountiesByState(stateID) {
-        const data = await this.asyncFetch(this.baseUrl + 'countiesInState?stateID='.concat(stateID));
+        const data = await this.asyncFetch(this.baseUrl + 'countiesInState?stateId='.concat(stateID));
 
         if (data.status != "ok") {
             alert("server error: unable to get data");
