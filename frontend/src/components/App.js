@@ -1,70 +1,94 @@
-import React, { Component } from 'react';
-import { render } from 'react-dom';
-import MapGL, { Popup, NavigationControl, FullscreenControl, ScaleControl, Source, Layer, LinearInterpolator, WebMercatorViewport } from 'react-map-gl';
-import { Nav, Navbar, Form } from 'react-bootstrap';
-import { json } from 'd3-request';
-import bbox from '@turf/bbox';
-import { ToastContainer, toast } from 'react-toastify';
-import { GeoJsonLayer } from '@deck.gl/layers';
-import Geocoder from 'react-map-gl-geocoder';
-import { Editor, EditorModes } from 'react-map-gl-draw';
+import React, { Component } from "react";
+import { render } from "react-dom";
+import MapGL, {
+    Popup,
+    NavigationControl,
+    FullscreenControl,
+    ScaleControl,
+    Source,
+    Layer,
+    LinearInterpolator,
+    WebMercatorViewport,
+} from "react-map-gl";
+import { Nav, Navbar, Form } from "react-bootstrap";
+import { json } from "d3-request";
+import bbox from "@turf/bbox";
+import { ToastContainer, toast } from "react-toastify";
+import { GeoJsonLayer } from "@deck.gl/layers";
+import Geocoder from "react-map-gl-geocoder";
+import { Editor, EditorModes } from "react-map-gl-draw";
 
 /**
  * JS classes
  */
-import AppData from '../data/AppData';
+import AppData from "../data/AppData";
 
 /**
  * CSS Styling
  */
-import '../App.css';
-import '../styles/Collapsible.css';
-import '../styles/PinPopup.css';
-import '../static/app.css';
-import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import 'react-toastify/dist/ReactToastify.css';
+import "../App.css";
+import "../styles/Collapsible.css";
+import "../styles/PinPopup.css";
+import "../static/app.css";
+import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "react-toastify/dist/ReactToastify.css";
 
-import Card from 'react-bootstrap/Card';
+import Card from "react-bootstrap/Card";
 
 /**
  * Map layers
  */
-import { countyDataLayerFillable, countyDataLayerFillableHighlight, countyDataLayerOutline } from '../layers/CountyLayer';
-import { stateLayerFill, stateLayerFillHighlight } from '../layers/StateLayer';
-import { precinctLayerFill, precinctLayerFillHighlight, precinctLayerOutline } from '../layers/PrecinctLayer';
-import { congressionalLayerFill, congressionalLayerFillHighlight, congressionalLayerOutline } from '../layers/CongressionalLayer';
+import {
+    countyDataLayerFillable,
+    countyDataLayerFillableHighlight,
+    countyDataLayerOutline,
+} from "../layers/CountyLayer";
+import { stateLayerFill, stateLayerFillHighlight } from "../layers/StateLayer";
+import {
+    precinctLayerFill,
+    precinctLayerFillHighlight,
+    precinctLayerOutline,
+} from "../layers/PrecinctLayer";
+import {
+    congressionalLayerFill,
+    congressionalLayerFillHighlight,
+    congressionalLayerOutline,
+} from "../layers/CongressionalLayer";
 
 /**
  * Our components
  */
-import Pins from './map/ErrorPins';
-import ErrorInfo from './map/ErrorModal';
-import StateSelector from './navbar/StateSelector';
-import LeftSidebar from './sidebar/LeftSidebar';
-import Toolbar from './map/toolbar';
-import UserModeSelector from './navbar/UserModeSelector';
+import Pins from "./map/ErrorPins";
+import ErrorInfo from "./map/ErrorModal";
+import StateSelector from "./navbar/StateSelector";
+import LeftSidebar from "./sidebar/LeftSidebar";
+import Toolbar from "./map/toolbar";
+import UserModeSelector from "./navbar/UserModeSelector";
 
 /**
  * Static data files
  */
-import ERRORS from '../data/errors.json';
+import ERRORS from "../data/errors.json";
 //import STATES_TOOLTIP_DATA from '../data/states_tooltip_data.geojson';
 //import NY_COUNTY_SHORELINE_DATA from '../data/ny_county_shoreline.geojson';
 //import NY_PRECINCT_DATA from '../data/ny_precincts.geojson';
-import NY_CONGRESSIONAL_DATA from '../data//New_York_Congressional_Districts.GeoJSON';
+import NY_CONGRESSIONAL_DATA from "../data//New_York_Congressional_Districts.GeoJSON";
 // import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 
 /**
  * Mapbox Style & API Key
  */
-const MAPBOX_STYLE = 'mapbox://styles/shortland/ck7fn4gmu014c1ip60jlumnm2';
-const MAPBOX_API = 'pk.eyJ1Ijoic2hvcnRsYW5kIiwiYSI6ImNqeXVzOWhsbjBpYzczY29hNGZycTlqdXAifQ.B6l-uEqGG-Pw6-quz4eflQ';
+const MAPBOX_STYLE = "mapbox://styles/shortland/ck7fn4gmu014c1ip60jlumnm2";
+const MAPBOX_API =
+    "pk.eyJ1Ijoic2hvcnRsYW5kIiwiYSI6ImNqeXVzOWhsbjBpYzczY29hNGZycTlqdXAifQ.B6l-uEqGG-Pw6-quz4eflQ";
 
 /**
- * @state viewport: the mpas viewport (lat, long, etc)
- * 
+ * Main React component which renders everything
+ * @state viewport: the maps viewport (lat, long, etc)
+ * @state stateData, countyData, congresionalDistrictData, precinctData: hold data loaded from API
+ * @state layers: keeps track of which layers should be on (ex: precincts should be displayed when layers.precincts is true)
  */
 export default class App extends Component {
     constructor(props) {
@@ -77,7 +101,7 @@ export default class App extends Component {
             precinctData: null,
             viewport: {
                 width: "100%",
-                height: window.innerHeight - 56,
+                height: window.innerHeight,
                 latitude: 37.0902,
                 longitude: -105.7129,
                 zoom: 3.3,
@@ -92,7 +116,13 @@ export default class App extends Component {
             features: {},
             selectedFeatureIndex: null,
             userMode: "View",
-            layers: { states: true, counties: true, congressional: true, precincts: true, parks: true }
+            layers: {
+                states: true,
+                counties: true,
+                congressional: true,
+                precincts: true,
+                parks: true,
+            },
         };
 
         this._editorRef = null;
@@ -100,11 +130,11 @@ export default class App extends Component {
         this.appData = new AppData();
 
         this.filters = {
-            countyFilter: ['==', 'NAME', ''],
-            precinctFilter: ['==', 'GEOID10', ''],
-            stateFilter: ['==', 'name', ''],
-            congressionalFilter: ['==', 'NAMELSAD', '']
-        }
+            countyFilter: ["==", "NAME", ""],
+            precinctFilter: ["==", "GEOID10", ""],
+            stateFilter: ["==", "name", ""],
+            congressionalFilter: ["==", "NAMELSAD", ""],
+        };
     }
 
     /**
@@ -112,13 +142,13 @@ export default class App extends Component {
      */
     mapRef = React.createRef();
 
-    handleViewportChange = viewport => {
+    handleViewportChange = (viewport) => {
         this.setState({
-            viewport: { ...this.state.viewport, ...viewport }
+            viewport: { ...this.state.viewport, ...viewport },
         });
     };
 
-    handleGeocoderViewportChange = viewport => {
+    handleGeocoderViewportChange = (viewport) => {
         const geocoderDefaultOverrides = { transitionDuration: 1000 };
 
         return this.handleViewportChange({
@@ -127,7 +157,7 @@ export default class App extends Component {
         });
     };
 
-    handleOnResult = event => {
+    handleOnResult = (event) => {
         console.log(event.result);
         this.setState({
             searchResultLayer: new GeoJsonLayer({
@@ -137,7 +167,7 @@ export default class App extends Component {
                 getRadius: 1000,
                 pointRadiusMinPixels: 10,
                 pointRadiusMaxPixels: 10,
-            })
+            }),
         });
     };
 
@@ -151,8 +181,7 @@ export default class App extends Component {
                 position: toast.POSITION.BOTTOM_RIGHT,
             });
             return;
-        }
-        else {
+        } else {
             toast.info("Selected precinct is deleted", {
                 position: toast.POSITION.BOTTOM_RIGHT,
             });
@@ -160,13 +189,16 @@ export default class App extends Component {
             if (selectedFeatureIndex > -1) {
                 features.data.splice(selectedFeatureIndex, 1);
             }
-            this.setState({ selectedFeatureIndex: null, selectedMode: EditorModes.READ_ONLY, features: features });
+            this.setState({
+                selectedFeatureIndex: null,
+                selectedMode: EditorModes.READ_ONLY,
+                features: features,
+            });
         }
         this._editorRef.deleteFeatures(selectedFeatureIndex);
-
     };
 
-    _switchMode = evt => {
+    _switchMode = (evt) => {
         let selectedMode = evt.target.id;
         if (selectedMode === this.state.selectedMode) {
             selectedMode = null;
@@ -176,35 +208,42 @@ export default class App extends Component {
     };
 
     //Map GL Draw select a feature (a created shape by the MapGLDraw)
-    _onSelect = selected => {
-        this.setState({ selectedFeatureIndex: (selected && selected.selectedFeatureIndex) });
+    _onSelect = (selected) => {
+        this.setState({
+            selectedFeatureIndex: selected && selected.selectedFeatureIndex,
+        });
     };
     //Map GL Draw update (user draw a new shape)
     _onUpdate = (features) => {
-        this.setState({ features: features, selectedMode: EditorModes.READ_ONLY, selectedFeatureIndex: null });
-    }
-    // _updateViewport = viewport => {
-    //     this.setState({ viewport });
-    // };
+        this.setState({
+            features: features,
+            selectedMode: EditorModes.READ_ONLY,
+            selectedFeatureIndex: null,
+        });
+    };
 
     //toobar save button click event
     _onSaveRequest = (toolBarRequest) => {
         if (toolBarRequest) {
-            let selected_saved_feature = this.state.features.data[this.state.selectedFeatureIndex];
+            let selected_saved_feature = this.state.features.data[
+                this.state.selectedFeatureIndex
+            ];
             console.log(selected_saved_feature);
-            this.setState({ selectedMode: EditorModes.READ_ONLY, selectedFeatureIndex: null })
+            this.setState({
+                selectedMode: EditorModes.READ_ONLY,
+                selectedFeatureIndex: null,
+            });
             if (selected_saved_feature) {
                 toast.info("New precinct is saved", {
                     position: toast.POSITION.BOTTOM_RIGHT,
                 });
-            }
-            else {
+            } else {
                 toast.info("Please select a new created precint to save", {
                     position: toast.POSITION.BOTTOM_RIGHT,
                 });
             }
         }
-    }
+    };
 
     _renderToolbar = () => {
         const { userMode } = this.state;
@@ -220,27 +259,36 @@ export default class App extends Component {
                     toolBarRequest={this._onSaveRequest}
                 />
             );
-        }
-        else {
+        } else {
             return;
         }
-
     };
 
-    _onClick = event => {
+    /**
+     * Here can load anything based on the state feature selected
+     * such as congressional districts or national parks by state
+     */
+    onStateSelected(stateFeature) {
+        const { layers } = this.state;
+
+        console.log(stateFeature.properties)
+
+        this.setState({ selectedFeature: stateFeature });
+    }
+
+    _onClick = (event) => {
         // sets the selected feature onclcik, to have properties displayed by LeftSidebar
-        const {
-            features,
-        } = event;
+        const { features } = event;
 
         if (features) {
-            const stateFeature = features.find(f => f.layer.id === 'stateFill');
-            const countyFeature = features.find(f => f.layer.id === 'countyFill');
-            const congressionalFeature = features.find(f => f.layer.id === 'congressionalFill')
-            const precinctFeature = features.find(f => f.layer.id === 'precinctFill');
+            const stateFeature = features.find((f) => f.layer.id === "stateFill");
+            const countyFeature = features.find((f) => f.layer.id === "countyFill");
+            const congressionalFeature = features.find((f) => f.layer.id === "congressionalFill");
+            const precinctFeature = features.find((f) => f.layer.id === "precinctFill");
 
             if (stateFeature) {
                 stateFeature.properties.type = "State";
+                console.log(stateFeature)
                 // if a clicks on a state that was already selected/clicked on
                 if (this.state.selectedFeature) {
                     if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
@@ -248,36 +296,40 @@ export default class App extends Component {
                         return;
                     }
                 } else {
-                    toast.info("Click the same feature (state/county) again to zoom in.", {
-                        position: toast.POSITION.BOTTOM_RIGHT,
-                    });
+                    toast.info(
+                        "Click the same feature (state/county) again to zoom in.",
+                        {
+                            position: toast.POSITION.BOTTOM_RIGHT,
+                        }
+                    );
                 }
-                this.setState({ selectedFeature: stateFeature });
-            }
-            else if (countyFeature) {
+
+                this.onStateSelected(stateFeature);
+
+            } else if (countyFeature) {
                 countyFeature.properties.type = "County";
                 // if a clicks on a county that was already selected/clicked on
                 if (this.state.selectedFeature) {
-                    if (countyFeature.properties.NAME === this.state.selectedFeature.properties.NAME) {
+                    if (
+                        countyFeature.properties.NAME ===
+                        this.state.selectedFeature.properties.NAME
+                    ) {
                         this._zoomToFeature(event);
                         return;
                     }
                 }
                 this.setState({ selectedFeature: countyFeature });
-            }
-            else if (congressionalFeature) {
-                congressionalFeature.properties.type = "Congressional District";
+            } else if (congressionalFeature) {
+                //congressionalFeature.properties.type = "Congressional District";
                 this.setState({ selectedFeature: congressionalFeature });
-            }
-            else if (precinctFeature) {
+            } else if (precinctFeature) {
                 precinctFeature.properties.type = "Precinct";
                 this.setState({ selectedFeature: precinctFeature });
-            }
-            else {
+            } else {
                 //this.setState({ selectedFeature: null });
             }
         }
-    }
+    };
 
     _zoomToFeature(event) {
         const feature = event.features[0];
@@ -289,9 +341,15 @@ export default class App extends Component {
         if (feature.layer.id === "stateFill" || feature.layer.id === "countyFill") {
             const [minLng, minLat, maxLng, maxLat] = bbox(feature);
             const viewport = new WebMercatorViewport(this.state.viewport);
-            const { longitude, latitude, zoom } = viewport.fitBounds([[minLng, minLat], [maxLng, maxLat]], {
-                padding: 40
-            });
+            const { longitude, latitude, zoom } = viewport.fitBounds(
+                [
+                    [minLng, minLat],
+                    [maxLng, maxLat],
+                ],
+                {
+                    padding: 40,
+                }
+            );
 
             this.setState({
                 viewport: {
@@ -300,10 +358,10 @@ export default class App extends Component {
                     latitude,
                     zoom,
                     transitionInterpolator: new LinearInterpolator({
-                        around: [event.offsetCenter.x, event.offsetCenter.y]
+                        around: [event.offsetCenter.x, event.offsetCenter.y],
                     }),
                     transitionDuration: 1000,
-                }
+                },
             });
             return;
         }
@@ -312,31 +370,31 @@ export default class App extends Component {
     getFeatureFilter = (feature) => {
         if (!feature) {
             return null;
-        }
-        else if (feature.isState) {
-            return ['==', 'name', feature.properties.name];
-        }
-        else if (feature.isCounty) {
-            return ['==', 'NAME', feature.properties.NAME];
-        }
-        else if (feature.isCongressional) {
-            return ['==', 'NAMELSAD', feature.properties.NAMELSAD];
-        }
-        else if (feature.isPrecinct) {
-            return ['==', 'GEOID10', feature.properties.GEOID10];
-        }
-        else {
+        } else if (feature.isState) {
+            return ["==", "name", feature.properties.name];
+        } else if (feature.isCounty) {
+            return ["==", "NAME", feature.properties.NAME];
+        } else if (feature.isCongressional) {
+            return ["==", "NAMELSAD", feature.properties.NAMELSAD];
+        } else if (feature.isPrecinct) {
+            return ["==", "GEOID10", feature.properties.GEOID10];
+        } else {
             return null;
         }
-    }
+    };
 
-    _onHover = event => {
+    _onHover = (event) => {
         const {
             features,
             srcEvent: { x, y },
         } = event;
 
-        if (!event.type || !event.features || event.features.length === 0 || event.features[0].source === "composite") {
+        if (
+            !event.type ||
+            !event.features ||
+            event.features.length === 0 ||
+            event.features[0].source === "composite"
+        ) {
             this.setState({
                 hoveredFeature: null,
                 filter: null,
@@ -350,44 +408,63 @@ export default class App extends Component {
         }
 
         if (features) {
-            const stateHovered = features.find(f => f.layer.id === 'stateFill');
-            const countyHovered = features.find(f => f.layer.id === 'countyFill');
-            const congressionalHovered = features.find(f => f.layer.id === 'congressionalFill');
-            const precinctHovered = features.find(f => f.layer.id === 'precinctFill');
+            const stateHovered = features.find((f) => f.layer.id === "stateFill");
+            const countyHovered = features.find((f) => f.layer.id === "countyFill");
+            const congressionalHovered = features.find(
+                (f) => f.layer.id === "congressionalFill"
+            );
+            const precinctHovered = features.find(
+                (f) => f.layer.id === "precinctFill"
+            );
 
-            const hovered = stateHovered || countyHovered || congressionalHovered || precinctHovered;
+            const hovered =
+                stateHovered ||
+                countyHovered ||
+                congressionalHovered ||
+                precinctHovered;
 
-            if (stateHovered) { hovered.isState = true; }
-            else if (countyHovered) { hovered.isCounty = true; }
-            else if (congressionalHovered) { hovered.isCongressional = true; }
-            else if (precinctHovered) { hovered.isPrecinct = true; }
+            if (stateHovered) {
+                hovered.isState = true;
+            } else if (countyHovered) {
+                hovered.isCounty = true;
+            } else if (congressionalHovered) {
+                hovered.isCongressional = true;
+            } else if (precinctHovered) {
+                hovered.isPrecinct = true;
+            }
             const filter = this.getFeatureFilter(hovered);
 
             this.setState({
                 hoveredFeature: hovered,
-                filter: filter
+                filter: filter,
             });
         }
-    }
+    };
 
+    /**
+     * renders the on hover tooltip
+     */
     _renderTooltip() {
         const { hoveredFeature, x, y } = this.state;
 
-        if (!hoveredFeature) { return; }
-        else if (hoveredFeature.isState) {
+        if (!hoveredFeature) {
+            return;
+        } else if (hoveredFeature.isState) {
             const stateHovered = hoveredFeature;
             return (
                 hoveredFeature && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h5>{stateHovered.properties.name}</h5>
-                        <div>Congressional Districts: {(stateHovered.properties.congressional_districts).length}</div>
+                        <div>
+                            Congressional Districts:{" "}
+                            {stateHovered.properties.congressional_districts.length}
+                        </div>
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
                 )
             );
-        }
-        else if (hoveredFeature.isCounty) {
+        } else if (hoveredFeature.isCounty) {
             const countyHovered = hoveredFeature;
             return (
                 countyHovered && (
@@ -399,8 +476,7 @@ export default class App extends Component {
                     </div>
                 )
             );
-        }
-        else if (hoveredFeature.isCongressional) {
+        } else if (hoveredFeature.isCongressional) {
             const congressionalHovered = hoveredFeature;
             return (
                 congressionalHovered && (
@@ -412,8 +488,7 @@ export default class App extends Component {
                     </div>
                 )
             );
-        }
-        else if (hoveredFeature.isPrecinct) {
+        } else if (hoveredFeature.isPrecinct) {
             const precinctHovered = hoveredFeature;
             return (
                 precinctHovered && (
@@ -432,31 +507,28 @@ export default class App extends Component {
         if (userMode) {
             this.setState({ userMode: userMode });
         }
-    }
+    };
 
     stateSelect(name) {
         let latitude = 0;
         let longitude = 0;
-        let zoom;
+        let zoom = 6;
 
         switch (name) {
             case "New York":
             case "NY":
                 latitude = 43.2994;
                 longitude = -76.2179;
-                zoom = 6;
                 break;
             case "Wisconsin":
             case "WI":
                 latitude = 44.7844;
                 longitude = -89.7879;
-                zoom = 6;
                 break;
             case "Utah":
             case "UT":
-                latitude = 39.3210;
+                latitude = 39.321;
                 longitude = -112.0937;
-                zoom = 6;
                 break;
             default:
         }
@@ -474,7 +546,7 @@ export default class App extends Component {
     /**
      * Rendering error pins on the map & its popup
      */
-    _onClickError = error_data => {
+    _onClickError = (error_data) => {
         this.setState({ popupInfo: error_data });
         console.log(error_data);
         this.setState({
@@ -484,7 +556,7 @@ export default class App extends Component {
                 latitude: error_data.latitude,
                 transitionDuration: 1000,
                 zoom: 11,
-            }
+            },
         });
     };
 
@@ -521,11 +593,15 @@ export default class App extends Component {
         }
     }
 
+    /**
+     * This is called after everything is rendered to DOM
+     * Good place for API calls
+     */
     componentDidMount() {
         /**
          * Get all the states
          */
-        this.appData.fetchAllStates().then(data => {
+        this.appData.fetchAllStates().then((data) => {
             this.setState({
                 stateData: data.featureCollection,
             });
@@ -534,123 +610,12 @@ export default class App extends Component {
         /**
          * Get all the congressional districts
          */
-        this.appData.fetchAllCongressionalDistricts().then(cdData => {
+        this.appData.fetchAllCongressionalDistricts().then((cdData) => {
             this.setState({
                 congressionalDistrictData: cdData,
             });
         });
 
-        /**
-         * State data
-         */
-        /* json(
-            STATES_TOOLTIP_DATA,
-            (error, response) => {
-                if (!error) {
-                    console.log(response)
-                    // this.setState({ stateData: response});
-                }
-            }
-        ); */
-        /**
-         * County data outline
-         */
-        /* json(
-            NY_COUNTY_SHORELINE_DATA,
-            (error, response) => {
-                if (!error) {
-                    this.setState({countyDataOutline: response});
-                }
-            }
-        ); */
-        /**
-         * County data
-         */
-        /* json(
-            NY_COUNTY_SHORELINE_DATA,
-            (error, response) => {
-                if (!error) {
-                    this.setState({countyData: response});
-                }
-            }
-        );
-        */
-        // json(
-        //     NY_CONGRESSIONAL_DATA,
-        //     (error, response) => {
-        //         if (!error) {
-        //             console.log(response);
-        //             this.setState({ congressionalDistrictData: response });
-        //         }
-        //     }
-        // );
-
-        /* json(
-            NY_PRECINCT_DATA,
-            (error, response) => {
-                if (!error) {
-                    console.log(response);
-                    this.setState({precinctData: response});
-                }
-                else {
-                    console.log(error);
-                }
-            }
-        ); */
-    }
-
-    /**
-     * called when rendering our data layers to the map
-     */
-    renderLayers() {
-        const { stateData, countyData, countyDataOutline, congressionalDistrictData, precinctData, stateFilter, countyFilter, precinctFilter, congressionalFilter } = this.state;
-        const { layers } = this.state;
-
-        return (<>
-            {/* NY COUNTY DATA */}
-            {/* < Source type="geojson" data={countyData} >
-                    <Layer
-                        {...countyDataLayerFillableHighlight}
-                        filter={countyFilter}
-                        minzoom={5}
-                        maxzoom={8}
-                    />
-                    <Layer
-                        {...countyDataLayerFillable}
-                        minzoom={5}
-                        maxzoom={8}
-                    />
-                </Source > */}
-
-            {/* NY COUNTY DATA (OUTLINE) */}
-            {/* < Source type="geojson" data={countyDataOutline} >
-                    <Layer
-                        {...countyDataLayerOutline}
-                        minzoom={5}
-                    // maxzoom={8}
-                    />
-                </Source > */}
-
-            {/* NY PRECINCT DATA */}
-            {/* {
-                    layers.precinct &&
-                    < Source type="geojson" data={precinctData} >
-                        <Layer
-                            {...precinctLayerFillHighlight}
-                            filter={precinctFilter}
-                            minzoom={8}
-                        />
-                        <Layer
-                            {...precinctLayerOutline}
-                            minzoom={8}
-                        />
-                        <Layer
-                            {...precinctLayerFill}
-                            minzoom={8}
-                        />
-                    </Source >
-                } */}
-        </>);
     }
 
     /**
@@ -659,78 +624,66 @@ export default class App extends Component {
     renderStateLayers() {
         const { layers, stateData, stateFilter } = this.state;
 
-        return (<>
-            {
-                layers.states &&
-                < Source type="geojson" data={stateData} >
-                    <Layer
-                        {...stateLayerFillHighlight}
-                        filter={stateFilter}
-                        maxzoom={5}
-                    />
-                    <Layer
-                        {...stateLayerFill}
-                        maxzoom={5}
-                    />
-                </Source >
-            }
-        </>);
+        return (
+            <>
+                {layers.states && (
+                    <Source type="geojson" data={stateData}>
+                        <Layer
+                            {...stateLayerFillHighlight}
+                            filter={stateFilter}
+                            maxzoom={5}
+                        />
+                        <Layer {...stateLayerFill} maxzoom={5} />
+                    </Source>
+                )}
+            </>
+        );
     }
 
     /**
      * Render congressional data
      */
     renderCongressionalLayers() {
-        const { layers, congressionalDistrictData, } = this.state;
+        const { layers, congressionalDistrictData } = this.state;
 
-        return (<>
-            {
-                layers.congressional &&
-                < Source type="geojson" data={congressionalDistrictData} >
-                    <Layer
-                        {...congressionalLayerFillHighlight}
-                        //filter={congressionalFilter}
-                        minzoom={5}
-                    />
-                    <Layer
-                        {...congressionalLayerOutline}
-                        minzoom={5}
-                    />
-                    <Layer
-                        {...congressionalLayerFill}
-                        minzoom={5}
-                    />
-                </Source >
-            }
-        </>);
+        return (
+            <>
+                {layers.congressional && (
+                    <Source type="geojson" data={congressionalDistrictData}>
+                        <Layer
+                            {...congressionalLayerFillHighlight}
+                            //filter={congressionalFilter}
+                            minzoom={5}
+                        />
+                        <Layer {...congressionalLayerOutline} minzoom={5} />
+                        <Layer {...congressionalLayerFill} minzoom={5} />
+                    </Source>
+                )}
+            </>
+        );
     }
 
     /**
      * Render precinct data
      */
     renderPrecinctLayers() {
-        const { layers, precinctData, } = this.state;
+        const { layers, precinctData } = this.state;
 
-        return (<>
-            {
-                layers.precinct &&
-                < Source type="geojson" data={precinctData} >
-                    <Layer
-                        {...precinctLayerFillHighlight}
-                        // filter={precinctFilter}
-                        minzoom={8}
-                    />
-                    <Layer
-                        {...precinctLayerOutline}
-                        minzoom={8}
-                    />
-                    <Layer
-                        {...precinctLayerFill}
-                        minzoom={8}
-                    />
-                </Source >
-            }
-        </>);
+        return (
+            <>
+                {layers.precinct && (
+                    <Source type="geojson" data={precinctData}>
+                        <Layer
+                            {...precinctLayerFillHighlight}
+                            // filter={precinctFilter}
+                            minzoom={8}
+                        />
+                        <Layer {...precinctLayerOutline} minzoom={8} />
+                        <Layer {...precinctLayerFill} minzoom={8} />
+                    </Source>
+                )}
+            </>
+        );
     }
 
     render() {
@@ -738,19 +691,16 @@ export default class App extends Component {
 
         return (
             <div className="App">
-                <Navbar bg="dark" expand="lg" variant="dark">
-                    <Navbar.Brand href="#home">Election Data Quality</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            {/* <Nav.Link href="#tmp">Something</Nav.Link> */}
-                            <StateSelector
-                                select_state={(state_abv) => this.stateSelect.bind(this, state_abv)}
-                            />
-                            <UserModeSelector userModeSelect={(selectedMode) => this.userModeSelect(selectedMode)} />
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
+                <div className="selectStateItem inlineDivs">
+                    <StateSelector
+                        select_state={(state_abv) => this.stateSelect.bind(this, state_abv)}
+                    />
+                </div>
+                <div className="toggleModeItem inlineDivs">
+                    <UserModeSelector
+                        userModeSelect={(selectedMode) => this.userModeSelect(selectedMode)}
+                    />
+                </div>
 
                 <div>
                     <div id="leftCol">
@@ -762,7 +712,9 @@ export default class App extends Component {
 
                     <MapGL
                         {...viewport}
-                        onViewportChange={(viewport => this.setState({ viewport: viewport }))}
+                        onViewportChange={(viewport) =>
+                            this.setState({ viewport: viewport })
+                        }
                         mapStyle={MAPBOX_STYLE}
                         mapboxApiAccessToken={MAPBOX_API}
                         onHover={this._onHover}
@@ -770,18 +722,21 @@ export default class App extends Component {
                         doubleClickZoom={false}
                         ref={this.mapRef}
                     >
-                        <div id="map-checkboxes" style={{
-                            position: 'absolute',
-                            textAlign: 'left',
-                            fontSize: '10pt',
-                            top: '10%',
-                            right: '10px'
-                        }}>
+                        <div
+                            id="map-checkboxes"
+                            style={{
+                                position: "absolute",
+                                textAlign: "left",
+                                fontSize: "10pt",
+                                top: "10%",
+                                right: "10px",
+                            }}
+                        >
                             {this._renderCheckboxes()}
                         </div>
 
                         <Editor
-                            ref={_ => (this._editorRef = _)}
+                            ref={(_) => (this._editorRef = _)}
                             clickRadius={12}
                             onSelect={(selected) => this._onSelect(selected)}
                             onUpdate={(features) => this._onUpdate(features)}
@@ -836,10 +791,13 @@ export default class App extends Component {
                 </div>
 
                 <ToastContainer />
-            </div >
+            </div>
         );
     }
 
+    /**
+     * toggles whether a layer is displayed
+     */
     toggleLayer = (layer) => {
         const { layers } = this.state;
         switch (layer) {
@@ -860,30 +818,49 @@ export default class App extends Component {
                 break;
             default:
         }
-        this.setState({ layers: layers })
-    }
+        this.setState({ layers: layers });
+    };
 
+    /**
+     * renders layer selection checkboxes
+     */
     _renderCheckboxes = () => {
         return (
             <div>
-                <Card border="secondary" style={{ width: '10rem', backgroundColor: 'rgba(255,255,255,0.9)' }} >
+                <Card
+                    border="secondary"
+                    style={{ width: "10rem", backgroundColor: "rgba(255,255,255,0.9)" }}
+                >
                     <Card.Header>Layers</Card.Header>
                     <Card.Body>
                         <Form>
-                            {['States', 'Counties', 'Congressional Districts', 'Precincts', 'National Parks'].map((name) => (
+                            {[
+                                "States",
+                                "Counties",
+                                "Congressional Districts",
+                                "Precincts",
+                                "National Parks",
+                            ].map((name) => (
                                 <div key={"checkbox-".concat(name)}>
-                                    <Form.Check label={name} type={'checkbox'} defaultChecked={true} onChange={this.toggleLayer.bind(this, name)} />
+                                    <Form.Check
+                                        label={name}
+                                        type={"checkbox"}
+                                        defaultChecked={true}
+                                        onChange={this.toggleLayer.bind(this, name)}
+                                    />
                                 </div>
                             ))}
                         </Form>
                     </Card.Body>
-                    <Card.Footer style={{ lineHeight: '1.0' }}>
-                        <small className="text-muted">Note: some layers will only show at certain zoom levels</small>
+                    <Card.Footer style={{ lineHeight: "1.0" }}>
+                        <small className="text-muted">
+                            Note: some layers will only show at certain zoom levels
+            </small>
                     </Card.Footer>
                 </Card>
             </div>
         );
-    }
+    };
 }
 
 export function renderToDom(container) {

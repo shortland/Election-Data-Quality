@@ -1,13 +1,15 @@
 package com.electiondataquality.features;
 
+import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.electiondataquality.features.util.CompareFeatureShape;
 import com.electiondataquality.geometry.Geometry;
 import com.electiondataquality.geometry.MultiPolygon;
 import com.electiondataquality.geometry.Polygon;
 
-public abstract class Feature {
+public class Feature {
 
     public Geometry geometry;
 
@@ -15,17 +17,47 @@ public abstract class Feature {
      * This isn't used ATM. @see Geometry above
      */
     @JsonIgnore
-    public ArrayList<ArrayList<ArrayList<double[]>>> shape;
+    public List<List<List<double[]>>> shape;
 
     @JsonIgnore
     public boolean isMultiPolygon = false;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String name;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String properties;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String id;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String parentId;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String childrenId;
+
+    /**
+     * For satisfying deserialization requirements of congressional district
+     */
+    public String type;
 
     public static boolean CompareShape(Feature f1, Feature f2) {
         return CompareFeatureShape.CompareFeatures(f1, f2);
     }
 
     public Feature() {
-        this.shape = new ArrayList<ArrayList<ArrayList<double[]>>>();
+        this.shape = new ArrayList<List<List<double[]>>>();
     }
 
     public Feature(MultiPolygon multiPolygon) {
@@ -39,7 +71,7 @@ public abstract class Feature {
         this.shape = multiPolygon.coordinates;
     }
 
-    public ArrayList<ArrayList<ArrayList<double[]>>> getShape() {
+    public List<List<List<double[]>>> getShape() {
         return this.shape;
     }
 

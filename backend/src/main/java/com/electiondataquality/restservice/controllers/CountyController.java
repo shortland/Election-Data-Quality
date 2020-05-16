@@ -24,6 +24,8 @@ public class CountyController {
 
     @GetMapping("/countiesInState")
     public ApiResponse getCountyByState(@RequestParam String stateId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         CountyEntityManager cem = new CountyEntityManager(RestServiceApplication.emFactoryCounty);
         List<CountyTable> targetCounties = cem.findCountiesByState(stateId);
 
@@ -32,15 +34,17 @@ public class CountyController {
         for (CountyTable county : targetCounties) {
             Map<String, Object> c = new HashMap<>();
             County countyForReturn = new County(county);
+
             c.put("countyId", countyForReturn.getId());
             c.put("name", countyForReturn.getName());
             c.put("geometry", countyForReturn.geometry);
+
             counties.add(c);
         }
 
         cem.cleanup();
 
-        System.out.println(counties);
+        RestServiceApplication.logger.debug("counties in state:", counties);
 
         return ResponseGen.create(API_STATUS.OK, counties);
     }

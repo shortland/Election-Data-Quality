@@ -30,6 +30,8 @@ public class ErrorController {
      */
     @GetMapping("/resolveError")
     public ApiResponse setErrorAsCorrected(@RequestParam String precinctId, @RequestParam int errorId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetPrecinct = pem.findPrecinctFeatureById(precinctId);
 
@@ -64,6 +66,8 @@ public class ErrorController {
     // NOTE: tested 5/5/2020
     @GetMapping("/unresolveError")
     public ApiResponse setErrorAsIncorrected(@RequestParam String precinctId, @RequestParam int errorId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetPrecinct = pem.findPrecinctFeatureById(precinctId);
 

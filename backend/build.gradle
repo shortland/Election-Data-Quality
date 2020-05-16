@@ -46,13 +46,14 @@ tasks.register("deploy") {
     doLast {
         println 'Please make sure any commits you have made are pushed and merged to the master branch.\n'
 
+        // NOTE: This link is HTTP; https isn't enabled for the specified port currently (maybe ever)
         exec {
             ignoreExitValue true
             workingDir '.'
-            commandLine 'sh', '-c', 'curl -s --max-time 6 http://67.80.171.107:1235/pull'
+            commandLine 'sh', '-c', 'curl -s --max-time 6 http://ElectionDataQuality.com:1235/pull'
         }
 
-        println 'Server has pulled latest code.\nPlease allow a few moments for the server to compile & run the latest build.\nServer: http://67.80.171.107:1234/'
+        println 'Server has pulled latest code.\nPlease allow a few moments for the server to compile & run the latest build.\nServer: https://ElectionDataQuality:1234/'
     }
 }
 

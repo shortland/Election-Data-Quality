@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.electiondataquality.restservice.RestServiceApplication;
 import com.electiondataquality.restservice.index.Greeting;
 import com.electiondataquality.types.responses.ApiResponse;
 import com.electiondataquality.types.responses.ResponseGen;
@@ -27,6 +28,8 @@ public class GreetingController {
      */
     @GetMapping("/")
     public ApiResponse greeting(@RequestParam(defaultValue = "World") String name) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         return ResponseGen.create(API_STATUS.OK,
                 new Greeting(counter.incrementAndGet(), String.format(template, name)));
     }

@@ -6,20 +6,21 @@ from shapely.geometry import LineString
 import re
 
 # This script will merge two precincts as specified with server data input
+# NOTE: No spaces allowed in input vectors
 
 if __name__ == '__main__':
 
     # Arg input
     polygonData1 = ""
     polygonData2 = ""
+
     try:
         polygonData1 = sys.argv[1]
         polygonData2 = sys.argv[2]
     except:
-        print("INVALID USAGE: Please input an input file and output file")
+        print("INVALID USAGE: Please input two geometry strings, must be real polygons")
         print("Usage:")
-        print(
-            "$ Python3 ")
+        print("$ Python3 mergePrecincts.py \"[[[...]]]\" \"[[[...]]]\"")
         exit(1)
 
     # tempData1 = "[[[-73.68075370788573,40.74134755281577],[-73.68184804916382,40.7397461504767],[-73.67953062057495,40.738599945434885],[-73.67752432823181,40.73975427951992],[-73.6777925491333,40.741477614257114],[-73.68009924888611,40.74181902433063],[-73.68075370788573,40.74134755281577]]]"
@@ -42,13 +43,12 @@ if __name__ == '__main__':
 
     polygon1 = Polygon(polygon1Array)
 
-
-
     points = re.findall(r'[-+]?\d*\.\d+|\d+', polygonData2)
 
     polygon2Array = []
 
     p1 = 0.0
+
     for x in range(0, points.__len__()):
         if (x % 2 == 0):
             p1 = float(points[x])
@@ -56,7 +56,6 @@ if __name__ == '__main__':
             polygon2Array.append((p1, float(points[x])))
 
     polygon2 = Polygon(polygon2Array)
-
 
     mergedPolygon = unary_union([polygon1, polygon2])
 
@@ -66,18 +65,22 @@ if __name__ == '__main__':
         for mlineIndex in range(0, mergedPolygon.boundary.__len__()):
             mline = mergedPolygon.boundary[mlineIndex]
             returnPolygonData += "["
+
             for xIndex in range(0, mline.coords.xy[0].__len__()):
-                returnPolygonData += "[" + str(mline.coords.xy[0][xIndex]) + ", " + str(
+                returnPolygonData += "[" + str(mline.coords.xy[0][xIndex]) + "," + str(
                     mline.coords.xy[1][xIndex]) + "]"
                 returnPolygonData += "" if (xIndex == (mline.coords.xy[0].__len__() - 1)) else ","
+
             returnPolygonData += "]"
             returnPolygonData += "" if (mlineIndex == (mergedPolygon.boundary.__len__() - 1)) else ","
     else:
         returnPolygonData += "["
+
         for xIndex in range(0, mergedPolygon.boundary.coords.xy[0].__len__()):
-            returnPolygonData += "[" + str(mergedPolygon.boundary.coords.xy[0][xIndex]) + ", " + str(
+            returnPolygonData += "[" + str(mergedPolygon.boundary.coords.xy[0][xIndex]) + "," + str(
                 mergedPolygon.boundary.coords.xy[1][xIndex]) + "]"
             returnPolygonData += "" if (xIndex == (mergedPolygon.boundary.coords.xy[0].__len__() - 1)) else ","
+
         returnPolygonData += "]"
 
     returnPolygonData += "]"

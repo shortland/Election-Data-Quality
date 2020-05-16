@@ -7,7 +7,12 @@ import DemographicsTable from './DemographicsTable';
 import DataCorrectionPage from './DataCorrectionPage';
 import Comments from './Comments';
 import CommentModal from './CommentModal';
-
+/**
+ * Our sidebar component
+ * @prop selected: the currently selected map feature
+ * @prop showErrorPins: function to show or hide error pins
+ * 
+ */
 class LeftSidebar extends Component {
     constructor(props) {
         super(props);
@@ -23,7 +28,7 @@ class LeftSidebar extends Component {
         const feature = this.props.selected; //the selected feature
 
         if (feature) {
-            if (feature.properties) {
+            if (feature) {
                 const properties = feature.properties;
                 for (const p in properties) {
                     list.push(<div>{`${p}: ${properties[p]}`}</div>);
@@ -51,10 +56,10 @@ class LeftSidebar extends Component {
         this.props.showErrorPins();
     }
 
-    makeHeader(){
+    makeHeader() {
         const feature = this.props.selected;
 
-        if(feature && feature.properties && feature.properties.type){
+        if (feature && feature.properties && feature.properties.type) {
             //let name = feature.properties.name || feature.properties.NAME || feature.properties.GEOID10 || feature.properties.NAMELSAD
             let type = feature.properties.type;
         }

@@ -1,7 +1,6 @@
 package com.electiondataquality.jpa.tables;
 
 import java.util.Map;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -115,29 +114,34 @@ public class DemographicTable {
         if (demographicData.containsKey("ASIAN")) {
             this.setAsianPopulation(demographicData.get("ASIAN"));
         }
+
         if (demographicData.containsKey("BLACK")) {
             this.setBlackPopulation(demographicData.get("BLACK"));
         }
+
         if (demographicData.containsKey("NATIVE_AMERICAN")) {
             this.setNativeAmericanPopulation(demographicData.get("NATIVE_AMERICAN"));
         }
+
         if (demographicData.containsKey("NATIVE_HAWAIIAN")) {
             this.setNativeHawaiianPopulation(demographicData.get("NATIVE_HAWAIIAN"));
         }
+
         if (demographicData.containsKey("OTHER")) {
             this.setOtherPopulation(demographicData.get("OTHER"));
         }
+
         if (demographicData.containsKey("WHITE")) {
             this.setWhitePopulation(demographicData.get("WHITE"));
         }
+
         this.setPrecinctId(precinctId);
     }
 
-    // public String toString() {
-    // return "Asian : " + Integer.toString(this.asianPopulation) + " Black : "
-    // + Integer.toString(this.blackPopulation) + " Hispanic : " +
-    // Integer.toString(this.hispanicPopulation)
-    // + " Other : " + Integer.toString(this.otherPopulation) + " White : "
-    // + Integer.toString(this.whitePopulation);
-    // }
+    @Override
+    public String toString() {
+        return "DemographicTable [asianPopulation=" + asianPopulation + ", blackPopulation=" + blackPopulation
+                + ", naPopulation=" + naPopulation + ", nhPopulation=" + nhPopulation + ", otherPopulation="
+                + otherPopulation + ", precicntId=" + precicntId + ", whitePopulation=" + whitePopulation + "]";
+    }
 }

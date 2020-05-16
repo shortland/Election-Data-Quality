@@ -64,3 +64,21 @@ code {
 .show {
     display: block;
 }
+
+.inlineDivs {
+    display: inline;
+}
+
+.selectStateItem {
+    position: fixed;
+    top: 10px;
+    left: 300px;
+    z-index: 12;
+}
+
+.toggleModeItem {
+    position: fixed;
+    top: 10px;
+    left: calc(300px + 130px);
+    z-index: 12;
+}

@@ -37,6 +37,8 @@ public class CommentController {
     @RequestMapping(value = "/createComment", method = RequestMethod.POST)
     public ApiResponse createComment(@RequestBody String commentText, @RequestParam String precinctId,
             @RequestParam int errorId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
 
@@ -52,6 +54,8 @@ public class CommentController {
                 newComment.setParentPrecinctId(precinctId);
                 parentError.addComment(newComment);
                 commentManager.addComment(newComment);
+
+                RestServiceApplication.logger.info("Created Comment:" + newComment.toString());
 
                 return ResponseGen.create(API_STATUS.OK, "successfully created comment");
             }
@@ -73,11 +77,17 @@ public class CommentController {
      */
     @RequestMapping(value = "/updateComment", method = RequestMethod.PUT)
     public ApiResponse updateComment(@RequestBody String commentText, @RequestParam int commentId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         Comment target = commentManager.getComment(commentId);
 
         if (target != null) {
+            RestServiceApplication.logger.info("Original Comment:" + target.toString());
+
             target.updateText(commentText);
+
+            RestServiceApplication.logger.info("Updated Comment:" + target.toString());
 
             return ResponseGen.create(API_STATUS.OK, "successfully updated comment");
         }
@@ -95,6 +105,8 @@ public class CommentController {
      */
     @RequestMapping(value = "/deleteComment", method = RequestMethod.DELETE)
     public ApiResponse deleteComment(@RequestParam int commentId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         PrecinctManager precinctManager = RestServiceApplication.serverManager.getPrecinctManager();
         Comment target = commentManager.getComment(commentId);
@@ -117,6 +129,8 @@ public class CommentController {
                 return ResponseGen.create(API_STATUS.ERROR, "unable to get parent precinct");
             }
 
+            RestServiceApplication.logger.info("Deleted Comment:" + target.toString());
+
             return ResponseGen.create(API_STATUS.OK, "successfully deleted comment");
         }
 
@@ -134,6 +148,8 @@ public class CommentController {
      */
     @RequestMapping(value = "/commentByError", method = RequestMethod.GET)
     public ApiResponse getAllCommentsOfError(@RequestParam int precinctId, @RequestParam int errorId) {
+        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+
         CommentManager commentManager = RestServiceApplication.serverManager.getCommentManager();
         List<Comment> comments = new ArrayList<>(commentManager.getCommentsByError(errorId));
 
