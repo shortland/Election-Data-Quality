@@ -116,15 +116,26 @@ class AppData {
                 type: "Feature",
                 properties: {
                     name: data.content[i].name,
+<<<<<<< HEAD
+                    //id: data.content[i].countyId,
+                    //counties: data.content[i].countyId,
+=======
                     id: data.content[i].countyId
+>>>>>>> 1b53663b9efa7fbab7c7e725f5d26acf1dc54c72
                 },
+                id: data.content[i].countyId,
                 geometry: data.content[i].geometry,
             };
 
             featureCollection.features.push(feature);
         }
 
+<<<<<<< HEAD
+        console.log(features)
+        return features;
+=======
         return featureCollection;
+>>>>>>> 1b53663b9efa7fbab7c7e725f5d26acf1dc54c72
     }
 
     //------------ * PRECINCTS * ----------------

@@ -2,7 +2,7 @@ export const countyDataLayerFillable = {
     id: 'countyFill',
     type: 'fill',
     paint: {
-        'fill-color': '#27496d',
+        'fill-color': 'rgba(66, 135, 245, 0.3)',
     },
 };
 
@@ -16,7 +16,7 @@ export const countyDataLayerFillableHighlight = {
 };
 
 export const countyDataLayerOutline = {
-    id: 'countyDataOutline',
+    id: 'countyOutline',
     type: 'line',
     paint: {
         'line-color': '#000000',
