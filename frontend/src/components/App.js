@@ -663,7 +663,7 @@ export default class App extends Component {
      */
     renderCongressionalLayers() {
         const { layers, congressionalDistrictData } = this.state;
-        console.log(congressionalDistrictData)
+        // console.log(congressionalDistrictData)
         return (
             <>
                 {layers.congressional && (
@@ -683,7 +683,7 @@ export default class App extends Component {
 
     renderCountyLayers() {
         const { layers, countyData } = this.state;
-        console.log(countyData)
+        //console.log(countyData)
         return (
             <>
                 {layers.county && (
