@@ -41,7 +41,12 @@ class DemographicsTable extends PureComponent {
     getPercentage(race) {
         if (this.props.demographicData) {
             let demographic = this.props.demographicData.demographic;
-            return demographic[race] / this.state.total;
+            if (demographic[race] == 0) {
+                return 0;
+            }
+            else {
+                return (demographic[race] / this.state.total) * 100;
+            }
         }
         else {
             return 0;
@@ -52,6 +57,7 @@ class DemographicsTable extends PureComponent {
 
     render() {
         this.calculateTotal();
+        console.log(this.props.demographicData);
         return (
             <div>
                 <Table striped bordered hover>
@@ -59,45 +65,46 @@ class DemographicsTable extends PureComponent {
                         <tr>
                             <th>Race</th>
                             <th>Num</th>
-                            <th>Percent</th>
+                            {/* <th>Percent</th> */}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <th>White</th>
                             <td>{this.getPopulation("WHITE")}</td>
-                            <td>{this.getPercentage("WHITE")}</td>
+                            {/* <td>{this.getPercentage("WHITE")}%</td> */}
                         </tr>
                         <tr>
                             <th>Black</th>
                             <td>{this.getPopulation("BLACK")}</td>
-                            <td>{this.getPercentage("BLACK")}</td>
+                            {/* <td>{this.getPercentage("BLACK")}%</td> */}
                         </tr>
                         <tr>
                             <th>Native_American</th>
                             <td>{this.getPopulation("NATIVE_AMERICAN")}</td>
-                            <td>{this.getPercentage("NATIVE_AMERICAN")}</td>
+                            {/* <td>{this.getPercentage("NATIVE_AMERICAN")}%</td> */}
                         </tr>
                         <tr>
                             <th>Asian</th>
                             <td>{this.getPopulation("ASIAN")}</td>
-                            <td>{this.getPercentage("ASIAN")}</td>
+                            {/* <td>{this.getPercentage("ASIAN")}%</td> */}
                         </tr>
                         <tr>
                             <th>Native_Hawaiian</th>
                             <td>{this.getPopulation("NATIVE_HAWAIIAN")}</td>
-                            <td>{this.getPercentage("NATIVE_HAWAIIAN")}</td>
+                            {/* <td>{this.getPercentage("NATIVE_HAWAIIAN")}%</td> */}
                         </tr>
                         <tr>
                             <th>Other</th>
                             <td>{this.getPopulation("OTHER")}</td>
-                            <td>{this.getPercentage("OTHER")}</td>
+                            {/* <td>{this.getPercentage("OTHER")}%</td> */}
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colSpan="2">Total Population</th>
+                            <th colSpan="1">Total Population</th>
                             <td>{this.state.total}</td>
+                            {/* <td>100%</td> */}
                         </tr>
                     </tfoot>
                 </Table>
