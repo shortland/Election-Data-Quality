@@ -19,7 +19,12 @@ export const precinctLayerOutline = {
     id: 'precinctOutline',
     type: 'line',
     paint: {
-        'line-color': 'rgba(66, 135, 245, 1.0)',
-        'line-width': 1,
+        //'line-color': 'rgba(66, 135, 245, 1.0)',
+        'line-color': '#FCBF1E',
+        'line-opacity': 1,
+        'line-width': 3,
     },
+    layout: {
+        'line-join': 'round'
+    }
 };
