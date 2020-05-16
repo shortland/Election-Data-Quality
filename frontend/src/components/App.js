@@ -273,6 +273,12 @@ export default class App extends Component {
         console.log(stateFeature.properties)
         let stateID = stateFeature.properties.id
 
+        this.appData.fetchCongressionalDistrictByState(stateID).then((data) => {
+            this.setState({
+                congressionalDistrictData: data
+            });
+        });
+
 
         this.appData.fetchCountiesByState(stateID).then((data) => {
             this.setState({
@@ -614,11 +620,11 @@ export default class App extends Component {
         /**
          * Get all the congressional districts
          */
-        this.appData.fetchAllCongressionalDistricts().then((cdData) => {
-            this.setState({
-                congressionalDistrictData: cdData,
-            });
-        });
+        // this.appData.fetchAllCongressionalDistricts().then((cdData) => {
+        //     this.setState({
+        //         congressionalDistrictData: cdData,
+        //     });
+        // });
 
         console.log(this.mapRef.current.getMap())
 
