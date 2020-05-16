@@ -691,10 +691,9 @@ export default class App extends Component {
 
     renderCountyLayers() {
         const { layers, countyData } = this.state;
-        //console.log(countyData)
         return (
             <>
-                {layers.county && (
+                {layers.counties && (
                     <Source type="geojson" data={countyData}>
                         <Layer
                             {...countyDataLayerFillableHighlight}
