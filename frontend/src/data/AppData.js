@@ -48,6 +48,7 @@ class AppData {
         }
 
         //console.log(data.content)
+        console.log(features);
         return {
             featureCollection: features,
         };
@@ -61,7 +62,7 @@ class AppData {
             alert("server error: unable to get data");
             return;
         }
-        console.log(data.content)
+        //console.log(data.content)
 
         return data.content;
     }
@@ -73,7 +74,7 @@ class AppData {
             alert("server error: unable to get data");
             return;
         }
-        console.log(data.content)
+        //console.log(data.content)
         return data.content;
     }
 
@@ -86,8 +87,29 @@ class AppData {
             return;
         }
 
-        console.log(data.content)
-        return data.content
+        let features = {
+            type: "FeatureCollection",
+            features: [],
+        };
+
+        for (let i in data.content) {
+            let feature = {
+                type: "Feature",
+                properties: {
+                    name: data.content[i].name,
+                    id: data.content[i].id,
+                    counties: data.content[i].countyId,
+                },
+                geometry: data.content[i].geometry,
+            };
+
+            features.features.push(feature);
+        }
+
+        console.log(features)
+        return {
+            featureCollection: features,
+        };
     }
 
     //------------ * PRECINCTS * ----------------
