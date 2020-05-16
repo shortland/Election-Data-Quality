@@ -48,6 +48,7 @@ class AppData {
         }
 
         //console.log(data.content)
+        console.log(features);
         return {
             featureCollection: features,
         };
@@ -62,6 +63,24 @@ class AppData {
             return;
         }
 
+        let features = data.content.features
+        for (let i = 0; i < features.length; i++) {
+            let currFeature = features[i];
+            let properties = {
+                "id": currFeature.id,
+                "name": currFeature.name,
+                "parentId": currFeature.parentId,
+                "childrenId": currFeature.childrenId
+            }
+            delete currFeature.id;
+            delete currFeature.name;
+            delete currFeature.parentId;
+            delete currFeature.childrenId;
+            currFeature["properties"] = properties;
+        }
+
+        data.content.features = features;
+
         return data.content;
     }
 
@@ -72,11 +91,11 @@ class AppData {
             alert("server error: unable to get data");
             return;
         }
-
+        //console.log(data.content)
         return data.content;
     }
 
-    //-------------- * COUNTIES * ------------------
+    //----t---------- * COUNTIES * ------------------
     async fetchCountiesByState(stateID) {
         const data = await this.asyncFetch(this.baseUrl + 'countiesInState?stateId='.concat(stateID));
 
@@ -85,8 +104,27 @@ class AppData {
             return;
         }
 
-        console.log(data.content)
-        return data.content
+        console.log(data)
+
+        let featureCollection = {
+            type: "FeatureCollection",
+            features: [],
+        };
+
+        for (let i in data.content) {
+            let feature = {
+                type: "Feature",
+                properties: {
+                    name: data.content[i].name,
+                    id: data.content[i].countyId
+                },
+                geometry: data.content[i].geometry,
+            };
+
+            featureCollection.features.push(feature);
+        }
+
+        return featureCollection;
     }
 
     //------------ * PRECINCTS * ----------------

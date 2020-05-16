@@ -283,10 +283,9 @@ export default class App extends Component {
         this.appData.fetchCountiesByState(stateID).then((data) => {
             this.setState({
                 countyData: data,
+                selectedFeature: stateFeature
             });
         });
-
-        this.setState({ selectedFeature: stateFeature });
     }
 
     _onClick = (event) => {
@@ -306,7 +305,7 @@ export default class App extends Component {
                 if (this.state.selectedFeature) {
                     if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
                         this._zoomToFeature(event);
-                        this.onStateSelected(stateFeature);
+                        //this.onStateSelected(stateFeature);
                         return;
                     }
                 } else {
@@ -552,6 +551,9 @@ export default class App extends Component {
                 zoom: zoom,
             },
         });
+
+
+
     }
 
     /**
@@ -682,7 +684,6 @@ export default class App extends Component {
     renderCountyLayers() {
         const { layers, countyData } = this.state;
         console.log(countyData)
-
         return (
             <>
                 {layers.county && (
