@@ -97,9 +97,10 @@ class AppData {
                 type: "Feature",
                 properties: {
                     name: data.content[i].name,
-                    id: data.content[i].id,
-                    counties: data.content[i].countyId,
+                    //id: data.content[i].countyId,
+                    //counties: data.content[i].countyId,
                 },
+                id: data.content[i].countyId,
                 geometry: data.content[i].geometry,
             };
 
@@ -107,9 +108,7 @@ class AppData {
         }
 
         console.log(features)
-        return {
-            featureCollection: features,
-        };
+        return features;
     }
 
     //------------ * PRECINCTS * ----------------

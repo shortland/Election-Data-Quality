@@ -74,7 +74,7 @@ import ERRORS from "../data/errors.json";
 //import STATES_TOOLTIP_DATA from '../data/states_tooltip_data.geojson';
 //import NY_COUNTY_SHORELINE_DATA from '../data/ny_county_shoreline.geojson';
 //import NY_PRECINCT_DATA from '../data/ny_precincts.geojson';
-import NY_CONGRESSIONAL_DATA from "../data//New_York_Congressional_Districts.GeoJSON";
+//import NY_CONGRESSIONAL_DATA from "../data//New_York_Congressional_Districts.GeoJSON";
 // import TESTING_PRECINCT_DATA from './data/GeoJSON_example.geojson';
 
 /**
@@ -274,6 +274,7 @@ export default class App extends Component {
         let stateID = stateFeature.properties.id
 
         this.appData.fetchCongressionalDistrictByState(stateID).then((data) => {
+            console.log(data)
             this.setState({
                 congressionalDistrictData: data
             });
@@ -281,11 +282,13 @@ export default class App extends Component {
 
 
         this.appData.fetchCountiesByState(stateID).then((data) => {
+            console.log(data)
             this.setState({
-                countyData: data,
-                selectedFeature: stateFeature
+                countyData: data
             });
         });
+
+        this.setState({ selectedFeature: stateFeature })
     }
 
     _onClick = (event) => {
@@ -305,7 +308,6 @@ export default class App extends Component {
                 if (this.state.selectedFeature) {
                     if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
                         this._zoomToFeature(event);
-                        //this.onStateSelected(stateFeature);
                         return;
                     }
                 } else {
@@ -626,6 +628,12 @@ export default class App extends Component {
         //     });
         // });
 
+        // this.appData.fetchCountiesByState(36).then((data) => {
+        //     this.setState({
+        //         countyData: data
+        //     });
+        // });
+
         console.log(this.mapRef.current.getMap())
 
         const map = this.mapRef.current.getMap()
@@ -688,10 +696,10 @@ export default class App extends Component {
                         <Layer
                             {...countyDataLayerFillableHighlight}
                             //filter={congressionalFilter}
-                            minzoom={5}
+                            minzoom={5.5}
                         />
-                        <Layer {...countyDataLayerOutline} minzoom={5} />
-                        <Layer {...countyDataLayerFillable} minzoom={5} />
+                        <Layer {...countyDataLayerOutline} minzoom={5.5} />
+                        <Layer {...countyDataLayerFillable} minzoom={5.5} />
                     </Source>
                 )}
             </>
@@ -807,7 +815,7 @@ export default class App extends Component {
 
                         {this.renderStateLayers()}
 
-                        {/*this.renderCongressionalLayers() */}
+                        {this.renderCongressionalLayers()}
 
                         {this.renderCountyLayers()}
 
