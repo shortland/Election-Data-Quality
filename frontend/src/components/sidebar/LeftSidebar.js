@@ -26,15 +26,15 @@ class LeftSidebar extends Component {
         let list = [];
 
         const feature = this.props.selected; //the selected feature
-
+        console.log(feature)
         if (feature) {
-            if (feature) {
-                const properties = feature.properties;
-                for (const p in properties) {
+            const properties = feature.properties;
+            for (const p in properties) {
+                if (p !== "demographicData" && p !== "precinctError" && p !== "votingData") {
                     list.push(<div>{`${p}: ${properties[p]}`}</div>);
                 }
-                // list.push(<div>State: {properties['name']}</div>);
             }
+            // list.push(<div>State: {properties['name']}</div>);
         }
         return list;
     }
@@ -88,7 +88,9 @@ class LeftSidebar extends Component {
                             />
                         </Collapsible>
                         <Collapsible trigger="Modify Data">
-                            <DataCorrectionPage data_correction_page_status={this.get_data_correction_page_status} />
+                            <DataCorrectionPage
+                                data_correction_page_status={this.get_data_correction_page_status}
+                            />
                         </Collapsible>
                         <Collapsible trigger="View Comments">
                             <Comments savedCommentData={comment_data} />
