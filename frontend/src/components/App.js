@@ -274,7 +274,7 @@ export default class App extends Component {
         let stateID = stateFeature.properties.id;
 
         this.appData.fetchCongressionalDistrictByState(stateID).then((data) => {
-            console.log(data)
+            //console.log(data)
             this.setState({
                 congressionalDistrictData: data
             });
@@ -282,7 +282,7 @@ export default class App extends Component {
 
 
         this.appData.fetchCountiesByState(stateID).then((data) => {
-            console.log(data)
+            //console.log(data)
             this.setState({
                 countyData: data
             });
@@ -292,7 +292,7 @@ export default class App extends Component {
     }
 
     onCountySelected(countyFeature) {
-        console.log(countyFeature.properties)
+        //console.log(countyFeature.properties)
         let countyId = countyFeature.properties.id;
 
         this.appData.fetchShapeOfPrecinctsByCounty(countyId).then((data) => {
@@ -307,12 +307,10 @@ export default class App extends Component {
     }
 
     onPrecinctSelected(precinctFeature) {
-        console.log(precinctFeature.properties)
+        //console.log(precinctFeature.properties)
         let precinctId = precinctFeature.properties.id;
-        console.log(precinctId);
         this.appData.fetchPrecinctInfo(precinctId).then((data) => {
             let oldData = this.state.selectedFeature;
-            console.log(data, oldData)
             let info = {
                 "demographicData": data.demographicData,
                 "fullName": data.fullName,
@@ -324,7 +322,6 @@ export default class App extends Component {
                 "votingData": data.votingData
             }
             let newProp = Object.assign(oldData.properties, info);
-            console.log(newProp);
             oldData.properties = newProp;
             this.setState({
                 selectedFeature: oldData

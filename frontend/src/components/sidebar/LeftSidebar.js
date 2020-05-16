@@ -56,14 +56,14 @@ class LeftSidebar extends Component {
         this.props.showErrorPins();
     }
 
-    makeHeader() {
-        const feature = this.props.selected;
+    // makeHeader() {
+    //     const feature = this.props.selected;
 
-        if (feature && feature.properties && feature.properties.type) {
-            //let name = feature.properties.name || feature.properties.NAME || feature.properties.GEOID10 || feature.properties.NAMELSAD
-            let type = feature.properties.type;
-        }
-    }
+    //     if (feature && feature.properties && feature.properties.type) {
+    //         //let name = feature.properties.name || feature.properties.NAME || feature.properties.GEOID10 || feature.properties.NAMELSAD
+    //         let type = feature.properties.type;
+    //     }
+    // }
 
     render() {
         const { mode } = this.state;
@@ -83,7 +83,9 @@ class LeftSidebar extends Component {
                             <ElectionDisplayBar />
                         </Collapsible>
                         <Collapsible trigger="View Demographics">
-                            <DemographicsTable />
+                            <DemographicsTable
+                                demographicData={this.props.selected.properties.demographicData}
+                            />
                         </Collapsible>
                         <Collapsible trigger="Modify Data">
                             <DataCorrectionPage data_correction_page_status={this.get_data_correction_page_status} />
