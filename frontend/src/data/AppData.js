@@ -103,8 +103,6 @@ class AppData {
             return;
         }
 
-        console.log(data)
-
         let featureCollection = {
             type: "FeatureCollection",
             features: [],
@@ -129,15 +127,47 @@ class AppData {
 
     //------------ * PRECINCTS * ----------------
     async fetchShapeOfPrecinctsByCounty(countyID) {
-        const data = await this.asyncFetch(this.baseUrl + 'shapeOfPrecinctByCounty');
+        const data = await this.asyncFetch(this.baseUrl + 'shapeOfPrecinctByCounty?countyId='.concat(countyID));
 
         if (data.status != "ok") {
-            alert("server error: unable to get data");
+            console.log(data)
+            alert("server error: unable to get precinct shapes");
             return;
         }
 
-        console.log(data.content)
-        return data.content
+        let featureCollection = {
+            type: "FeatureCollection",
+            features: [],
+        };
+
+        for (let i in data.content) {
+            let f = {
+                type: "Feature",
+                properties: {
+                    id: data.content[i].id
+                },
+                geometry: data.content[i].geometry,
+            };
+            featureCollection.features.push(f);
+        }
+
+        console.log(featureCollection)
+
+        return featureCollection
+    }
+
+    async fetchPrecinctInfo(precinctId) {
+        const data = await this.asyncFetch(this.baseUrl + 'precinctInfo?precinctId='.concat(precinctId));
+
+        if (data.status != "ok") {
+            console.log(data);
+            alert("server error : unable to get precinct info");
+            return
+        }
+
+        console.log(data.content);
+
+        return data.content;
     }
 }
 
