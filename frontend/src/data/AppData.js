@@ -1,26 +1,25 @@
 import { json } from 'd3-request';
 /**
- * A js class to access all our fetch API calls through
+ * A class to access all our fetch API calls through
  */
 class AppData {
-
     constructor() {
         this.allStates = null;
 
         // For development
-        // this.baseUrl = "//0.0.0.0:1234/";
+        this.baseUrl = "//0.0.0.0:1234/";
 
         // For production
-        this.baseUrl = "//ElectionDataQuality.com:1234/";
+        //this.baseUrl = "//ElectionDataQuality.com:1234/";
     }
 
     asyncFetch = async (url) => {
         const response = await fetch(url);
         const json = await response.json();
-
         return json;
     }
 
+    //-------- * STATES * -----------
     async fetchAllStates() {
         const data = await this.asyncFetch(this.baseUrl + 'allStates');
 
@@ -48,11 +47,13 @@ class AppData {
             features.features.push(feature);
         }
 
+        console.log(data.content)
         return {
             featureCollection: features,
         };
     }
 
+    //---------- * CONGRESSIONAL DISTRICTS * --------------
     async fetchCongressionalDistrictByState(stateID) {
         const data = await this.asyncFetch(this.baseUrl + 'congressionalDistrictsForState?stateId='.concat(stateID));
 
@@ -60,6 +61,7 @@ class AppData {
             alert("server error: unable to get data");
             return;
         }
+        console.log(data.content)
 
         return data.content;
     }
@@ -71,24 +73,34 @@ class AppData {
             alert("server error: unable to get data");
             return;
         }
-
+        console.log(data.content)
         return data.content;
     }
 
-    // fetchCongressionalDistrictByCID(CID) {
-    //     return this.asyncFetch(this.baseUrl + 'congressionalDistrict?cid='.concat(CID))
-    //         .then(data => {
-    //             if (data.status != "ok") {
-    //                 alert("server error: unable to get data");
-    //                 return;
-    //             }
+    //-------------- * COUNTIES * ------------------
+    async fetchCountiesByState(stateID) {
+        const data = await this.asyncFetch(this.baseUrl + 'countiesInState?stateID='.concat(stateID));
 
-    //             return data.content;
-    //         });
-    // }
+        if (data.status != "ok") {
+            alert("server error: unable to get data");
+            return;
+        }
 
-    fetchPrecincts() {
+        console.log(data.content)
+        return data.content
+    }
 
+    //------------ * PRECINCTS * ----------------
+    async fetchShapeOfPrecinctsByCounty(countyID) {
+        const data = await this.asyncFetch(this.baseUrl + 'shapeOfPrecinctByCounty');
+
+        if (data.status != "ok") {
+            alert("server error: unable to get data");
+            return;
+        }
+
+        console.log(data.content)
+        return data.content
     }
 }
 
