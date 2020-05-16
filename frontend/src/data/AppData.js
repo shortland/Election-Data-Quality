@@ -165,8 +165,6 @@ class AppData {
             return
         }
 
-        console.log(data.content);
-
         return data.content;
     }
 }
