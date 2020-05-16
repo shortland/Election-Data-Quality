@@ -61,7 +61,6 @@ class AppData {
             alert("server error: unable to get data");
             return;
         }
-        console.log(data.content)
 
         return data.content;
     }
@@ -73,7 +72,7 @@ class AppData {
             alert("server error: unable to get data");
             return;
         }
-        console.log(data.content)
+
         return data.content;
     }
 
