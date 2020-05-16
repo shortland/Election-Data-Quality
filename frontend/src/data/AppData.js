@@ -62,7 +62,24 @@ class AppData {
             alert("server error: unable to get data");
             return;
         }
-        //console.log(data.content)
+
+        let features = data.content.features
+        for (let i = 0; i < features.length; i++) {
+            let currFeature = features[i];
+            let properties = {
+                "id": currFeature.id,
+                "name": currFeature.name,
+                "parentId": currFeature.parentId,
+                "childrenId": currFeature.childrenId
+            }
+            delete currFeature.id;
+            delete currFeature.name;
+            delete currFeature.parentId;
+            delete currFeature.childrenId;
+            currFeature["properties"] = properties;
+        }
+
+        data.content.features = features;
 
         return data.content;
     }
@@ -78,7 +95,7 @@ class AppData {
         return data.content;
     }
 
-    //-------------- * COUNTIES * ------------------
+    //----t---------- * COUNTIES * ------------------
     async fetchCountiesByState(stateID) {
         const data = await this.asyncFetch(this.baseUrl + 'countiesInState?stateId='.concat(stateID));
 
@@ -87,7 +104,9 @@ class AppData {
             return;
         }
 
-        let features = {
+        console.log(data)
+
+        let featureCollection = {
             type: "FeatureCollection",
             features: [],
         };
@@ -97,18 +116,26 @@ class AppData {
                 type: "Feature",
                 properties: {
                     name: data.content[i].name,
+<<<<<<< HEAD
                     //id: data.content[i].countyId,
                     //counties: data.content[i].countyId,
+=======
+                    id: data.content[i].countyId
+>>>>>>> 1b53663b9efa7fbab7c7e725f5d26acf1dc54c72
                 },
                 id: data.content[i].countyId,
                 geometry: data.content[i].geometry,
             };
 
-            features.features.push(feature);
+            featureCollection.features.push(feature);
         }
 
+<<<<<<< HEAD
         console.log(features)
         return features;
+=======
+        return featureCollection;
+>>>>>>> 1b53663b9efa7fbab7c7e725f5d26acf1dc54c72
     }
 
     //------------ * PRECINCTS * ----------------

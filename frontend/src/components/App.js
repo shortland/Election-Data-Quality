@@ -553,6 +553,9 @@ export default class App extends Component {
                 zoom: zoom,
             },
         });
+
+
+
     }
 
     /**
@@ -668,7 +671,7 @@ export default class App extends Component {
      */
     renderCongressionalLayers() {
         const { layers, congressionalDistrictData } = this.state;
-
+        console.log(congressionalDistrictData)
         return (
             <>
                 {layers.congressional && (
@@ -688,7 +691,7 @@ export default class App extends Component {
 
     renderCountyLayers() {
         const { layers, countyData } = this.state;
-
+        console.log(countyData)
         return (
             <>
                 {layers.county && (
