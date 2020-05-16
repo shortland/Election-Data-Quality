@@ -208,7 +208,7 @@ public class PrecinctController {
      */
     // @PutMapping("/updateShape")
     @RequestMapping(value = "/updateShape", method = RequestMethod.PUT)
-    public ApiResponse updateShapeOfPrecicnt(@RequestParam String precinctId, @RequestParam Geometry geometry) {
+    public ApiResponse updateShapeOfPrecicnt(@RequestParam String precinctId, @RequestBody Geometry geometry) {
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         Optional<PrecinctFeature> targetData = pem.findPrecinctFeatureById(precinctId);
 
