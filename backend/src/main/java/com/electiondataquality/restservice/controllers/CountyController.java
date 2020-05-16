@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.electiondataquality.features.county.County;
+import com.electiondataquality.features.util.FeatureCollectionWrapper;
 import com.electiondataquality.jpa.managers.CountyEntityManager;
 import com.electiondataquality.jpa.tables.CountyTable;
 import com.electiondataquality.restservice.RestServiceApplication;
