@@ -425,7 +425,7 @@ export default class App extends Component {
     }
 
     getFeatureFilter = (feature) => {
-        console.log(feature)
+        //console.log(feature)
         if (!feature) {
             return null;
         } else if (feature.isState) {

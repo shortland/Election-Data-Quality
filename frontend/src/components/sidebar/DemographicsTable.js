@@ -9,9 +9,7 @@ import Table from 'react-bootstrap/Table';
 class DemographicsTable extends PureComponent {
     constructor(props) {
         super(props);
-        this.state = {
-            "total": 0
-        }
+        this.total = 0;
     }
 
     calculateTotal() {
@@ -21,9 +19,7 @@ class DemographicsTable extends PureComponent {
             for (let i in value) {
                 total += value[i];
             }
-            this.setState({
-                "total": total
-            });
+            this.total = total
         }
     }
 
@@ -103,7 +99,7 @@ class DemographicsTable extends PureComponent {
                     <tfoot>
                         <tr>
                             <th colSpan="1">Total Population</th>
-                            <td>{this.state.total}</td>
+                            <td>{this.total}</td>
                             {/* <td>100%</td> */}
                         </tr>
                     </tfoot>
