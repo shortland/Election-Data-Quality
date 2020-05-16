@@ -425,12 +425,13 @@ export default class App extends Component {
     }
 
     getFeatureFilter = (feature) => {
+        //console.log(feature)
         if (!feature) {
             return null;
         } else if (feature.isState) {
             return ["==", "name", feature.properties.name];
         } else if (feature.isCounty) {
-            return ["==", "NAME", feature.properties.NAME];
+            return ["==", "name", feature.properties.name];
         } else if (feature.isCongressional) {
             return ["==", "NAMELSAD", feature.properties.NAMELSAD];
         } else if (feature.isPrecinct) {
@@ -523,7 +524,7 @@ export default class App extends Component {
             return (
                 countyHovered && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
-                        <h5>{countyHovered.properties.NAME} County</h5>
+                        <h5>{countyHovered.properties.name}</h5>
                         <div>FIPS Code: {countyHovered.properties.FIPS_CODE}</div>
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
@@ -535,7 +536,7 @@ export default class App extends Component {
             return (
                 congressionalHovered && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
-                        <h5>{congressionalHovered.properties.NAMELSAD}</h5>
+                        <h5>{congressionalHovered.properties.name}</h5>
                         <div></div>
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
@@ -547,8 +548,8 @@ export default class App extends Component {
             return (
                 precinctHovered && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
-                        <h5>Precinct GEOID: {precinctHovered.properties.GEOID10}</h5>
-                        {/* <div>FIPS Code: {precinctHovered.properties}</div> */}
+                        <h6>Precinct id: {precinctHovered.properties.id}</h6>
+                        {/* <div>id: {precinctHovered.properties.id}</div> */}
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
@@ -595,9 +596,6 @@ export default class App extends Component {
                 zoom: zoom,
             },
         });
-
-
-
     }
 
     /**
@@ -739,11 +737,11 @@ export default class App extends Component {
                     <Source type="geojson" data={countyData}>
                         <Layer
                             {...countyDataLayerFillableHighlight}
-                            //filter={congressionalFilter}
+                            filter={this.countyFilter}
                             minzoom={5.5}
                         />
                         <Layer {...countyDataLayerOutline} minzoom={5.5} />
-                        <Layer {...countyDataLayerFillable} minzoom={5.5} />
+                        <Layer {...countyDataLayerFillable} minzoom={5.5} maxzoom={10} />
                     </Source>
                 )}
             </>
@@ -761,11 +759,11 @@ export default class App extends Component {
             <>
                 {layers.precincts && (
                     <Source type="geojson" data={precinctData}>
-                        <Layer
+                        {/* <Layer
                             {...precinctLayerFillHighlight}
                             // filter={precinctFilter}
                             minzoom={8}
-                        />
+                        /> */}
                         <Layer {...precinctLayerOutline} minzoom={8} />
                         <Layer {...precinctLayerFill} minzoom={8} />
                     </Source>
@@ -858,13 +856,13 @@ export default class App extends Component {
 
                         {/* {this.renderLayers()} */}
 
-                        {this.renderStateLayers()}
-
-                        {this.renderCongressionalLayers()}
+                        {this.renderPrecinctLayers()}
 
                         {this.renderCountyLayers()}
 
-                        {this.renderPrecinctLayers()}
+                        {this.renderCongressionalLayers()}
+
+                        {this.renderStateLayers()}
 
                         {this._renderTooltip()}
 
