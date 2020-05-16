@@ -269,9 +269,9 @@ export default class App extends Component {
      * such as congressional districts or national parks by state
      */
     onStateSelected(stateFeature) {
-        const { layers } = this.state;
+        // const { layers } = this.state;
         console.log(stateFeature.properties)
-        let stateID = stateFeature.properties.id
+        let stateID = stateFeature.properties.id;
 
         this.appData.fetchCongressionalDistrictByState(stateID).then((data) => {
             console.log(data)
@@ -289,6 +289,48 @@ export default class App extends Component {
         });
 
         this.setState({ selectedFeature: stateFeature })
+    }
+
+    onCountySelected(countyFeature) {
+        console.log(countyFeature.properties)
+        let countyId = countyFeature.properties.id;
+
+        this.appData.fetchShapeOfPrecinctsByCounty(countyId).then((data) => {
+            console.log(data)
+            this.setState({
+                precinctData: data
+            });
+        });
+
+        //NOTE: in _onClick already set selectedFeature
+        //this.setState({ selectedFeature: countyFeature })
+    }
+
+    onPrecinctSelected(precinctFeature) {
+        console.log(precinctFeature.properties)
+        let precinctId = precinctFeature.properties.id;
+        console.log(precinctId);
+        this.appData.fetchPrecinctInfo(precinctId).then((data) => {
+            let oldData = this.state.selectedFeature;
+            console.log(data, oldData)
+            let info = {
+                "demographicData": data.demographicData,
+                "fullName": data.fullName,
+                "id": data.id,
+                "isGhost": data.isGhost,
+                "neighborsId": data.neighborsId,
+                "parentId": data.parentDistrictId,
+                "precinctError": data.precinctErrors,
+                "votingData": data.votingData
+            }
+            let newProp = Object.assign(oldData.properties, info);
+            console.log(newProp);
+            oldData.properties = newProp;
+            this.setState({
+                selectedFeature: oldData
+            });
+        });
+
     }
 
     _onClick = (event) => {
@@ -321,26 +363,29 @@ export default class App extends Component {
 
                 this.onStateSelected(stateFeature);
 
-            } else if (countyFeature) {
+            }
+            else if (countyFeature) {
                 countyFeature.properties.type = "County";
                 // if a clicks on a county that was already selected/clicked on
                 if (this.state.selectedFeature) {
-                    if (
-                        countyFeature.properties.NAME ===
-                        this.state.selectedFeature.properties.NAME
-                    ) {
+                    if (countyFeature.properties.name === this.state.selectedFeature.properties.name) {
                         this._zoomToFeature(event);
                         return;
                     }
                 }
                 this.setState({ selectedFeature: countyFeature });
-            } else if (congressionalFeature) {
+                this.onCountySelected(countyFeature);
+            }
+            else if (congressionalFeature) {
                 //congressionalFeature.properties.type = "Congressional District";
                 this.setState({ selectedFeature: congressionalFeature });
-            } else if (precinctFeature) {
+            }
+            else if (precinctFeature) {
                 precinctFeature.properties.type = "Precinct";
                 this.setState({ selectedFeature: precinctFeature });
-            } else {
+                this.onPrecinctSelected(precinctFeature);
+            }
+            else {
                 //this.setState({ selectedFeature: null });
             }
         }
@@ -713,10 +758,11 @@ export default class App extends Component {
      */
     renderPrecinctLayers() {
         const { layers, precinctData } = this.state;
+        //console.log(layers.precincts, precinctData)
 
         return (
             <>
-                {layers.precinct && (
+                {layers.precincts && (
                     <Source type="geojson" data={precinctData}>
                         <Layer
                             {...precinctLayerFillHighlight}
@@ -733,7 +779,7 @@ export default class App extends Component {
 
     render() {
         const { viewport, selectedMode, shouldShowPins } = this.state;
-
+        //console.log("testing for leftSideBar\n", this.state.selectedFeature)
         return (
             <div className="App">
                 <div className="selectStateItem inlineDivs">
