@@ -31,7 +31,7 @@ class LeftSidebar extends Component {
             const properties = feature.properties;
             for (const p in properties) {
                 if (p !== "demographicData" && p !== "precinctError" && p !== "votingData") {
-                    list.push(<div>{`${p}: ${properties[p]}`}</div>);
+                    list.push(<div className="text-left">{`${p}: ${properties[p]}`}</div>);
                 }
             }
             // list.push(<div>State: {properties['name']}</div>);
@@ -69,23 +69,26 @@ class LeftSidebar extends Component {
         const { mode } = this.state;
         const { comment_data } = this.state;
         const list = this.createList();
-        // const feature = this.props.selected;
+        const selectedFeature = this.props.selected;
+        console.log(selectedFeature);
 
         if (list.length > 0) {
             if (mode === "data_display") {
                 return (
-                    <div >
-                        <h5></h5>
+                    <div style={{ textAlign: 'left'}}>
                         <Collapsible trigger="View General Info" open={true}>
-                            {list}
+                            <div style={{ marginLeft: '5px' }}>
+                                {list}
+                            </div>
                         </Collapsible>
                         <Collapsible trigger="View Elections">
                             <ElectionDisplayBar />
                         </Collapsible>
                         <Collapsible trigger="View Demographics">
-                            <DemographicsTable
-                                demographicData={this.props.selected.properties.demographicData}
-                            />
+                            {(selectedFeature.properties.type == "Precinct" && <DemographicsTable
+                                demographicData={selectedFeature.properties.demographicData}
+                            />) ||
+                                <div>select a precinct to view demographics</div>}
                         </Collapsible>
                         <Collapsible trigger="Modify Data">
                             <DataCorrectionPage

@@ -483,20 +483,20 @@ export default class App extends Component {
             const hovered = stateHovered || countyHovered || congressionalHovered || precinctHovered;
             const lastHovered = this.state.hoveredFeature;
 
-            console.log(hovered);
+            //console.log(hovered);
+
+            //set highlight on hover
+            if (hovered) {
+                map.setFeatureState(
+                    { source: hovered.source, id: hovered.id },
+                    { hover: true }
+                );
+            }
 
             if (stateHovered) {
                 hovered.isState = true;
-                map.setFeatureState(
-                    { source: hovered.source, id: hovered.id },
-                    { hover: true }
-                );
             } else if (countyHovered) {
                 hovered.isCounty = true;
-                map.setFeatureState(
-                    { source: hovered.source, id: hovered.id },
-                    { hover: true }
-                );
             } else if (congressionalHovered) {
                 hovered.isCongressional = true;
             } else if (precinctHovered) {
@@ -549,7 +549,7 @@ export default class App extends Component {
                 countyHovered && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h5>{countyHovered.properties.name}</h5>
-                        <div>FIPS Code: {countyHovered.properties.FIPS_CODE}</div>
+                        {/* <div>FIPS Code: {countyHovered.properties.FIPS_CODE}</div> */}
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
@@ -701,12 +701,12 @@ export default class App extends Component {
             <>
                 {layers.states && (
                     <Source type="geojson" data={stateData}>
-                        <Layer
+                        {/* <Layer
                             {...stateLayerFillHighlight}
                             filter={stateFilter}
                             maxzoom={5}
-                        />
-                        <Layer {...stateLayerFill} maxzoom={5} />
+                        /> */}
+                        <Layer {...stateLayerFill} maxzoom={5.5} />
                     </Source>
                 )}
             </>
@@ -742,13 +742,13 @@ export default class App extends Component {
             <>
                 {layers.counties && (
                     <Source type="geojson" data={countyData}>
-                        <Layer
+                        {/* <Layer
                             {...countyDataLayerFillableHighlight}
                             filter={this.countyFilter}
                             minzoom={5.5}
-                        />
+                        /> */}
                         <Layer {...countyDataLayerOutline} minzoom={5.5} />
-                        <Layer {...countyDataLayerFillable} minzoom={5.5} maxzoom={10} />
+                        <Layer {...countyDataLayerFillable} minzoom={5.5} maxzoom={9.5} />
                     </Source>
                 )}
             </>
