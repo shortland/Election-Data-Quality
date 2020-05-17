@@ -26,7 +26,7 @@ class LeftSidebar extends Component {
         let list = [];
 
         const feature = this.props.selected; //the selected feature
-        console.log(feature)
+        //console.log(feature)
         if (feature) {
             const properties = feature.properties;
             for (const p in properties) {

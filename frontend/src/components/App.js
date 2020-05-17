@@ -135,12 +135,17 @@ export default class App extends Component {
             stateFilter: ["==", "name", ""],
             congressionalFilter: ["==", "NAMELSAD", ""],
         };
+
+        this.lastHovered = null; //keeps track of which feature to unhighlight
+
     }
 
     /**
      * For Mapbox geocoding
      */
     mapRef = React.createRef();
+
+
 
     handleViewportChange = (viewport) => {
         this.setState({
@@ -442,17 +447,20 @@ export default class App extends Component {
     };
 
     _onHover = (event) => {
+        const map = this.mapRef.current.getMap();
+
         const {
             features,
             srcEvent: { x, y },
         } = event;
 
-        if (
-            !event.type ||
-            !event.features ||
-            event.features.length === 0 ||
-            event.features[0].source === "composite"
-        ) {
+        if (!event.type || !event.features || event.features.length === 0 || event.features[0].source === "composite") {
+            if (this.lastHovered) {
+                map.setFeatureState(
+                    { source: this.lastHovered.source, id: this.lastHovered.id },
+                    { hover: false }
+                );
+            }
             this.setState({
                 hoveredFeature: null,
                 filter: null,
@@ -471,14 +479,14 @@ export default class App extends Component {
             const congressionalHovered = features.find((f) => f.layer.id === "congressionalFill");
             const precinctHovered = features.find((f) => f.layer.id === "precinctFill");
 
-            const hovered =
-                stateHovered ||
-                countyHovered ||
-                congressionalHovered ||
-                precinctHovered;
+            const hovered = stateHovered || countyHovered || congressionalHovered || precinctHovered;
 
             if (stateHovered) {
                 hovered.isState = true;
+                map.setFeatureState(
+                    { source: stateHovered.source, id: stateHovered.id },
+                    { hover: true }
+                );
             } else if (countyHovered) {
                 hovered.isCounty = true;
             } else if (congressionalHovered) {
@@ -486,6 +494,16 @@ export default class App extends Component {
             } else if (precinctHovered) {
                 hovered.isPrecinct = true;
             }
+
+            //if changed hovered features, remove highlight from previous
+            if (this.lastHovered && this.lastHovered.id != hovered.id) {
+                map.setFeatureState(
+                    { source: this.lastHovered.source, id: this.lastHovered.id },
+                    { hover: false }
+                );
+            }
+
+            this.lastHovered = hovered;
 
             const filter = this.getFeatureFilter(hovered);
 
@@ -568,7 +586,6 @@ export default class App extends Component {
         let latitude = 0;
         let longitude = 0;
         let zoom = 6;
-
         switch (name) {
             case "New York":
             case "NY":
@@ -662,26 +679,10 @@ export default class App extends Component {
             });
         });
 
-        /**
-         * Get all the congressional districts
-         */
-        // this.appData.fetchAllCongressionalDistricts().then((cdData) => {
-        //     this.setState({
-        //         congressionalDistrictData: cdData,
-        //     });
-        // });
-
-        // this.appData.fetchCountiesByState(36).then((data) => {
-        //     this.setState({
-        //         countyData: data
-        //     });
-        // });
-
         console.log(this.mapRef.current.getMap())
 
         const map = this.mapRef.current.getMap()
         //this.map = this.mapRef.current.getMap()
-
     }
 
     /**
