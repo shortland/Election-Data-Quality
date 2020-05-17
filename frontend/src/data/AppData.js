@@ -40,6 +40,7 @@ class AppData {
                     id: data.content[i].id,
                     congressional_districts: data.content[i].congressionalDistrictIds,
                 },
+                id: data.content[i].id,
                 geometry: data.content[i].geometry,
             };
 
@@ -71,7 +72,7 @@ class AppData {
                 "parentId": currFeature.parentId,
                 "childrenId": currFeature.childrenId
             }
-            delete currFeature.id;
+            //delete currFeature.id;
             delete currFeature.name;
             delete currFeature.parentId;
             delete currFeature.childrenId;

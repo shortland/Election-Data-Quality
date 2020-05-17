@@ -3,6 +3,12 @@ export const precinctLayerFill = {
     type: 'fill',
     paint: {
         'fill-color': 'rgba(0, 0, 0, 0.0)',
+        'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            1,
+            0.5
+        ]
     },
 };
 

@@ -24,7 +24,7 @@ class LeftSidebar extends Component {
 
     createList = () => {
         let list = [];
-        console.log(this.props.selected);
+        //console.log(this.props.selected);
         const feature = this.props.selected; //the selected feature
         if (feature) {
             const properties = feature.properties;
@@ -80,7 +80,7 @@ class LeftSidebar extends Component {
                         </Collapsible>
                         <Collapsible trigger="Elections">
                             <ElectionDisplayBar
-                                electionData={this.props.selected.properties.votingData}
+                                votingData={this.props.selected.properties.votingData}
                             />
                         </Collapsible>
                         <Collapsible trigger="Demographics">
