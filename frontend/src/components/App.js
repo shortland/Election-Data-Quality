@@ -346,6 +346,9 @@ export default class App extends Component {
      * when detected a precinct is being hovered on
      */
     onPrecinctHover(precinctFeature) {
+    }
+
+    onPrecinctSelected(precinctFeature) {
         let precinctId = precinctFeature.properties.id;
         this.appData.fetchPrecinctInfo(precinctId).then((data) => {
             let oldData = precinctFeature;
@@ -361,14 +364,12 @@ export default class App extends Component {
             }
             let newProp = Object.assign(oldData.properties, info);
             oldData.properties = newProp;
-        });
-    }
-
-    onPrecinctSelected(precinctFeature) {
-        this.highlightPrecinctNeighbors(precinctFeature);
-        
-        this.setState({
-            selectedFeature: precinctFeature
+            return oldData;
+        }).then((updatedPrecinct) => {
+            this.highlightPrecinctNeighbors(updatedPrecinct);
+            this.setState({
+                selectedFeature: updatedPrecinct
+            });
         });
     }
 
