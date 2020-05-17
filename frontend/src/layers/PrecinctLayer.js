@@ -3,17 +3,22 @@ export const precinctLayerFill = {
     type: 'fill',
     paint: {
         'fill-color': '#900c3f',
-        'fill-opacity': [
-            'case',
-            ['boolean', ['feature-state', 'hover'], false],
-            0.4,
-            0.20
-        ]
-    },
+        'fill-opacity':
+            ['case',
+                ['boolean', ['feature-state', 'selected'], false],
+                0.6,
+                ['boolean', ['feature-state', 'hover'], false],
+                0.4,
+                ['boolean', ['feature-state', 'neighbor'], false],
+                0.3,
+                0.2
+            ]
+    }
 };
 
 export const precinctLayerOutline = {
     id: 'precinctOutline',
+    //source: 'precinctFill',
     type: 'line',
     paint: {
         //'line-color': 'rgba(66, 135, 245, 1.0)',

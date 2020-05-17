@@ -339,7 +339,6 @@ export default class App extends Component {
             });
         });
 
-
         this.appData.fetchCountiesByState(stateID).then((data) => {
             //console.log(data)
             this.setState({
@@ -408,6 +407,11 @@ export default class App extends Component {
             const countyFeature = features.find((f) => f.layer.id === "countyFill");
             const congressionalFeature = features.find((f) => f.layer.id === "congressionalFill");
             const precinctFeature = features.find((f) => f.layer.id === "precinctFill");
+
+            const selectedFeature = stateFeature || countyFeature || congressionalFeature || precinctFeature;
+            const previouslySelected = this.state.selectedFeature;
+            this.removeSelectedHighlight(previouslySelected);
+            this.addSelectedHighlight(selectedFeature);
 
             if (stateFeature) {
                 stateFeature.properties.type = "State";
@@ -603,8 +607,8 @@ export default class App extends Component {
         }
     };
 
-    highlightFeature(feature) {
-        const map = this.mapRef.current.getMap()
+    addHoveredHighlight(feature) {
+        const map = this.mapRef.current.getMap();
         if (feature.id && feature.source) {
             map.setFeatureState(
                 { source: feature.source, id: feature.id },
@@ -613,17 +617,39 @@ export default class App extends Component {
         }
     }
 
+    addSelectedHighlight(feature) {
+        const map = this.mapRef.current.getMap();
+        if (feature.id && feature.source) {
+            map.setFeatureState(
+                { source: feature.source, id: feature.id },
+                { selected: true }
+            );
+        }
+    }
+
+    removeSelectedHighlight(feature) {
+        const map = this.mapRef.current.getMap();
+        if (feature && feature.id && feature.source) {
+            map.setFeatureState(
+                { source: feature.source, id: feature.id },
+                { selected: false }
+            );
+        }
+    }
+
     highlightPrecinctNeighbors(precinctFeature) {
-        //console.log(precinctFeature);
+        console.log(precinctFeature);
         const map = this.mapRef.current.getMap()
         const neighbors = precinctFeature.properties.neighborsId || false;
         const source = precinctFeature.source;
 
         if (neighbors && source) {
-            for (let Nid in neighbors) {
+            for (let index in neighbors) {
+                let Nid = neighbors[index].trim();
+                console.log(Nid);
                 map.setFeatureState(
                     { source: source, id: Nid },
-                    { hover: true }
+                    { neighbor: true }
                 );
             }
         }
