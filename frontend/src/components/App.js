@@ -303,6 +303,8 @@ export default class App extends Component {
     /**
      * Here can load anything based on the state feature selected
      * such as congressional districts or national parks by state
+     * 
+     * state.selectedFeature is set within here
      */
     onStateSelected(stateFeature) {
         // const { layers } = this.state;
@@ -326,6 +328,11 @@ export default class App extends Component {
         this.setState({ selectedFeature: stateFeature })
     }
 
+    /**
+     * any operations when a county is selected can go here
+     * 
+     * sets state.selectedFeature to be the county feature passed
+     */
     onCountySelected(countyFeature) {
         //console.log(countyFeature.properties)
         let countyId = countyFeature.properties.id;
@@ -337,8 +344,7 @@ export default class App extends Component {
             });
         });
 
-        //NOTE: in _onClick already set selectedFeature
-        //this.setState({ selectedFeature: countyFeature })
+        this.setState({ selectedFeature: countyFeature });
     }
 
     /**
@@ -347,6 +353,11 @@ export default class App extends Component {
     onPrecinctHover(precinctFeature) {
     }
 
+    /**
+     * any operations for when a precinct is selected can go here
+     * 
+     * sets state.selectedFeature as the precinct passed
+     */
     onPrecinctSelected(precinctFeature) {
         let precinctId = precinctFeature.properties.id;
         this.appData.fetchPrecinctInfo(precinctId).then((data) => {
@@ -365,6 +376,8 @@ export default class App extends Component {
             oldData.properties = newProp;
             return oldData;
         }).then((updatedPrecinct) => {
+            const prevSelected = this.state.selectedFeature;
+            this.removeHighlightPrecinctNeighbors(prevSelected);
             this.highlightPrecinctNeighbors(updatedPrecinct);
             this.setState({
                 selectedFeature: updatedPrecinct
@@ -374,7 +387,7 @@ export default class App extends Component {
 
     _onClick = (event) => {
         //map object
-        const map = this.mapRef.current.getMap();
+        //const map = this.mapRef.current.getMap();
 
         // sets the selected feature onclcik, to have properties displayed by LeftSidebar
         const { features } = event;
@@ -420,26 +433,20 @@ export default class App extends Component {
                         return;
                     }
                 }
-                this.setState({ selectedFeature: countyFeature });
                 this.onCountySelected(countyFeature);
             }
             else if (congressionalFeature) {
-                //congressionalFeature.properties.type = "Congressional District";
+                congressionalFeature.properties.type = "Congressional District";
                 this.setState({ selectedFeature: congressionalFeature });
             }
             else if (precinctFeature) {
                 precinctFeature.properties.type = "Precinct";
-                this.setState({ selectedFeature: precinctFeature });
                 this.onPrecinctSelected(precinctFeature);
-                //set highlight on hover
-                if (precinctFeature) {
-                    map.setFeatureState(
-                        { source: precinctFeature.source, id: precinctFeature.id },
-                        { hover: true }
-                    );
-                }
             }
             else {
+                if (previouslySelected.properties.type === "Precinct") {
+                    this.removeHighlightPrecinctNeighbors(previouslySelected);
+                }
                 //this.setState({ selectedFeature: null });
             }
         }
@@ -576,7 +583,7 @@ export default class App extends Component {
 
     addHoveredHighlight(feature) {
         const map = this.mapRef.current.getMap();
-        if (feature.id && feature.source) {
+        if (feature && feature.id && feature.source) {
             map.setFeatureState(
                 { source: feature.source, id: feature.id },
                 { hover: true }
@@ -586,7 +593,7 @@ export default class App extends Component {
 
     addSelectedHighlight(feature) {
         const map = this.mapRef.current.getMap();
-        if (feature.id && feature.source) {
+        if (feature && feature.id && feature.source) {
             map.setFeatureState(
                 { source: feature.source, id: feature.id },
                 { selected: true }
@@ -604,8 +611,12 @@ export default class App extends Component {
         }
     }
 
+    /**
+     * will set precicnt's neighbors' styling
+     * @param {*} precinctFeature the precinct whose neighbors to highlight
+     */
     highlightPrecinctNeighbors(precinctFeature) {
-        console.log(precinctFeature);
+        //console.log(precinctFeature);
         const map = this.mapRef.current.getMap()
         const neighbors = precinctFeature.properties.neighborsId || false;
         const source = precinctFeature.source;
@@ -613,14 +624,35 @@ export default class App extends Component {
         if (neighbors && source) {
             for (let index in neighbors) {
                 let Nid = neighbors[index].trim();
-                console.log(Nid);
+                //console.log(Nid);
                 map.setFeatureState(
                     { source: source, id: Nid },
                     { neighbor: true }
                 );
             }
         }
+    }
 
+    /**
+     * removes neighbors styling, for when new precinct selected
+     * @param {*} precinctFeature the precicnt to remove neighbors' highlighting
+     */
+    removeHighlightPrecinctNeighbors(precinctFeature) {
+        //console.log(precinctFeature);
+        const map = this.mapRef.current.getMap()
+        const neighbors = precinctFeature.properties.neighborsId || false;
+        const source = precinctFeature.source;
+
+        if (neighbors && source) {
+            for (let index in neighbors) {
+                let Nid = neighbors[index].trim();
+                //console.log(Nid);
+                map.setFeatureState(
+                    { source: source, id: Nid },
+                    { neighbor: false }
+                );
+            }
+        }
     }
 
     /**
