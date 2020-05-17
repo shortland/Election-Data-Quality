@@ -140,13 +140,16 @@ export default class App extends Component {
         };
 
         this.lastHovered = null; //keeps track of which feature to unhighlight
-
+        this.mapRef = React.createRef();
     }
 
     /**
-     * For Mapbox geocoding
+     * gets the underlying Mapbox GL JS map
+     * be careful calling methods on this map as it may break the React wrapper
      */
-    mapRef = React.createRef();
+    getMap() {
+        return this.mapRef.current.getMap()
+    }
 
     handleViewportChange = (viewport) => {
         this.setState({
@@ -360,11 +363,16 @@ export default class App extends Component {
         //this.setState({ selectedFeature: countyFeature })
     }
 
+    /**
+     * when detected a precinct is being hovered on
+     */
+    onPrecinctHover(precinctFeature) {
+    }
+
     onPrecinctSelected(precinctFeature) {
-        //console.log(precinctFeature.properties)
         let precinctId = precinctFeature.properties.id;
         this.appData.fetchPrecinctInfo(precinctId).then((data) => {
-            let oldData = this.state.selectedFeature;
+            let oldData = precinctFeature;
             let info = {
                 "demographicData": data.demographicData,
                 "fullName": data.fullName,
@@ -377,11 +385,13 @@ export default class App extends Component {
             }
             let newProp = Object.assign(oldData.properties, info);
             oldData.properties = newProp;
+            return oldData;
+        }).then((updatedPrecinct) => {
+            this.highlightPrecinctNeighbors(updatedPrecinct);
             this.setState({
-                selectedFeature: oldData
+                selectedFeature: updatedPrecinct
             });
         });
-
     }
 
     _onClick = (event) => {
@@ -560,6 +570,8 @@ export default class App extends Component {
                 hovered.isCongressional = true;
             } else if (precinctHovered) {
                 hovered.isPrecinct = true;
+                this.onPrecinctHover(precinctHovered)
+                //this.highlightPrecinctNeighbors(precinctHovered);
             }
 
             //if changed hovered features, remove highlight from previous
@@ -570,14 +582,41 @@ export default class App extends Component {
                 );
             }
 
-            const filter = this.getFeatureFilter(hovered);
+            //const filter = this.getFeatureFilter(hovered);
 
             this.setState({
                 hoveredFeature: hovered,
-                filter: filter,
+                //filter: filter,
             });
         }
     };
+
+    highlightFeature(feature) {
+        const map = this.mapRef.current.getMap()
+        if (feature.id && feature.source) {
+            map.setFeatureState(
+                { source: feature.source, id: feature.id },
+                { hover: true }
+            );
+        }
+    }
+
+    highlightPrecinctNeighbors(precinctFeature) {
+        //console.log(precinctFeature);
+        const map = this.mapRef.current.getMap()
+        const neighbors = precinctFeature.properties.neighborsId || false;
+        const source = precinctFeature.source;
+
+        if (neighbors && source) {
+            for (let Nid in neighbors) {
+                map.setFeatureState(
+                    { source: source, id: Nid },
+                    { hover: true }
+                );
+            }
+        }
+
+    }
 
     /**
      * renders the on hover tooltip
