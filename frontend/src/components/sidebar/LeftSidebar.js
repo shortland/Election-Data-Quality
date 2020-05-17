@@ -10,9 +10,12 @@ import Comments from './Comments';
 import CommentModal from './CommentModal';
 /**
  * Our sidebar component
- * @prop selected: the currently selected map feature
- * @prop showErrorPins: function to show or hide error pins
- * @prop userMode :  current user mode
+ * @props selected: the currently selected map feature
+ * @props showErrorPins: function to show or hide error pins
+ * @props userMode :  current user mode
+ * @props leftSideBarStatus : for returning status of the leftSideBar
+ * @props precinctSelectedForEdit : a precinct that user selected for editions 
+ * @props appData : API
  */
 class LeftSidebar extends Component {
     constructor(props) {
@@ -45,6 +48,19 @@ class LeftSidebar extends Component {
             this.setState({ mode: "data_display" });
         }
     }
+
+    get_modify_neighbors_page_status = (page_status) => {
+        if (page_status !== "default") {
+            // send the precinct Selection Mode back to the Apps
+            this.props.leftSideBarStatus("precinct_selection_to_edit");
+        }
+        else {
+            this.props.leftSideBarStatus()
+        }
+    }
+
+
+
 
     get_comments_modal_data = (comment_modal_data) => {
         if (comment_modal_data) {
@@ -130,6 +146,9 @@ class LeftSidebar extends Component {
                             <Collapsible trigger="Modify Neighbors" >
                                 <ModifyNeighbors
                                     selectedFeature={selectedFeature}
+                                    modify_neighbors_page_status={this.get_modify_neighbors_page_status}
+                                    precinctSelectedForEdit={this.props.precinctSelectedForEdit}
+                                    appData={this.props.appData}
                                 />
                             </Collapsible>
                         </div >
