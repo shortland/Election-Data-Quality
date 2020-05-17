@@ -85,6 +85,10 @@ Sample State Data
 
 ## Data Sources
 
+### Misc
+
+- [National Park Data](https://public-nps.opendata.arcgis.com/datasets/nps-boundary-1?geometry=-75.936%2C40.613%2C-68.213%2C42.057)
+
 ### Wisconsin
 
 Geographic Data:
@@ -93,7 +97,7 @@ Geographic Data:
 
 - [Congressional Boundries](https://data-ltsb.opendata.arcgis.com/datasets/wisconsin-congressional-districts-2011/data)
 
-- [Counties](https://data-ltsb.opendata.arcgis.com/datasets/440ac07e5a174e29b28663d15d5f7d95)
+- [Counties](https://data-wi-dnr.opendata.arcgis.com/datasets/8b8a0896378449538cf1138a969afbc6_3)
 
 Demographic Data:
 

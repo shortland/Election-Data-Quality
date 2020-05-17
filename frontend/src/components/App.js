@@ -179,7 +179,7 @@ export default class App extends Component {
             }),
         });
     };
-
+    //----------------------- React Map GL Draw--------------------//
     /**
      * For React Map Gl Draw
      */
@@ -256,6 +256,32 @@ export default class App extends Component {
 
     _renderToolbar = () => {
         const { userMode } = this.state;
+        let selectedFeature = this.state.selectedFeature;
+        if (selectedFeature && selectedFeature.properties.type === "Precinct") {
+            let oldFeatureForEdit = this.state.featureForEditing;
+            let selectedFeatureId = selectedFeature.id;
+            if (oldFeatureForEdit) {
+                if (oldFeatureForEdit.id !== selectedFeatureId) {
+                    this.appData.fetchPrecinctShape(selectedFeatureId).then((data) => {
+                        //console.log(data);
+                        data.features[0].geometry = {
+                            type: "Polygon",
+                            coordinates: data.features[0].geometry.coordinates[0]
+                        }
+                        this.setState({
+                            featureForEditing: data.features
+                        });
+                    });
+                }
+            }
+        }
+        let featureForEditing = this.state.featureForEditing;
+        if (featureForEditing && userMode === "Edit") {
+            let r = this._editorRef.addFeatures(featureForEditing);
+            console.log(this._editorRef, r);
+            // console.log(this.state.featureForEditing)
+            // console.log(this._editorRef.addFeatures(featureForEditing))
+        }
         if (userMode === "Edit") {
             return (
                 <Toolbar
@@ -264,8 +290,9 @@ export default class App extends Component {
                     onDelete={this._onDelete}
                     onSelect={this._onSelect}
                     features={this.state.features}
-                    selectedFeatureId={this.state.selectedFeatureId}
+                    selectedFeature={this.state.selectedFeature}
                     toolBarRequest={this._onSaveRequest}
+                    appData={this.appData}
                 />
             );
         } else {
@@ -346,6 +373,9 @@ export default class App extends Component {
     }
 
     _onClick = (event) => {
+        //map object
+        const map = this.mapRef.current.getMap();
+
         // sets the selected feature onclcik, to have properties displayed by LeftSidebar
         const { features } = event;
 
@@ -396,6 +426,13 @@ export default class App extends Component {
                 precinctFeature.properties.type = "Precinct";
                 this.setState({ selectedFeature: precinctFeature });
                 this.onPrecinctSelected(precinctFeature);
+                //set highlight on hover
+                if (precinctFeature) {
+                    map.setFeatureState(
+                        { source: precinctFeature.source, id: precinctFeature.id },
+                        { hover: true }
+                    );
+                }
             }
             else {
                 //this.setState({ selectedFeature: null });

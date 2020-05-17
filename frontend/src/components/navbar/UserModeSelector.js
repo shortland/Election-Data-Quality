@@ -26,7 +26,6 @@ class UserModeSelector extends Component {
           </Dropdown.Item>
                     <Dropdown.Item onClick={() => {
                         this.props.userModeSelect("Edit");
-                        console.log(selectedFeatureType)
                         if (selectedFeatureType != "Precinct" && selectedFeatureType != undefined) {
                             toast.info("Note: Only can edit precinct", {
                                 position: toast.POSITION.BOTTOM_RIGHT,

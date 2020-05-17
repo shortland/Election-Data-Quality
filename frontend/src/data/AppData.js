@@ -158,6 +158,33 @@ class AppData {
         return featureCollection
     }
 
+    async fetchPrecinctShape(precinctId) {
+        const data = await this.asyncFetch(this.baseUrl + 'shapeOfPrecinct?precinctId='.concat(precinctId));
+
+        if (data.status != "ok") {
+            console.log(data)
+            alert("server error: unable to get precinct shapes");
+            return;
+        }
+
+        let featureCollection = {
+            type: "FeatureCollection",
+            features: [],
+        };
+
+        let f = {
+            type: "Feature",
+            properties: {
+                id: data.content.id
+            },
+            geometry: data.content.geometry,
+            id: data.content.id
+        };
+        featureCollection.features.push(f);
+
+        return featureCollection;
+    }
+
     async fetchPrecinctInfo(precinctId) {
         const data = await this.asyncFetch(this.baseUrl + 'precinctInfo?precinctId='.concat(precinctId));
 

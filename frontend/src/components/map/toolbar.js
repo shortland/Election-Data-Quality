@@ -67,6 +67,18 @@ const Delete = styled(Row)`
   }
 `;
 
+
+/**
+ * @props selectedMode={this.state.selectedMode}
+ * @props onSwitchMode={this._switchMode}
+ * @props onDelete={this._onDelete}           
+ * @props onSelect={this._onSelect}
+ * @props features={this.state.features}
+ * @props selectedFeature={this.state.selectedFeature}
+ * @props toolBarRequest={this._onSaveRequest}
+ * 
+ */
+
 export default class Toolbar extends PureComponent {
     constructor(props) {
         super(props);
@@ -92,9 +104,25 @@ export default class Toolbar extends PureComponent {
         this.props.toolBarRequest(this.props.features.data);
     }
 
+    // checkSelectedFeature() {
+    //     console.log(this.props.selectedFeature, this.props.features)
+    //     let selectedFeature = this.props.selectedFeature;
+    //     if (selectedFeature && selectedFeature.properties.type === "Precinct") {
+    //         let selectedFeatureId = selectedFeature.id;
+    //         this.props.appData.fetchPrecinctShape(selectedFeatureId).then((data) => {
+    //             console.log(data);
+    //             this.setState({
+    //                 selectedPrecinctFeature: data.features[0]
+    //             });
+    //         });
+    //     }
+
+    // }
+
     render() {
         const { selectedMode } = this.props;
         const { hoveredId } = this.state;
+        //this.checkSelectedFeature();
         return (
             <Container>
                 {MODES.map(m => {

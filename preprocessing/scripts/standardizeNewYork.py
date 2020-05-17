@@ -1,14 +1,12 @@
 import geopandas
 import sys
 
-# This script
+# This script standardizes NY precinct data to our standard form.
 
 if __name__ == '__main__':
     precinctFileName = ""
-    # countyFileName = ""
     try:
         precinctFileName : str = sys.argv[1]
-        # countyFileName: str = sys.argv[2]
     except:
         print("INVALID USAGE: Please input an state, precinct, and output file name")
         print("Usage:")
@@ -17,7 +15,6 @@ if __name__ == '__main__':
 
 
     precinctGDF: geopandas.GeoDataFrame = geopandas.read_file(precinctFileName)
-    # countyGDF: geopandas.GeoDataFrame = geopandas.read_file(countyFileName)
 
     precinctGDF = precinctGDF.drop(columns="VTDI10")
     precinctGDF = precinctGDF.drop(columns="NAME10")
@@ -56,8 +53,6 @@ if __name__ == '__main__':
     precinctGDF = precinctGDF.drop(columns="NRV")
     precinctGDF = precinctGDF.drop(columns="STATEFP10")
 
-
-
     precinctGDF["STATE_ID"] = "36"
     precinctGDF["CNTY_FIPS"] = None
     precinctGDF["CNTY_NAME"] = None
@@ -68,20 +63,20 @@ if __name__ == '__main__':
     precinctGDF["NOTES"] = None
 
     lastWardID = ""
-    index = 0
+    wardIDIndex = 0
 
     for p_index, precinct in precinctGDF.iterrows():
         precinctGDF.loc[p_index, "CNTY_NAME"] = precinctGDF.loc[p_index, "COUNTYFP10"]
         precinctGDF.loc[p_index, "CNTY_FIPS"] = "36"+(precinctGDF.loc[p_index, "COUNTYFP10"].zfill(3))
         if lastWardID != "36"+(precinctGDF.loc[p_index, "COUNTYFP10"].zfill(3)):
             lastWardID = "36"+(precinctGDF.loc[p_index, "COUNTYFP10"].zfill(3))
-            index = 0
-        precinctGDF.loc[p_index, "WARDID"] = str(index).zfill(4)
-        precinctGDF.loc[p_index, "WARD_FIPS"] = "49"+(
-            precinctGDF.loc[p_index, "COUNTYFP10"].zfill(3))+"99999"+str(index).zfill(4)
-        precinctGDF.loc[p_index, "GEOID"] = "49" + (
-            precinctGDF.loc[p_index, "COUNTYFP10"].zfill(3)) + "99999" + str(index).zfill(4)
-        index += 1
+            wardIDIndex = 0
+        precinctGDF.loc[p_index, "WARDID"] = str(wardIDIndex).zfill(4)
+        precinctGDF.loc[p_index, "WARD_FIPS"] = "36"+(
+            precinctGDF.loc[p_index, "COUNTYFP10"].zfill(3))+"99999"+str(wardIDIndex).zfill(4)
+        precinctGDF.loc[p_index, "GEOID"] = "36" + (
+            precinctGDF.loc[p_index, "COUNTYFP10"].zfill(3)) + "99999" + str(wardIDIndex).zfill(4)
+        wardIDIndex += 1
 
 
 

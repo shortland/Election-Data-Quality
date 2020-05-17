@@ -43,21 +43,15 @@ if __name__ == '__main__':
     precinctGDF: geopandas.GeoDataFrame = geopandas.read_file(statePrecinctDataFileName)
 
     precinctGDF['geometry'] = precinctGDF['geometry'].buffer(0.0001)
-
     precinctGDF = precinctGDF.dissolve(by='STATE_ID')
 
-    # stateGDF.explode()
-    # precinctGDF.explode()
+    stateGDF.explode()
+    precinctGDF.explode()
 
-    precinctGDF.crs
-    stateGDF.crs
     precinctGDF.to_crs(crs=stateGDF.crs, inplace=True)
 
-
     ghosts = geopandas.overlay(precinctGDF, stateGDF, how="symmetric_difference", keep_geom_type=False)
-
-    # Explode Multipolygons into multiple single polygons
-    # ghosts = ghosts.explode()
+    ghosts = ghosts.explode()
 
     ghosts['GEOID'] = None
     for index, ghost in ghosts.iterrows():
@@ -93,11 +87,6 @@ if __name__ == '__main__':
 
     ghosts.__setattr__(attr='NOTES', val='Ghosts')
 
-    # ghosts = ghosts.reset_index(drop=True)
-    #
-    # finalGDF = precinctGDF.append(ghosts, ignore_index=True)
-    #
-    # finalGDF.to_file(outputFileName, driver='GeoJSON')
     ghosts.to_file(outputFileName, driver='GeoJSON')
 
 

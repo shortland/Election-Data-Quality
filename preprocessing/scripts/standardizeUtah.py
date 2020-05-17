@@ -1,7 +1,7 @@
 import geopandas
 import sys
 
-# This script
+# This script standardizes the Utah precinct data to our standard form
 
 if __name__ == '__main__':
     precinctFileName = ""
@@ -15,17 +15,12 @@ if __name__ == '__main__':
         print("$ Python3 scripts/tagUnclosedPrecincts.py \"data/<precinct_data_file>.GeoJSON\" ")
         exit(1)
 
-
     precinctGDF: geopandas.GeoDataFrame = geopandas.read_file(precinctFileName)
     countyGDF: geopandas.GeoDataFrame = geopandas.read_file(countyFileName)
 
-    # precinctGDF = precinctGDF.drop(columns="CountyID")
-    # precinctGDF = precinctGDF.drop(columns="VistaID")
-    # precinctGDF = precinctGDF.drop(columns="PrecinctID")
     precinctGDF = precinctGDF.drop(columns="SubPrecinc")
     precinctGDF = precinctGDF.drop(columns="VersionNbr")
     precinctGDF = precinctGDF.drop(columns="EffectiveD")
-    # precinctGDF = precinctGDF.drop(columns="AliasName")
     precinctGDF = precinctGDF.drop(columns="Comments")
     precinctGDF = precinctGDF.drop(columns="RcvdDate")
     precinctGDF = precinctGDF.drop(columns="Shape_Leng")
@@ -41,7 +36,7 @@ if __name__ == '__main__':
     precinctGDF["NOTES"] = None
 
     precinctGDF = precinctGDF.to_crs(epsg=4326)
-    # countyGDF.to_crs(epsg=26912)
+
 
     for c_index, county in countyGDF.iterrows():
         nextPrecinctID = 1
@@ -56,11 +51,5 @@ if __name__ == '__main__':
                 precinctGDF.loc[p_index, "WARD_FIPS"] = "49"+countynbr+"99999"+str(nextPrecinctID).zfill(4)
                 precinctGDF.loc[p_index, "GEOID"] = "49" + countynbr + "99999" + str(nextPrecinctID).zfill(4)
                 nextPrecinctID += 1
-
-    # nonClosedPrecincts = precinctGDF[nonClosed[0]:nonClosed[1]]
-    # nonClosed.remove(nonClosed[0])
-    # for index in nonClosed:
-    #     nonClosedPrecincts.append(precinctGDF[index:(index+1)])
-    # nonClosedPrecincts.to_file(temp, driver='GeoJSON')
 
     precinctGDF.to_file(precinctFileName, driver='GeoJSON')

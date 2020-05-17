@@ -8,33 +8,44 @@ class ElectionDisplayBar extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            votingData: props.votingData,
             election: 2016,
             presidental: undefined,
             congressional: undefined
         }
     }
 
-    componentDidMount() {
-        let defaultYear = this.getAllElection();
-        if (defaultYear) {
-            console.log(defaultYear[0]);
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.votingData !== prevState.votingData) {
+            return {
+                votingData: nextProps.votingData,
+                presidental: undefined,
+                congressional: undefined
+            };
         }
-        console.log("00000i090909000000")
+        else {
+            return null;
+        }
     }
 
     getAllElection() {
-        let elections = this.props.votingData;
+        let elections = this.state.votingData;
         if (elections === undefined) {
-
+            return undefined;
         }
         else {
             let allElections = Object.keys(elections.electionData);
-            return allElections;
+            if (allElections.length === 0) {
+                return undefined;
+            }
+            else {
+                return allElections;
+            }
         }
     }
 
     getResults(year) {
-        let elections = this.props.votingData;
+        let elections = this.state.votingData;
         if (elections === undefined) {
 
         }
@@ -60,11 +71,10 @@ class ElectionDisplayBar extends Component {
         let resultInYear = this.getResults(year);
         let resultInYearKey = Object.keys(resultInYear);
         this.setState({
-            year: year,
+            election: year,
             presidental: undefined,
             congressional: undefined
-        })
-
+        });
         for (let i in resultInYearKey) {
             if (resultInYearKey[i].includes("PRES")) {
                 this.setState({
@@ -76,15 +86,6 @@ class ElectionDisplayBar extends Component {
                     congressional: resultInYear[resultInYearKey[i]]
                 });
         }
-        // let clinton = Math.random() * 100;
-        // clinton = Math.round(clinton);
-        // let trump = 100 - clinton;
-        // this.setState({ election: year, electionResults: { "Dem": clinton, "Rep": trump } });
-    }
-
-    presidentalPercentage(party) {
-        let presidental = this.state.presidental;
-
     }
 
     yearButtons(allElection) {
@@ -110,7 +111,7 @@ class ElectionDisplayBar extends Component {
 
     render() {
         let allElection = this.getAllElection();
-        if (allElection && (this.state.presidental === undefined && this.state.congressional === undefined)) {
+        if (allElection !== undefined && (this.state.presidental === undefined && this.state.congressional === undefined)) {
             this.changeElection(allElection[0].substring(4, 9));
         }
 
@@ -121,8 +122,6 @@ class ElectionDisplayBar extends Component {
             return (
                 <div>
                     <ButtonGroup size="sm" className="mt-3">
-                        {/* <Button variant="outline-primary" id="btn1" className="button" onClick={this.changeElection.bind(this, 2016)}>2016</Button>
-                        <Button variant="outline-primary" id="btn3" className="button" onClick={this.changeElection.bind(this, 2018)}>2018</Button> */}
                         {this.yearButtons(allElection)}
                     </ButtonGroup>
                     <br />
@@ -167,8 +166,6 @@ class ElectionDisplayBar extends Component {
             return (
                 <div>
                     <ButtonGroup size="sm" className="mt-3">
-                        {/* <Button variant="outline-primary" id="btn1" className="button" onClick={this.changeElection.bind(this, 2016)}>2016</Button>
-                        <Button variant="outline-primary" id="btn3" className="button" onClick={this.changeElection.bind(this, 2018)}>2018</Button> */}
                         {this.yearButtons(allElection)}
                     </ButtonGroup>
                     <br />
@@ -196,8 +193,6 @@ class ElectionDisplayBar extends Component {
             return (
                 <div>
                     <ButtonGroup size="sm" className="mt-3">
-                        {/* <Button variant="outline-primary" id="btn1" className="button" onClick={this.changeElection.bind(this, 2016)}>2016</Button>
-                        <Button variant="outline-primary" id="btn3" className="button" onClick={this.changeElection.bind(this, 2018)}>2018</Button> */}
                         {this.yearButtons(allElection)}
                     </ButtonGroup>
                     <br />
