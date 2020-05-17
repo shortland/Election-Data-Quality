@@ -12,7 +12,8 @@ class ModifyNeighbors extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mode: "default"
+            mode: "default",
+            dynamicAddNeighbor: false
         }
     }
 
@@ -21,7 +22,7 @@ class ModifyNeighbors extends Component {
         let neighbors = currentFeature.properties.neighborsId;
         let r = [];
         for (let i in neighbors) {
-            r.push(<p>{neighbors[i].trim()}</p>);
+            r.push(<li>{neighbors[i]}</li>);
         }
         return r;
     }
@@ -45,8 +46,9 @@ class ModifyNeighbors extends Component {
             if (precinctsForEdit) {
                 this.props.appData.addPrecinctNeighbor(targetPrecinct, precinctsForEdit).then((respond) => {
                     console.log(respond);
+                    this.dynamicAddNeighborId(precinctsForEdit);
+                    this.forceUpdate();
                 });
-
             }
             this.props.modify_neighbors_page_status("default");
         }
@@ -57,14 +59,30 @@ class ModifyNeighbors extends Component {
             if (precinctsForEdit) {
                 this.props.appData.deletePrecinctNeighbor(targetPrecinct, precinctsForEdit).then((respond) => {
                     console.log(respond);
+                    this.dynamicDeleteNeighborId(precinctsForEdit);
+                    this.forceUpdate();
                 });
             }
             this.props.modify_neighbors_page_status("default");
         }
     }
 
+    dynamicAddNeighborId(newId) {
+        this.props.selectedFeature.properties.neighborsId.push(newId);
+    }
+
+    dynamicDeleteNeighborId(deletedId) {
+        let oldNeighbors = this.props.selectedFeature.properties.neighborsId;
+        let newNeighbors = [];
+        for (let i in oldNeighbors) {
+            if (oldNeighbors[i] !== deletedId) {
+                newNeighbors.push(oldNeighbors[i]);
+            }
+        }
+        this.props.selectedFeature.properties.neighborsId = newNeighbors;
+    }
+
     render() {
-        this.getAllNeighbors();
         const { mode } = this.state;
         if (mode === "default") {
             return (
@@ -76,7 +94,9 @@ class ModifyNeighbors extends Component {
                     <br />
                     <hr />
                     <h5>Current Neighbors</h5>
-                    <div>{this.getAllNeighbors()}</div>
+                    <div>
+                        <ul>{this.getAllNeighbors()}</ul>
+                    </div>
                     <br />
                 </div>
             );
