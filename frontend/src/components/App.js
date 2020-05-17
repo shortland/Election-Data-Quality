@@ -253,14 +253,24 @@ export default class App extends Component {
 
     _renderToolbar = () => {
         const { userMode } = this.state;
-        let selectedFeature = this.state.selectedFeature;
-        if (selectedFeature && selectedFeature.properties.type === "Precinct") {
-            let oldFeatureForEdit = this.state.featureForEditing;
-            let selectedFeatureId = selectedFeature.id;
-            if (oldFeatureForEdit) {
-                if (oldFeatureForEdit.id !== selectedFeatureId) {
+        if (userMode === "Edit") {
+            let selectedFeature = this.state.selectedFeature;
+            if (selectedFeature && selectedFeature.properties.type === "Precinct") {
+                let oldFeatureForEdit = this.state.featureForEditing;
+                let selectedFeatureId = selectedFeature.id;
+                let isUpdateStateNeeded = false;
+                //check if featureForEdit is the same
+                if (oldFeatureForEdit) {
+                    if (oldFeatureForEdit.id !== selectedFeatureId) {
+                        isUpdateStateNeeded = true;
+                    }
+                }
+                else {
+                    isUpdateStateNeeded = true;
+                }
+
+                if (isUpdateStateNeeded) {
                     this.appData.fetchPrecinctShape(selectedFeatureId).then((data) => {
-                        //console.log(data);
                         data.features[0].geometry = {
                             type: "Polygon",
                             coordinates: data.features[0].geometry.coordinates[0]
@@ -271,15 +281,26 @@ export default class App extends Component {
                     });
                 }
             }
-        }
-        let featureForEditing = this.state.featureForEditing;
-        if (featureForEditing && userMode === "Edit") {
-            let r = this._editorRef.addFeatures(featureForEditing);
-            console.log(this._editorRef, r);
-            // console.log(this.state.featureForEditing)
-            // console.log(this._editorRef.addFeatures(featureForEditing))
-        }
-        if (userMode === "Edit") {
+            let featureForEditing = this.state.featureForEditing;
+            let editor = this._editorRef;
+            //we only use one feature
+            if (featureForEditing) {
+                //check if editor's featureCollection exist or not
+                if (editor.state.featureCollection) {
+                    if (editor.state.featureCollection.featureCollection.length !== 1) {
+                        editor.state.featureCollection.featureCollection.length = 0;
+                        //editor.addFeatures(featureForEditing);
+                    }
+                }
+                else {
+                    editor.addFeatures(featureForEditing);
+                }
+            }
+            else {
+                //console.log(editor);
+            }
+
+
             return (
                 <Toolbar
                     selectedMode={this.state.selectedMode}
