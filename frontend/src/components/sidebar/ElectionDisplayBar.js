@@ -7,12 +7,21 @@ import Button from 'react-bootstrap/Button';
 class ElectionDisplayBar extends Component {
     constructor(props) {
         super(props);
-        //this.electionResults = { "Clinton": 60, "Trump": 40, "Other": 5 };
         this.state = {
-            election: 2016,
-            electionResults: { "Dem": 60, "Rep": 40, "Other": 5 }
+            // election: 2016,
+            // electionResults: { "Dem": 60, "Rep": 40, "Other": 5 }
         }
     }
+
+    // getElection() {
+    //     let elections = this.props.electionData;
+    //     if (elections === undefined) {
+
+    //     }
+    //     else {
+
+    //     }
+    // }
 
     changeElection(year) {
         let clinton = Math.random() * 100;
@@ -22,6 +31,7 @@ class ElectionDisplayBar extends Component {
     }
 
     render() {
+        this.getElection();
         const { electionResults } = this.state;
 
         let keys = Object.keys(electionResults);

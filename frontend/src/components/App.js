@@ -785,6 +785,7 @@ export default class App extends Component {
                 <div className="toggleModeItem inlineDivs">
                     <UserModeSelector
                         userModeSelect={(selectedMode) => this.userModeSelect(selectedMode)}
+                        selectedFeature={this.state.selectedFeature}
                     />
                 </div>
 
@@ -793,6 +794,7 @@ export default class App extends Component {
                         <LeftSidebar
                             selected={this.state.selectedFeature}
                             showErrorPins={this.showErrorPins.bind(this)}
+                            userMode={this.state.userMode}
                         />
                     </div>
 
