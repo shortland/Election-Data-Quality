@@ -56,7 +56,7 @@ class DemographicsTable extends PureComponent {
         //console.log(this.props.demographicData);
         return (
             <div>
-                <Table striped bordered hover>
+                <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
                             <th>Race</th>
