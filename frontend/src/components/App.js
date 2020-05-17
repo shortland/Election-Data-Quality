@@ -42,18 +42,21 @@ import Card from "react-bootstrap/Card";
  */
 import {
     countyDataLayerFillable,
-    countyDataLayerFillableHighlight,
+    //countyDataLayerFillableHighlight,
     countyDataLayerOutline,
 } from "../layers/CountyLayer";
-import { stateLayerFill, stateLayerFillHighlight } from "../layers/StateLayer";
+import {
+    stateLayerFill, stateLayerOutline,
+    //stateLayerFillHighlight
+} from "../layers/StateLayer";
 import {
     precinctLayerFill,
-    precinctLayerFillHighlight,
+    //precinctLayerFillHighlight,
     precinctLayerOutline,
 } from "../layers/PrecinctLayer";
 import {
     congressionalLayerFill,
-    congressionalLayerFillHighlight,
+    //congressionalLayerFillHighlight,
     congressionalLayerOutline,
 } from "../layers/CongressionalLayer";
 
@@ -144,8 +147,6 @@ export default class App extends Component {
      * For Mapbox geocoding
      */
     mapRef = React.createRef();
-
-
 
     handleViewportChange = (viewport) => {
         this.setState({
@@ -707,6 +708,7 @@ export default class App extends Component {
                             maxzoom={5}
                         /> */}
                         <Layer {...stateLayerFill} maxzoom={5.5} />
+                        <Layer {...stateLayerOutline} maxzoom={5.5} />
                     </Source>
                 )}
             </>
@@ -748,7 +750,7 @@ export default class App extends Component {
                             minzoom={5.5}
                         /> */}
                         <Layer {...countyDataLayerOutline} minzoom={5.5} />
-                        <Layer {...countyDataLayerFillable} minzoom={5.5} maxzoom={9.5} />
+                        <Layer {...countyDataLayerFillable} minzoom={5.5} maxzoom={9} />
                     </Source>
                 )}
             </>
@@ -863,13 +865,13 @@ export default class App extends Component {
 
                         {/* {this.renderLayers()} */}
 
-                        {this.renderPrecinctLayers()}
-
-                        {this.renderCountyLayers()}
+                        {this.renderStateLayers()}
 
                         {this.renderCongressionalLayers()}
 
-                        {this.renderStateLayers()}
+                        {this.renderCountyLayers()}
+
+                        {this.renderPrecinctLayers()}
 
                         {this._renderTooltip()}
 

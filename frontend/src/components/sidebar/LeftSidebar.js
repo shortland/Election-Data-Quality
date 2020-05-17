@@ -70,38 +70,40 @@ class LeftSidebar extends Component {
         const { comment_data } = this.state;
         const list = this.createList();
         const selectedFeature = this.props.selected;
-        console.log(selectedFeature);
+        //console.log(selectedFeature);
+
+        let keys = 0;
 
         if (list.length > 0) {
             if (mode === "data_display") {
                 return (
-                    <div style={{ textAlign: 'left'}}>
-                        <Collapsible trigger="View General Info" open={true}>
+                    <div style={{ textAlign: 'left' }}>
+                        <Collapsible trigger="View General Info" open={true} key={keys++}>
                             <div style={{ marginLeft: '5px' }}>
                                 {list}
                             </div>
                         </Collapsible>
-                        <Collapsible trigger="View Elections">
+                        <Collapsible trigger="View Elections" key={keys++}>
                             <ElectionDisplayBar />
                         </Collapsible>
-                        <Collapsible trigger="View Demographics">
-                            {(selectedFeature.properties.type == "Precinct" && <DemographicsTable
+                        <Collapsible trigger="View Demographics" key={keys++}>
+                            {(selectedFeature.properties.type === "Precinct" && <DemographicsTable
                                 demographicData={selectedFeature.properties.demographicData}
                             />) ||
                                 <div>select a precinct to view demographics</div>}
                         </Collapsible>
-                        <Collapsible trigger="Modify Data">
+                        <Collapsible trigger="Modify Data" key={keys++}>
                             <DataCorrectionPage
                                 data_correction_page_status={this.get_data_correction_page_status}
                             />
                         </Collapsible>
-                        <Collapsible trigger="View Comments">
+                        <Collapsible trigger="View Comments" key={keys++}>
                             <Comments savedCommentData={comment_data} />
                             <br />
                             <CommentModal savedCommentData={this.get_comments_modal_data} />
                             <br />
                         </Collapsible>
-                        <Collapsible trigger="View Map Errors">
+                        <Collapsible trigger="View Map Errors" key={keys++}>
                             <button className="Extra-Large-Button" onClick={this._handleClick}>View All</button>
                             <button className="Extra-Large-Button" onClick={this._handleClick}>View Self Intersecting Boundaries</button>
                             <button className="Extra-Large-Button" onClick={this._handleClick}>View Open Borders</button>

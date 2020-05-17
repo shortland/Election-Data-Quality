@@ -37,7 +37,7 @@ class DemographicsTable extends PureComponent {
     getPercentage(race) {
         if (this.props.demographicData) {
             let demographic = this.props.demographicData.demographic;
-            if (demographic[race] == 0) {
+            if (demographic[race] === 0) {
                 return 0;
             }
             else {
@@ -53,7 +53,7 @@ class DemographicsTable extends PureComponent {
 
     render() {
         this.calculateTotal();
-        console.log(this.props.demographicData);
+        //console.log(this.props.demographicData);
         return (
             <div>
                 <Table striped bordered hover>

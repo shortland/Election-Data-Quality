@@ -3,16 +3,12 @@ export const congressionalLayerFill = {
     type: 'fill',
     paint: {
         'fill-color': '#27496d',
-        'fill-opacity': 0.5
-    },
-};
-
-export const congressionalLayerFillHighlight = {
-    id: 'congressionalFillHighlighted',
-    type: 'fill',
-    source: 'congressionalFill',
-    paint: {
-        'fill-color': 'rgba(66, 135, 245, 0.5)',
+        'fill-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            0.5,
+            0.25
+        ]
     },
 };
 
@@ -27,4 +23,13 @@ export const congressionalLayerOutline = {
     layout: {
         'line-join': 'round'
     }
+};
+
+export const congressionalLayerFillHighlight = {
+    id: 'congressionalFillHighlighted',
+    type: 'fill',
+    source: 'congressionalFill',
+    paint: {
+        'fill-color': 'rgba(66, 135, 245, 0.5)',
+    },
 };

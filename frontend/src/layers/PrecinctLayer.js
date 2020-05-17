@@ -2,14 +2,28 @@ export const precinctLayerFill = {
     id: 'precinctFill',
     type: 'fill',
     paint: {
-        'fill-color': '#C73009',
+        'fill-color': '#900c3f',
         'fill-opacity': [
             'case',
             ['boolean', ['feature-state', 'hover'], false],
-            0.6,
-            0.25
+            0.4,
+            0.20
         ]
     },
+};
+
+export const precinctLayerOutline = {
+    id: 'precinctOutline',
+    type: 'line',
+    paint: {
+        //'line-color': 'rgba(66, 135, 245, 1.0)',
+        'line-color': '#000000',
+        'line-opacity': 0.5,
+        'line-width': 2,
+    },
+    layout: {
+        'line-join': 'round'
+    }
 };
 
 export const precinctLayerFillHighlight = {
@@ -19,18 +33,4 @@ export const precinctLayerFillHighlight = {
     paint: {
         'fill-color': 'rgba(66, 135, 245, 0.5)',
     },
-};
-
-export const precinctLayerOutline = {
-    id: 'precinctOutline',
-    type: 'line',
-    paint: {
-        //'line-color': 'rgba(66, 135, 245, 1.0)',
-        'line-color': '#FCBF1E',
-        'line-opacity': 0.75,
-        'line-width': 3,
-    },
-    layout: {
-        'line-join': 'round'
-    }
 };
