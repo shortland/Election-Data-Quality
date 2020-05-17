@@ -2,12 +2,12 @@ export const precinctLayerFill = {
     id: 'precinctFill',
     type: 'fill',
     paint: {
-        'fill-color': 'rgba(0, 0, 0, 0.0)',
+        'fill-color': '#C73009',
         'fill-opacity': [
             'case',
             ['boolean', ['feature-state', 'hover'], false],
-            1,
-            0.5
+            0.6,
+            0.25
         ]
     },
 };
@@ -27,7 +27,7 @@ export const precinctLayerOutline = {
     paint: {
         //'line-color': 'rgba(66, 135, 245, 1.0)',
         'line-color': '#FCBF1E',
-        'line-opacity': 1,
+        'line-opacity': 0.75,
         'line-width': 3,
     },
     layout: {

@@ -64,7 +64,7 @@ class DemographicsTable extends PureComponent {
                             {/* <th>Percent</th> */}
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="text-left">
                         <tr>
                             <th>White</th>
                             <td>{this.getPopulation("WHITE")}</td>

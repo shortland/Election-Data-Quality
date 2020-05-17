@@ -30,7 +30,7 @@ class LeftSidebar extends Component {
             const properties = feature.properties;
             for (const p in properties) {
                 if (p !== "demographicData" && p !== "precinctError" && p !== "votingData") {
-                    list.push(<div>{`${p}: ${properties[p]}`}</div>);
+                    list.push(<div className="text-left">{`${p}: ${properties[p]}`}</div>);
                 }
             }
             // list.push(<div>State: {properties['name']}</div>);
@@ -70,13 +70,17 @@ class LeftSidebar extends Component {
         const { comment_data } = this.state;
         const list = this.createList();
         let selectedFeatureType = this.props.selected ? this.props.selected.properties.type : undefined;
+        const selectedFeature = this.props.selected;
+        console.log(selectedFeature);
+
         if (list.length > 0) {
             if (userMode === "View") {
                 return (
-                    <div >
-                        <h5></h5>
+                    <div style={{ textAlign: 'left' }}>
                         <Collapsible trigger="General Info" open={true}>
-                            {list}
+                            <div style={{ marginLeft: '5px' }}>
+                                {list}
+                            </div>
                         </Collapsible>
                         <Collapsible trigger="Elections">
                             <ElectionDisplayBar
@@ -84,9 +88,10 @@ class LeftSidebar extends Component {
                             />
                         </Collapsible>
                         <Collapsible trigger="Demographics">
-                            <DemographicsTable
-                                demographicData={this.props.selected.properties.demographicData}
-                            />
+                            {(selectedFeature.properties.type == "Precinct" && <DemographicsTable
+                                demographicData={selectedFeature.properties.demographicData}
+                            />) ||
+                                <div>select a precinct to view demographics</div>}
                         </Collapsible>
                         <Collapsible trigger="Comments">
                             <Comments savedCommentData={comment_data} />

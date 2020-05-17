@@ -148,6 +148,7 @@ class AppData {
                     id: data.content[i].id
                 },
                 geometry: data.content[i].geometry,
+                id: data.content[i].id
             };
             featureCollection.features.push(f);
         }
