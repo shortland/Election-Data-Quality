@@ -112,7 +112,7 @@ export default class App extends Component {
             popupInfo: null,
             selectedFeature: null,
             selectedMode: EditorModes.READ_ONLY,
-            selectedFeatureId: null,
+            // selectedFeatureId: null,
             hoveredFeature: null,
             filter: null,
             shouldShowPins: false,
@@ -126,6 +126,8 @@ export default class App extends Component {
                 precincts: true,
                 parks: false,
             },
+            precinct_selection_to_edit: false, // this is for determine if user is selecting precincts to edit
+            precinct_selected_for_edit: null, // this is the precinct user selected while (precinct_selection_to_edit == true)
         };
 
         this._editorRef = null;
@@ -256,33 +258,54 @@ export default class App extends Component {
 
     _renderToolbar = () => {
         const { userMode } = this.state;
-        let selectedFeature = this.state.selectedFeature;
-        if (selectedFeature && selectedFeature.properties.type === "Precinct") {
-            let oldFeatureForEdit = this.state.featureForEditing;
-            let selectedFeatureId = selectedFeature.id;
-            if (oldFeatureForEdit) {
-                if (oldFeatureForEdit.id !== selectedFeatureId) {
-                    this.appData.fetchPrecinctShape(selectedFeatureId).then((data) => {
-                        //console.log(data);
-                        data.features[0].geometry = {
-                            type: "Polygon",
-                            coordinates: data.features[0].geometry.coordinates[0]
-                        }
-                        this.setState({
-                            featureForEditing: data.features
-                        });
-                    });
-                }
-            }
-        }
-        let featureForEditing = this.state.featureForEditing;
-        if (featureForEditing && userMode === "Edit") {
-            let r = this._editorRef.addFeatures(featureForEditing);
-            console.log(this._editorRef, r);
-            // console.log(this.state.featureForEditing)
-            // console.log(this._editorRef.addFeatures(featureForEditing))
-        }
         if (userMode === "Edit") {
+            // let selectedFeature = this.state.selectedFeature;
+            // if (selectedFeature && selectedFeature.properties.type === "Precinct") {
+            //     let oldFeatureForEdit = this.state.featureForEditing;
+            //     let selectedFeatureId = selectedFeature.id;
+            //     let isUpdateStateNeeded = false;
+            //     //check if featureForEdit is the same
+            //     if (oldFeatureForEdit) {
+            //         if (oldFeatureForEdit.id !== selectedFeatureId) {
+            //             isUpdateStateNeeded = true;
+            //         }
+            //     }
+            //     else {
+            //         isUpdateStateNeeded = true;
+            //     }
+
+            //     if (isUpdateStateNeeded) {
+            //         this.appData.fetchPrecinctShape(selectedFeatureId).then((data) => {
+            //             data.features[0].geometry = {
+            //                 type: "Polygon",
+            //                 coordinates: data.features[0].geometry.coordinates[0]
+            //             }
+            //             this.setState({
+            //                 featureForEditing: data.features
+            //             });
+            //         });
+            //     }
+            // }
+            // let featureForEditing = this.state.featureForEditing;
+            // let editor = this._editorRef;
+            // //we only use one feature
+            // if (featureForEditing) {
+            //     //check if editor's featureCollection exist or not
+            //     if (editor.state.featureCollection) {
+            //         if (editor.state.featureCollection.featureCollection.length !== 1) {
+            //             editor.state.featureCollection.featureCollection.length = 0;
+            //             //editor.addFeatures(featureForEditing);
+            //         }
+            //     }
+            //     else {
+            //         editor.addFeatures(featureForEditing);
+            //     }
+            // }
+            // else {
+            //     //console.log(editor);
+            // }
+
+
             return (
                 <Toolbar
                     selectedMode={this.state.selectedMode}
@@ -440,8 +463,18 @@ export default class App extends Component {
                 this.setState({ selectedFeature: congressionalFeature });
             }
             else if (precinctFeature) {
-                precinctFeature.properties.type = "Precinct";
-                this.onPrecinctSelected(precinctFeature);
+                //check if precinct_selection_to_edit is true
+                if (this.state.precinct_selection_to_edit) {
+                    //add the selected precinct to precinct_selected_for_edit
+                    this.setState({
+                        precinct_selected_for_edit: precinctFeature.id
+                    });
+                    //TODO: enable user to select multiple precicnts so this should also highlight all the selected precincts
+                }
+                else {
+                    precinctFeature.properties.type = "Precinct";
+                    this.onPrecinctSelected(precinctFeature);
+                }
             }
             else {
                 if (previouslySelected.properties.type === "Precinct") {
@@ -721,6 +754,13 @@ export default class App extends Component {
         if (userMode) {
             this.setState({ userMode: userMode });
         }
+
+        if (userMode !== "Edit") {
+            this.setState({
+                precinct_selection_to_edit: false,
+                precinct_selected_for_edit: null
+            });
+        }
     };
 
     stateSelect(name) {
@@ -891,6 +931,22 @@ export default class App extends Component {
         );
     }
 
+    get_leftSideBar_status = (status) => {
+        if (status === "precinct_selection_to_edit") {
+            this.setState({
+                precinct_selection_to_edit: true
+            });
+        }
+        else {
+            this.setState({
+                precinct_selected_for_edit: null,
+                precinct_selection_to_edit: false
+            })
+        }
+        console.log("precinct_selection_to_edit : ", this.state.precinct_selection_to_edit);
+    }
+
+
     /**
      * Render precinct data
      */
@@ -938,6 +994,9 @@ export default class App extends Component {
                             selected={this.state.selectedFeature}
                             showErrorPins={this.showErrorPins.bind(this)}
                             userMode={this.state.userMode}
+                            leftSideBarStatus={this.get_leftSideBar_status}
+                            precinctSelectedForEdit={this.state.precinct_selected_for_edit}
+                            appData={this.appData}
                         />
                     </div>
 

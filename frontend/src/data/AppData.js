@@ -196,6 +196,31 @@ class AppData {
 
         return data.content;
     }
+
+    async addPrecinctNeighbor(precinctId1, precinctId2) {
+        const response = await this.asyncFetch(this.baseUrl + 'addPrecinctNeighbor?precinctId1='.concat(precinctId1) + '&precinctId2='.concat(precinctId2));
+
+        if (response.status != "ok") {
+            console.log(response);
+            alert("server error : unable to add" + precinctId1 + " and " + precinctId2 + " as neighbor");
+            return
+        }
+
+        return response;
+    }
+
+    async deletePrecinctNeighbor(precinctId1, precinctId2) {
+        const response = await this.asyncFetch(this.baseUrl + 'deletePrecinctNeighbor?precinctId1='.concat(precinctId1) + '&precinctId2='.concat(precinctId2));
+
+        if (response.status != "ok") {
+            console.log(response);
+            alert("server error : unable to delete" + precinctId1 + " and " + precinctId2 + " as neighbor");
+            return
+        }
+
+        return response;
+    }
+
 }
 
 export default AppData;
