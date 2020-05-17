@@ -455,9 +455,10 @@ export default class App extends Component {
         } = event;
 
         if (!event.type || !event.features || event.features.length === 0 || event.features[0].source === "composite") {
-            if (this.lastHovered) {
+            const lastHovered = this.state.hoveredFeature;
+            if (lastHovered && lastHovered.id) {
                 map.setFeatureState(
-                    { source: this.lastHovered.source, id: this.lastHovered.id },
+                    { source: lastHovered.source, id: lastHovered.id },
                     { hover: false }
                 );
             }
@@ -480,15 +481,22 @@ export default class App extends Component {
             const precinctHovered = features.find((f) => f.layer.id === "precinctFill");
 
             const hovered = stateHovered || countyHovered || congressionalHovered || precinctHovered;
+            const lastHovered = this.state.hoveredFeature;
+
+            console.log(hovered);
 
             if (stateHovered) {
                 hovered.isState = true;
                 map.setFeatureState(
-                    { source: stateHovered.source, id: stateHovered.id },
+                    { source: hovered.source, id: hovered.id },
                     { hover: true }
                 );
             } else if (countyHovered) {
                 hovered.isCounty = true;
+                map.setFeatureState(
+                    { source: hovered.source, id: hovered.id },
+                    { hover: true }
+                );
             } else if (congressionalHovered) {
                 hovered.isCongressional = true;
             } else if (precinctHovered) {
@@ -496,14 +504,12 @@ export default class App extends Component {
             }
 
             //if changed hovered features, remove highlight from previous
-            if (this.lastHovered && this.lastHovered.id != hovered.id) {
+            if (lastHovered && hovered && hovered.id && lastHovered.id != hovered.id) {
                 map.setFeatureState(
-                    { source: this.lastHovered.source, id: this.lastHovered.id },
+                    { source: lastHovered.source, id: lastHovered.id },
                     { hover: false }
                 );
             }
-
-            this.lastHovered = hovered;
 
             const filter = this.getFeatureFilter(hovered);
 
