@@ -74,18 +74,35 @@
     display: inline-flex;
     width: 100%;
     color: white;
+    font-size: small;
 }
 
 .BlueBar {
     height: 30px;
     margin: 10px 0px 10px 0px;
-    background-color: rgb(0, 19, 234);
+    background-color: rgb(107, 119, 255);
+    color: black;
 }
 
 .RedBar {
     height: 30px;
     margin: 10px 0px 10px 0px;
-    background-color: rgb(234, 0, 0);
+    background-color: rgb(255, 82, 82);
+    color: black;
+}
+
+.GreenBar {
+    height: 30px;
+    margin: 10px 0px 10px 0px;
+    background-color: rgb(58, 180, 58);
+    color: black;
+}
+
+.YellowBar {
+    height: 30px;
+    margin: 10px 0px 10px 0px;
+    background-color: rgb(234, 234, 0);
+    color: black;
 }
 
 #leftCol {
