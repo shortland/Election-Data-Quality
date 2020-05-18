@@ -1289,7 +1289,9 @@ export default class App extends Component {
             const precinct1 = selectedPrecinctGroup.pop();
             const precinct2 = selectedPrecinctGroup.pop();
             //TODO deal with merge
-            const result = this.appData.mergePrecinct(precinct1, precinct2);
+            const result = this.appData.mergePrecinct(precinct2.id, precinct1.id).then(() => {
+                this.fetchAndUpdatePrecinctInfoAndShape(precinct2);
+            });
             //merge response
             if (result) {
                 toast.success("Precincts merged", {
@@ -1308,7 +1310,7 @@ export default class App extends Component {
 
     /**
      * method to fetch precinct info, parse, then update on frontend
-     * @param {*} precinctFeature 
+     * @param {*} precinctFeature the precinct feature object to fetch and update
      */
     fetchAndUpdatePrecinct(precinctFeature) {
         console.log("fetch and update called");
@@ -1338,11 +1340,22 @@ export default class App extends Component {
             }
             let newProp = Object.assign(oldData.properties, info);
             oldData.properties = newProp;
+            oldData.id = data.id;
             return oldData;
         }).then((updatedPrecinct) => {
             console.log(updatedPrecinct);
             this.forceUpdate();
             return updatedPrecinct;
+        });
+    }
+
+    fetchAndUpdatePrecinctInfoAndShape(precinctFeature) {
+        this.fetchAndUpdatePrecinct(precinctFeature);
+
+        this.appData.fetchPrecinctShape(precinctFeature.id).then((newShape) => {
+            console.log(newShape);
+            //const newGeom = newShape.features[0].geometry;
+            //precinctFeature._vectorTileFeature.
         });
     }
 
