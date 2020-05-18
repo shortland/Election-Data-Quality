@@ -793,10 +793,10 @@ export default class App extends Component {
                 hoveredFeature && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h5>{stateHovered.properties.name}</h5>
-                        <div>
+                        {/* <div>
                             Counties:{" "}
                             {}
-                        </div>
+                        </div> */}
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
                     </div>
@@ -978,11 +978,13 @@ export default class App extends Component {
             let countyId = id.slice(0, 5);
             let map = this.getMap();
             this.appData.fetchPrecinctShape(id).then((data) => {
-                let geo = data.geometry;
-                let f = map.queryRenderedFeatures(geo, { layers: "PrecinctFill" });
+                let geo = data.features[0].geometry;
+                console.log(geo);
+                let oneArray = geo.coordinates[0][0][0];
+                let f = map.queryRenderedFeatures(oneArray, { layers: "PrecinctFill" });
                 console.log(data);
                 console.log(f);
-            })
+            });
         }
     }
 
@@ -1112,9 +1114,18 @@ export default class App extends Component {
         );
     }
 
-
-
-
+    /**
+     * just checks if current selected feature is a precinct
+     */
+    precinctIsSelected() {
+        const selected = this.state.selectedFeature;
+        if (selected && selected.properties.type && selected.properties.type === "Precinct") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
     render() {
         const { viewport, selectedMode, shouldShowPins } = this.state;
@@ -1132,12 +1143,14 @@ export default class App extends Component {
                         selectedFeature={this.state.selectedFeature}
                     />
                 </div>
-                <div className="inlineDivs">
-                    <MergeBtn
-                        mergePrecincts={() => this.mergePrecincts()}
-                        enabled={this.state.selectedPrecinctGroup.length >= 2}
-                    />
-                </div>
+                {this.precinctIsSelected() &&
+                    <div className="mergeBtn inlineDivs">
+                        <MergeBtn
+                            mergePrecincts={() => this.mergePrecincts()}
+                            enabled={this.state.selectedPrecinctGroup.length >= 2}
+                        />
+                    </div>
+                }
 
                 <div>
                     <div id="leftCol">
@@ -1244,12 +1257,24 @@ export default class App extends Component {
 
     mergePrecincts = () => {
         const { selectedPrecinctGroup } = this.state;
-
         if (selectedPrecinctGroup.length === 2) {
             const precinctId1 = selectedPrecinctGroup.pop();
             const precinctId2 = selectedPrecinctGroup.pop();
             //TODO deal with merge
-            this.appData.mergePrecinct(precinctId1, precinctId2);
+            const result = this.appData.mergePrecinct(precinctId1, precinctId2);
+            //merge response
+            if (result) {
+                toast.success("Precincts merged", {
+                    position: toast.POSITION.BOTTOM_CENTER,
+                });
+            }
+            else {
+                toast.error("Could not merge", {
+                    position: toast.POSITION.BOTTOM_CENTER,
+                });
+            }
+            this.removeSelectedHighlight(precinctId1);
+            this.removeSelectedHighlight(precinctId2);
         }
     }
 

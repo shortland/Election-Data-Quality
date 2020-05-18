@@ -96,8 +96,12 @@ public class FileSaver {
         File file = new File(FileSaver.storePath + keyName + FileSaver.extension);
 
         if (file.lastModified() + FileSaver.expireTime > System.currentTimeMillis()) {
+            RestServiceApplication.logger.info("valid cache");
+
             return true;
         }
+
+        RestServiceApplication.logger.info("invalid cache");
 
         return false;
     }

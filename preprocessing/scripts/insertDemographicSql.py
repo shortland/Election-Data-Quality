@@ -13,7 +13,7 @@ db = mysql.connector.connect(
 dbCursor = db.cursor()
 
 # need to change the directory
-with open("../data/New York/New_York_Demographic_Data.json") as f:
+with open("../data/Wisconsin/Wisconsin_Demographic_Data.json") as f:
     data = json.load(f)
 
     demographic_data = data["PRECINCT_DEMOGRAPHICS"]

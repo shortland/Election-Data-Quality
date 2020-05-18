@@ -82,3 +82,10 @@ code {
     left: calc(300px + 130px);
     z-index: 12;
 }
+
+.mergeBtn {
+    position: fixed;
+    top: 10px;
+    left: calc(300px + 130px + 180px);
+    z-index: 12;
+}

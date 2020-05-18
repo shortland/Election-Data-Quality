@@ -7,19 +7,18 @@ import Button from "react-bootstrap/Button";
  * @prop enabled: boolean as to whether merge button enabled
  */
 class MergeBtn extends Component {
-
     render() {
         const { enabled } = this.props;
         if (enabled) {
             return (
-                <Button onClick={this.props.mergePrecincts}>
+                <Button variant="success" onClick={this.props.mergePrecincts}>
                     Merge
                 </Button>
             )
         }
         else {
             return (
-                <Button disabled>Merge</Button>
+                <Button variant="success" disabled>Merge</Button>
             )
         }
     }

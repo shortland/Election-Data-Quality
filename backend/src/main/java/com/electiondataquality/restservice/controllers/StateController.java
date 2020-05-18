@@ -55,7 +55,7 @@ public class StateController {
         /**
          * Return the datastore cache when valid
          */
-        if (RestServiceApplication.dataStore.isValid(method) && RestServiceApplication.caching) {
+        if (RestServiceApplication.dataStore.isValid(method)) {
             RestServiceApplication.logger.info("Using datastore cache");
 
             return ResponseGen.create(API_STATUS.OK,

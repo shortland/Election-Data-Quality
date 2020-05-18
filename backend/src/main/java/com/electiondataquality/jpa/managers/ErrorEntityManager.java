@@ -50,4 +50,11 @@ public class ErrorEntityManager {
 
         return results;
     }
+
+    public List<ErrorTable> findErrorByType() {
+        List<ErrorTable> results = manager.createQuery("Select a from ErrorTable a where errorType", ErrorTable.class)
+                .getResultList();
+
+        return results;
+    }
 }
