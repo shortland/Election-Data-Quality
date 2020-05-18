@@ -221,6 +221,18 @@ class AppData {
         return response;
     }
 
+    async mergePrecinct(precinctId1, precinctId2) {
+        const response = await this.asyncFetch(this.baseUrl + 'mergePrecinct?precinctId1='.concat(precinctId1) + '&precinctId2='.concat(precinctId2));
+
+        if (response.status != "ok") {
+            console.log(response);
+            alert("server error : unable to merge" + precinctId1 + " and " + precinctId2);
+            return
+        }
+
+        return response;
+    }
+
 }
 
 export default AppData;

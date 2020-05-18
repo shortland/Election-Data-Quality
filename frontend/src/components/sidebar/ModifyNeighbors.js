@@ -75,7 +75,7 @@ class ModifyNeighbors extends Component {
         let oldNeighbors = this.props.selectedFeature.properties.neighborsId;
         let newNeighbors = [];
         for (let i in oldNeighbors) {
-            if (oldNeighbors[i] !== deletedId) {
+            if (oldNeighbors[i].toString().trim() !== deletedId.toString().trim()) {
                 newNeighbors.push(oldNeighbors[i]);
             }
         }

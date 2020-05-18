@@ -660,7 +660,6 @@ export default class App extends Component {
 
         if (neighbors && source) {
             for (let index in neighbors) {
-                console.log(neighbors[index]);
                 let Nid = neighbors[index].trim();
                 //console.log(Nid);
                 map.setFeatureState(

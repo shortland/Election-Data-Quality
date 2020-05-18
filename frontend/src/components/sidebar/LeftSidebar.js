@@ -8,6 +8,7 @@ import DataCorrectionPage from './DataCorrectionPage';
 import ModifyNeighbors from './ModifyNeighbors';
 import Comments from './Comments';
 import CommentModal from './CommentModal';
+import MergePrecinct from './MergePrecinct';
 /**
  * Our sidebar component
  * @props selected: the currently selected map feature
@@ -151,7 +152,10 @@ class LeftSidebar extends Component {
                                 />
                             </Collapsible>
                             <Collapsible trigger="Merge Precinct" >
-
+                                <MergePrecinct
+                                    selectedFeature={selectedFeature}
+                                    precinctSelectedForEdit={this.props.precinctSelectedForEdit}
+                                    appData={this.props.appData} />
                             </Collapsible>
                         </div >
                     );
