@@ -400,7 +400,7 @@ export default class App extends Component {
             return oldData;
         }).then((updatedPrecinct) => {
             const prevSelected = this.state.selectedFeature;
-            this.removeHighlightPrecinctNeighbors(prevSelected);
+            this.removeHighlightFromPrecinctNeighbors(prevSelected);
             this.highlightPrecinctNeighbors(updatedPrecinct);
             this.setState({
                 selectedFeature: updatedPrecinct
@@ -443,9 +443,7 @@ export default class App extends Component {
                         }
                     );
                 }
-
                 this.onStateSelected(stateFeature);
-
             }
             else if (countyFeature) {
                 countyFeature.properties.type = "County";
@@ -477,8 +475,8 @@ export default class App extends Component {
                 }
             }
             else {
-                if (previouslySelected.properties.type === "Precinct") {
-                    this.removeHighlightPrecinctNeighbors(previouslySelected);
+                if (previouslySelected && previouslySelected.properties.type === "Precinct") {
+                    this.removeHighlightFromPrecinctNeighbors(previouslySelected);
                 }
                 //this.setState({ selectedFeature: null });
             }
@@ -656,7 +654,7 @@ export default class App extends Component {
 
         if (neighbors && source) {
             for (let index in neighbors) {
-                let Nid = neighbors[index].trim();
+                let Nid = neighbors[index].toString().trim();
                 //console.log(Nid);
                 map.setFeatureState(
                     { source: source, id: Nid },
@@ -670,15 +668,15 @@ export default class App extends Component {
      * removes neighbors styling, for when new precinct selected
      * @param {*} precinctFeature the precicnt to remove neighbors' highlighting
      */
-    removeHighlightPrecinctNeighbors(precinctFeature) {
-        //console.log(precinctFeature);
+    removeHighlightFromPrecinctNeighbors(precinctFeature) {
+        console.log(precinctFeature);
         const map = this.mapRef.current.getMap()
         const neighbors = precinctFeature.properties.neighborsId || false;
         const source = precinctFeature.source;
 
         if (neighbors && source) {
             for (let index in neighbors) {
-                let Nid = neighbors[index].trim();
+                let Nid = neighbors[index].toString().trim();
                 //console.log(Nid);
                 map.setFeatureState(
                     { source: source, id: Nid },
