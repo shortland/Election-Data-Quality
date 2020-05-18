@@ -158,3 +158,9 @@
 #userModeSelect {
     margin-left: 10px;
 }
+
+/*error list*/
+
+.errorList {
+    margin-bottom: 2px;
+}

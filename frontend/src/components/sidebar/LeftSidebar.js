@@ -9,6 +9,7 @@ import ModifyNeighbors from './ModifyNeighbors';
 import Comments from './Comments';
 import CommentModal from './CommentModal';
 import MergePrecinct from './MergePrecinct';
+import MapErrors from './MapErrors';
 /**
  * Our sidebar component
  * @props selected: the currently selected map feature
@@ -63,6 +64,10 @@ class LeftSidebar extends Component {
         }
     }
 
+    get_mapErrorList_onClick = (errorData) => {
+        this.props.errorListOnClick(errorData);
+    }
+
 
 
     get_comments_modal_data = (comment_modal_data) => {
@@ -91,7 +96,6 @@ class LeftSidebar extends Component {
         const list = this.createList();
         let selectedFeatureType = this.props.selected ? this.props.selected.properties.type : undefined;
         const selectedFeature = this.props.selected;
-        //console.log(selectedFeature);
 
         let keys = 0;
 
@@ -106,7 +110,7 @@ class LeftSidebar extends Component {
                         </Collapsible>
                         <Collapsible trigger="Elections">
                             {(selectedFeature.properties.type === "Precinct" && <ElectionDisplayBar
-                                votingData={this.props.selected.properties.votingData}
+                                votingData={selectedFeature.properties.votingData}
                             />) ||
                                 <div>select a precinct to view elections</div>}
                         </Collapsible>
@@ -123,12 +127,17 @@ class LeftSidebar extends Component {
                             <br />
                         </Collapsible> */}
                         <Collapsible trigger="Map Errors">
-                            <button className="Extra-Large-Button" onClick={this._handleClick}>View All</button>
+                            <MapErrors
+                                selectedFeature={this.props.selected}
+                                allErrors={this.props.allErrors}
+                                errorListOnClick={this.get_mapErrorList_onClick}
+                            />
+                            {/* <button className="Extra-Large-Button" onClick={this._handleClick}>View All</button>
                             <button className="Extra-Large-Button" onClick={this._handleClick}>View Self Intersecting Boundaries</button>
                             <button className="Extra-Large-Button" onClick={this._handleClick}>View Open Borders</button>
                             <button className="Extra-Large-Button" onClick={this._handleClick}>View Gaps in Precinct Coverage</button>
                             <button className="Extra-Large-Button" onClick={this._handleClick}>View Precinct Multipolygon</button>
-                            <button className="Extra-Large-Button" onClick={this._handleClick}>View Overlapping Precincts</button>
+                            <button className="Extra-Large-Button" onClick={this._handleClick}>View Overlapping Precincts</button> */}
                         </Collapsible>
                     </div >
                 );
@@ -153,12 +162,12 @@ class LeftSidebar extends Component {
                                     appData={this.props.appData}
                                 />
                             </Collapsible>
-                            <Collapsible trigger="Merge Precinct" >
+                            {/* <Collapsible trigger="Merge Precinct" >
                                 <MergePrecinct
                                     selectedFeature={selectedFeature}
                                     precinctSelectedForEdit={this.props.precinctSelectedForEdit}
                                     appData={this.props.appData} />
-                            </Collapsible>
+                            </Collapsible> */}
                         </div >
                     );
                 }

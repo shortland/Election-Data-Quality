@@ -411,7 +411,7 @@ export default class App extends Component {
                     "votingData": data.votingData
                 }
                 if (oldData.properties.neighborsId === undefined) {
-                    info = { "neighborsId": neighborsStrId }
+                    info["neighborsId"] = neighborsStrId;
                 }
                 let newProp = Object.assign(oldData.properties, info);
                 oldData.properties = newProp;
@@ -450,6 +450,7 @@ export default class App extends Component {
                     console.log(this.state.selectedPrecinctGroup);
                 }
                 else {
+                    console.log("jjj")
                     //remove highlights
                     this.removeSelectedHighlight(prevSelected);
                     this.removeHighlightPrecinctNeighbors(prevSelectedForDynmic);
@@ -950,6 +951,42 @@ export default class App extends Component {
     }
 
     /**
+     * getting all the error and pass the error to LeftSideBar -> MapError
+     */
+    getAllErrors() {
+        this.appData.fetchAllPrecinctError().then((data) => {
+            console.log(data);
+            let errorMap = {};
+            for (let i in data) {
+                let precinctId = data[i].precinctId;
+                if (precinctId) {
+                    errorMap[precinctId] = data[i];
+                }
+            }
+            this.setState({
+                //errorPrecinctId: precinctId,
+                allErrors: data
+            });
+        });
+    }
+
+    errorListOnClick = (errorData) => {
+        console.log(errorData);
+        let id = errorData.precinctId;
+        if (id) {
+            let stateId = id.slice(0, 2);
+            let countyId = id.slice(0, 5);
+            let map = this.getMap();
+            this.appData.fetchPrecinctShape(id).then((data) => {
+                let geo = data.geometry;
+                let f = map.queryRenderedFeatures(geo, { layers: "PrecinctFill" });
+                console.log(data);
+                console.log(f);
+            })
+        }
+    }
+
+    /**
      * This is called after everything is rendered to DOM
      * Good place for API calls
      */
@@ -963,7 +1000,9 @@ export default class App extends Component {
             });
         });
 
-        this.appData.getAllErrors();
+        this.getAllErrors();
+
+        //this.appData.fetchAllPrecinctError();
     }
 
     /**
@@ -1073,6 +1112,10 @@ export default class App extends Component {
         );
     }
 
+
+
+
+
     render() {
         const { viewport, selectedMode, shouldShowPins } = this.state;
         //console.log("testing for leftSideBar\n", this.state.selectedFeature)
@@ -1105,6 +1148,8 @@ export default class App extends Component {
                             leftSideBarStatus={this.get_leftSideBar_status}
                             precinctSelectedForEdit={this.state.precinct_selected_for_edit}
                             appData={this.appData}
+                            allErrors={this.state.allErrors}
+                            errorListOnClick={this.errorListOnClick}
                         />
                     </div>
 
@@ -1284,6 +1329,10 @@ export default class App extends Component {
         );
     };
 }
+
+
+
+
 
 export function renderToDom(container) {
     render(<App />, container);
