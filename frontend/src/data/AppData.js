@@ -233,6 +233,18 @@ class AppData {
         return response;
     }
 
+    async fetchAllPrecinctError() {
+        const data = await this.asyncFetch(this.baseUrl + "getAllError");
+
+        if (data.status != "ok") {
+            console.log(data);
+            alert("server error : unable to get precinct");
+            return
+        }
+
+        return data.content;
+    }
+
 }
 
 export default AppData;
