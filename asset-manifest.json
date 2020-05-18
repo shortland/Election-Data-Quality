@@ -1,25 +1,28 @@
 {
   "files": {
-    "main.css": "/Election-Data-Quality/static/css/main.429c1db8.chunk.css",
-    "main.js": "/Election-Data-Quality/static/js/main.674de142.chunk.js",
-    "main.js.map": "/Election-Data-Quality/static/js/main.674de142.chunk.js.map",
+    "main.css": "/Election-Data-Quality/static/css/main.c6614b44.chunk.css",
+    "main.js": "/Election-Data-Quality/static/js/main.e90da631.chunk.js",
+    "main.js.map": "/Election-Data-Quality/static/js/main.e90da631.chunk.js.map",
     "runtime-main.js": "/Election-Data-Quality/static/js/runtime-main.7079e672.js",
     "runtime-main.js.map": "/Election-Data-Quality/static/js/runtime-main.7079e672.js.map",
     "static/css/2.637c8785.chunk.css": "/Election-Data-Quality/static/css/2.637c8785.chunk.css",
-    "static/js/2.e50a3814.chunk.js": "/Election-Data-Quality/static/js/2.e50a3814.chunk.js",
-    "static/js/2.e50a3814.chunk.js.map": "/Election-Data-Quality/static/js/2.e50a3814.chunk.js.map",
+    "static/js/2.76e8c49d.chunk.js": "/Election-Data-Quality/static/js/2.76e8c49d.chunk.js",
+    "static/js/2.76e8c49d.chunk.js.map": "/Election-Data-Quality/static/js/2.76e8c49d.chunk.js.map",
     "index.html": "/Election-Data-Quality/index.html",
-    "precache-manifest.e5c91612733f0334c17fb368589e8a13.js": "/Election-Data-Quality/precache-manifest.e5c91612733f0334c17fb368589e8a13.js",
+    "precache-manifest.3e058b816e1a71ccce21dc5eb6fdf50c.js": "/Election-Data-Quality/precache-manifest.3e058b816e1a71ccce21dc5eb6fdf50c.js",
     "service-worker.js": "/Election-Data-Quality/service-worker.js",
     "static/css/2.637c8785.chunk.css.map": "/Election-Data-Quality/static/css/2.637c8785.chunk.css.map",
-    "static/css/main.429c1db8.chunk.css.map": "/Election-Data-Quality/static/css/main.429c1db8.chunk.css.map",
-    "static/js/2.e50a3814.chunk.js.LICENSE.txt": "/Election-Data-Quality/static/js/2.e50a3814.chunk.js.LICENSE.txt"
+    "static/css/main.c6614b44.chunk.css.map": "/Election-Data-Quality/static/css/main.c6614b44.chunk.css.map",
+    "static/js/2.76e8c49d.chunk.js.LICENSE.txt": "/Election-Data-Quality/static/js/2.76e8c49d.chunk.js.LICENSE.txt",
+    "static/media/New_York_National_Parks.GeoJSON": "/Election-Data-Quality/static/media/New_York_National_Parks.e4acd6e7.GeoJSON",
+    "static/media/Utah_National_Parks.GeoJSON": "/Election-Data-Quality/static/media/Utah_National_Parks.cc5c7638.GeoJSON",
+    "static/media/Wisconsin_National_Parks.GeoJSON": "/Election-Data-Quality/static/media/Wisconsin_National_Parks.e6f6ecd3.GeoJSON"
   },
   "entrypoints": [
     "static/js/runtime-main.7079e672.js",
     "static/css/2.637c8785.chunk.css",
-    "static/js/2.e50a3814.chunk.js",
-    "static/css/main.429c1db8.chunk.css",
-    "static/js/main.674de142.chunk.js"
+    "static/js/2.76e8c49d.chunk.js",
+    "static/css/main.c6614b44.chunk.css",
+    "static/js/main.e90da631.chunk.js"
   ]
 }
