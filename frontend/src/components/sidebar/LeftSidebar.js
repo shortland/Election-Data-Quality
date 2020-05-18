@@ -150,6 +150,9 @@ class LeftSidebar extends Component {
                                     appData={this.props.appData}
                                 />
                             </Collapsible>
+                            <Collapsible trigger="Merge Precinct" >
+
+                            </Collapsible>
                         </div >
                     );
                 }

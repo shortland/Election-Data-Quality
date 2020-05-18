@@ -385,12 +385,16 @@ export default class App extends Component {
         let precinctId = precinctFeature.properties.id;
         this.appData.fetchPrecinctInfo(precinctId).then((data) => {
             let oldData = precinctFeature;
+            let neighborsStrId = [];
+            for (let i in data.neighborsId) {
+                neighborsStrId.push(data.neighborsId[i].toString().trim());
+            }
             let info = {
                 "demographicData": data.demographicData,
                 "fullName": data.fullName,
                 "id": data.id,
                 "isGhost": data.isGhost,
-                "neighborsId": data.neighborsId,
+                "neighborsId": neighborsStrId,
                 "parentId": data.parentDistrictId,
                 "precinctError": data.precinctErrors,
                 "votingData": data.votingData
@@ -400,7 +404,7 @@ export default class App extends Component {
             return oldData;
         }).then((updatedPrecinct) => {
             const prevSelected = this.state.selectedFeature;
-            this.removeHighlightFromPrecinctNeighbors(prevSelected);
+            this.removeHighlightPrecinctNeighbors(prevSelected);
             this.highlightPrecinctNeighbors(updatedPrecinct);
             this.setState({
                 selectedFeature: updatedPrecinct
@@ -668,7 +672,7 @@ export default class App extends Component {
      * removes neighbors styling, for when new precinct selected
      * @param {*} precinctFeature the precicnt to remove neighbors' highlighting
      */
-    removeHighlightFromPrecinctNeighbors(precinctFeature) {
+    removeHighlightPrecinctNeighbors(precinctFeature) {
         console.log(precinctFeature);
         const map = this.mapRef.current.getMap()
         const neighbors = precinctFeature.properties.neighborsId || false;
@@ -757,6 +761,11 @@ export default class App extends Component {
             this.setState({
                 precinct_selection_to_edit: false,
                 precinct_selected_for_edit: null
+            });
+        }
+        else {
+            this.setState({
+                precinct_selection_to_edit: true
             });
         }
     };

@@ -31,11 +31,11 @@ class UserModeSelector extends Component {
                                 position: toast.POSITION.BOTTOM_RIGHT,
                             });
                         }
-                    }}>
+                    }} disabled={selectedFeatureType !== "Precinct"}>
                         Edit
           </Dropdown.Item>
                 </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown >
         );
     }
 }
