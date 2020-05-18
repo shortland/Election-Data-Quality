@@ -48,7 +48,7 @@ class AppData {
         }
 
         //console.log(data.content)
-        console.log(features);
+        //console.log(features);
         return {
             featureCollection: features,
         };
