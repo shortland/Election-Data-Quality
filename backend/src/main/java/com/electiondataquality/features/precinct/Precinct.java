@@ -44,7 +44,9 @@ public class Precinct extends Feature {
         String fullName = p1.getFullName();
         String parentId = p1.getParentDistrictId();
         VotingData vd = VotingData.mergeVotingData(p1.getVotingData(), p2.getVotingData());
-        DemographicData dd = DemographicData.mergeDemographicData(p1.getDemographicData(), p2.getDemographicData());
+        // DemographicData dd =
+        // DemographicData.mergeDemographicData(p1.getDemographicData(),
+        // p2.getDemographicData());
 
         Set<String> neighborsId1 = p1.getNeighborsId();
         Set<String> neighborsId2 = p2.getNeighborsId();
@@ -83,7 +85,7 @@ public class Precinct extends Feature {
             mergedErrorSet.add(errors2.get(errorId));
         }
 
-        return new Precinct(id, cName, fullName, parentId, vd, dd, mergedNeighborsId, mergedErrorSet, null);
+        return new Precinct(id, cName, fullName, parentId, vd, null, mergedNeighborsId, mergedErrorSet, null);
     }
 
     public static Precinct copyPrecinct(Precinct p) {
@@ -276,7 +278,7 @@ public class Precinct extends Feature {
         str += "ParentId : " + this.getParentDistrictId() + "\n";
         str += "NeighborsId : " + this.getNeighborsId().toString() + "\n";
         str += this.votingData.toString();
-        str += this.demographicData.toString();
+        // str += this.demographicData.toString();
 
         for (Integer eId : this.precinctErrors.keySet()) {
             str += this.precinctErrors.get(eId).toString() + "\n";
