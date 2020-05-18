@@ -238,7 +238,7 @@ class AppData {
 
         if (data.status != "ok") {
             console.log(data);
-            alert("server error : unable to get precinct");
+            alert("server error : unable to get precinctErrors");
             return
         }
 

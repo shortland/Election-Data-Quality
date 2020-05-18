@@ -937,6 +937,44 @@ export default class App extends Component {
     }
 
     /**
+     * getting all the error and pass the error to LeftSideBar -> MapError
+     */
+    getAllErrors() {
+        this.appData.fetchAllPrecinctError().then((data) => {
+            console.log(data);
+            let errorMap = {};
+            for (let i in data) {
+                let precinctId = data[i].precinctId;
+                if (precinctId) {
+                    errorMap[precinctId] = data[i];
+                }
+            }
+            this.setState({
+                //errorPrecinctId: precinctId,
+                allErrors: data
+            });
+        });
+    }
+
+    errorListOnClick = (errorData) => {
+        console.log(errorData);
+        let id = errorData.precinctId;
+        if (id) {
+            let stateId = id.slice(0, 2);
+            let countyId = id.slice(0, 5);
+            let map = this.getMap();
+            this.appData.fetchPrecinctShape(id).then((data) => {
+                let geo = data.features[0].geometry;
+                console.log(geo);
+                let oneArray = geo.coordinates[0][0][0];
+                let f = map.queryRenderedFeatures(oneArray, { layers: "PrecinctFill" });
+                console.log(data);
+                console.log(f);
+            });
+        }
+    }
+
+    /**
      * This is called after everything is rendered to DOM
      * Good place for API calls
      */
@@ -950,7 +988,10 @@ export default class App extends Component {
                 stateData: data.featureCollection,
             });
         });
-        //this.appData.getAllErrors();
+
+        this.getAllErrors();
+
+        //this.appData.fetchAllPrecinctError();
     }
 
     /**
@@ -1103,6 +1144,8 @@ export default class App extends Component {
                             leftSideBarStatus={this.get_leftSideBar_status}
                             precinctSelectedForEdit={this.state.precinct_selected_for_edit}
                             appData={this.appData}
+                            allErrors={this.state.allErrors}
+                            errorListOnClick={this.errorListOnClick}
                         />
                     </div>
 
@@ -1415,6 +1458,10 @@ export default class App extends Component {
         );
     }
 }
+
+
+
+
 
 export function renderToDom(container) {
     render(<App />, container);

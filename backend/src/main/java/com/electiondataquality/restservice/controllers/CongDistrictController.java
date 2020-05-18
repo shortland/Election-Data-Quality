@@ -31,7 +31,7 @@ public class CongDistrictController {
      * method 2 seconds after running app for first time for initial cache.
      */
     @Scheduled(fixedRate = 6 * 60 * 60000)
-    @Scheduled(initialDelay = 2000, fixedDelay = Long.MAX_VALUE)
+    @Scheduled(initialDelay = 6000, fixedDelay = Long.MAX_VALUE)
     private void validateDataStoreCachedEndpoints() throws Exception {
         RestServiceApplication.logger
                 .warn("Refreshing datastore cache for methods: '/allStates' @" + System.currentTimeMillis());
@@ -62,7 +62,7 @@ public class CongDistrictController {
         /**
          * Return the datastore cache when valid
          */
-        if (RestServiceApplication.dataStore.isValid(method) && RestServiceApplication.caching) {
+        if (RestServiceApplication.dataStore.isValid(method)) {
             RestServiceApplication.logger.info("Using datastore cache");
 
             return ResponseGen.create(API_STATUS.OK, (new ObjectMapper())
@@ -102,9 +102,19 @@ public class CongDistrictController {
      * @return
      */
     @GetMapping("/congressionalDistrictsForState")
-    public ApiResponse getCongDistrictForState(@RequestParam String stateId) {
+    public ApiResponse getCongDistrictForState(@RequestParam String stateId) throws Exception {
         String method = Thread.currentThread().getStackTrace()[1].getMethodName();
         RestServiceApplication.logger.info("Method:" + method);
+
+        /**
+         * Return the datastore cache when valid
+         */
+        if (RestServiceApplication.dataStore.isValid(method + "_" + stateId)) {
+            RestServiceApplication.logger.info("Using datastore cache");
+
+            return ResponseGen.create(API_STATUS.OK, (new ObjectMapper()).readValue(
+                    RestServiceApplication.dataStore.readFile(method + "_" + stateId), FeatureCollectionWrapper.class));
+        }
 
         CDEntityManager cdem = new CDEntityManager(RestServiceApplication.emFactoryCDistrict);
         List<CDFeature> targetCDs = cdem.findAllCongressionalDistrictsByStateId(stateId);
@@ -121,6 +131,11 @@ public class CongDistrictController {
 
         FeatureCollectionWrapper wrapper = new FeatureCollectionWrapper();
         wrapper.setFeatures(congDistricts);
+
+        /**
+         * Save the datastore cache
+         */
+        RestServiceApplication.dataStore.saveFile(method + "_" + stateId, wrapper);
 
         return ResponseGen.create(API_STATUS.OK, wrapper);
     }

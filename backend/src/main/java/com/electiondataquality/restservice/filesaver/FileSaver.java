@@ -83,7 +83,8 @@ public class FileSaver {
      * @throws IOException
      */
     private void initialize() throws IOException {
-        FileUtils.cleanDirectory(new File(FileSaver.storePath));
+        // TODO:
+        // FileUtils.cleanDirectory(new File(FileSaver.storePath));
     }
 
     /**
@@ -96,8 +97,12 @@ public class FileSaver {
         File file = new File(FileSaver.storePath + keyName + FileSaver.extension);
 
         if (file.lastModified() + FileSaver.expireTime > System.currentTimeMillis()) {
+            RestServiceApplication.logger.info("valid cache");
+
             return true;
         }
+
+        RestServiceApplication.logger.info("invalid cache");
 
         return false;
     }

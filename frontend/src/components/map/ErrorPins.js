@@ -13,27 +13,24 @@ const SIZE = 20;
  * @props appData : API
  * @props shouldShowPins
  * @props mapRef : map
+ * @props allErrors : callback for apps to handle the errors
  */
 export default class Pins extends PureComponent {
 
-    getAllErrors() {
-        this.props.appData.fetchAllPrecinctError().then((data) => {
-            console.log(data);
-            let precinctId = [];
-            for (let i in data) {
-                if (data[i].precinctId) {
-                    precinctId.push(data[i].precinctId);
-                }
-            }
-            let map = this.props.mapRef;
-            console.log(map);
-            //let result = map.querySourceFeature(precinctId[2], { sourceLayer: "precinctFill" });
-            //console.log(result);
-        });
-    }
+    // getAllErrors() {
+    //     this.props.appData.fetchAllPrecinctError().then((data) => {
+    //         console.log(data);
+    //         let precinctId = [];
+    //         for (let i in data) {
+    //             if (data[i].precinctId) {
+    //                 precinctId.push(data[i].precinctId);
+    //             }
+    //         }
+    //     });
+    // }
 
     render() {
-        this.getAllErrors();
+        //this.getAllErrors();
         const { data, onClick, shouldShowPins } = this.props;
         console.log(shouldShowPins);
         if (shouldShowPins) {
