@@ -292,8 +292,7 @@ public class PrecinctFeature {
 
     public String toString() {
         return "Id : " + this.id + " Name : " + this.fullName + "Parent ID : " + this.parentDistrictId + " Errors: "
-                + /* this.errors + */ "\nDemographic : " + this.demographic.toString() + "Feature : "
-                + this.feature.toString();
+                + /* this.errors + */ "\nDemographic : " + "-d-" + "Feature : " + this.feature.toString();
     }
 
     // private VotingData votingData;

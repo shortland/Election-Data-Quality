@@ -12,18 +12,18 @@ class MapErrors extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedErrorType: "All"
+            selectedErrorType: "All",
+            selectedFeature: null
         }
     }
 
-    // createErrorList() {
-    //     let allError = this.props.allErrors;
-    //     let errorList = [];
-    //     for (let i in allError) {
-    //         errorList.push(<ListGroup.Item onClick={() => this.props.errorListOnClick(allError[i])}> {allError[i].errorType + " " + allError[i].precinctId}</ListGroup.Item >);
-    //     }
-    //     return errorList;
-    // }
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.selectedFeature !== prevState.selectedFeature) {
+            return ({
+                selectedFeature: nextProps.selectedFeature
+            });
+        }
+    }
 
     changeErrorType(type) {
         this.setState({
@@ -31,13 +31,44 @@ class MapErrors extends Component {
         });
     }
 
-    createErrorListByType() {
+    getErrorInState(stateId) {
+        let ny = 36;
+        let wn = 55;
+        let utah = 49;
         let allError = this.props.allErrors;
+        let filteredErrors = [];
+        for (let i in allError) {
+            if (allError[i].precinctId.slice(0, 2) === stateId) {
+                filteredErrors.push(allError[i]);
+            }
+        }
+        return filteredErrors;
+    }
+
+    createErrorListByType() {
+        let selectedFeature = this.props.selectedFeature;
+        let allError = [];
+        if (selectedFeature) {
+            if (selectedFeature.properties.type === "Precinct") {
+                //console.log(selectedFeature);
+                if (selectedFeature.properties.precinctError) {
+                    for (let i in selectedFeature.properties.precinctError) {
+                        console.log(i);
+                        allError.push(selectedFeature.properties.precinctError[i]);
+                    }
+                }
+                console.log(allError)
+            }
+            else {
+                let stateId = selectedFeature.id.toString().slice(0, 2);
+                allError = this.getErrorInState(stateId);
+            }
+        }
         let errorList = [];
         let selectedErrorType = this.state.selectedErrorType;
         if (selectedErrorType === "All") {
             for (let i in allError) {
-                errorList.push(<ListGroup.Item onClick={() => this.props.errorListOnClick(allError[i])}> {allError[i].errorType + " " + allError[i].precinctId}</ListGroup.Item >);
+                errorList.push(<ListGroup.Item onClick={() => this.props.errorListOnClick(allError[i])}> {allError[i].precinctId ? allError[i].errorType + " " + allError[i].precinctId : allError[i].errorType + " \nResolve:" + allError[i].resolved}</ListGroup.Item >);
             }
         }
         else if (selectedErrorType === "NO_VOTER") {
@@ -82,8 +113,7 @@ class MapErrors extends Component {
     render() {
         return (
             <div>
-                Errors
-                <hr />
+                <br />
                 <DropdownButton title={this.state.selectedErrorType}>
                     <Dropdown.Item as="button" onClick={() => this.changeErrorType("All")}>All</Dropdown.Item>
                     <Dropdown.Item as="button" onClick={() => this.changeErrorType("NO_VOTER")} > No voters</Dropdown.Item>
