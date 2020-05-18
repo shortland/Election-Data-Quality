@@ -38,6 +38,7 @@ import com.electiondataquality.jpa.tables.FeatureTable;
 import com.electiondataquality.types.responses.ApiResponse;
 import com.electiondataquality.types.responses.ResponseGen;
 import com.electiondataquality.types.responses.enums.API_STATUS;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @CrossOrigin
@@ -82,10 +83,22 @@ public class PrecinctController {
      * 
      * @param countyId
      * @return
+     * @throws Exception
      */
     @GetMapping("/shapeOfPrecinctByCounty")
-    public ApiResponse getShapeOfPrecinctByCountyId(@RequestParam String countyId) {
-        RestServiceApplication.logger.info("Method:" + Thread.currentThread().getStackTrace()[1].getMethodName());
+    public ApiResponse getShapeOfPrecinctByCountyId(@RequestParam String countyId) throws Exception {
+        String method = Thread.currentThread().getStackTrace()[1].getMethodName();
+        RestServiceApplication.logger.info("Method:" + method);
+
+        /**
+         * Return the datastore cache when valid
+         */
+        if (RestServiceApplication.dataStore.isValid(method + "_" + countyId) && RestServiceApplication.caching) {
+            RestServiceApplication.logger.info("Using datastore cache");
+
+            return ResponseGen.create(API_STATUS.OK, (new ObjectMapper())
+                    .readValue(RestServiceApplication.dataStore.readFile(method + "_" + countyId), Set.class));
+        }
 
         PrecinctEntityManager pem = new PrecinctEntityManager(RestServiceApplication.emFactoryPrecinct);
         List<PrecinctFeature> targetPrecincts = pem.findAllPrecinctFeaturesByCountyId(countyId);
@@ -104,6 +117,11 @@ public class PrecinctController {
             }
 
             pem.cleanup();
+
+            /**
+             * Save the datastore cache
+             */
+            RestServiceApplication.dataStore.saveFile(method + "_" + countyId, precinctsShape);
 
             return ResponseGen.create(API_STATUS.OK, precinctsShape);
         }
