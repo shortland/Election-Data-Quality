@@ -963,7 +963,7 @@ export default class App extends Component {
             });
         });
 
-        this.appData.getAllErrors();
+        //this.appData.getAllErrors();
     }
 
     /**
