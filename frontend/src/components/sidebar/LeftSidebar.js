@@ -55,6 +55,9 @@ class LeftSidebar extends Component {
             // send the precinct Selection Mode back to the Apps
             this.props.leftSideBarStatus("precinct_selection_to_edit");
         }
+        else if (page_status === "default") {
+            this.props.leftSideBarStatus("saveRequested");
+        }
         else {
             this.props.leftSideBarStatus()
         }

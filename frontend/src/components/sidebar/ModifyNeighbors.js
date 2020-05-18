@@ -68,7 +68,7 @@ class ModifyNeighbors extends Component {
     }
 
     dynamicAddNeighborId(newId) {
-        this.props.selectedFeature.properties.neighborsId.push(newId);
+        this.props.selectedFeature.properties.neighborsId.push(newId.toString().trim());
     }
 
     dynamicDeleteNeighborId(deletedId) {

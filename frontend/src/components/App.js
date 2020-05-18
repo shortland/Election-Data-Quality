@@ -382,48 +382,89 @@ export default class App extends Component {
      * 
      * sets state.selectedFeature as the precinct passed
      */
-    onPrecinctSelected(precinctFeature, selectingMultiple) {
+    onPrecinctSelected(precinctFeature, selectingMultiple, precinct_selection_to_edit = this.state.precinct_selection_to_edit) {
         let precinctId = precinctFeature.properties.id;
-        this.appData.fetchPrecinctInfo(precinctId).then((data) => {
-            let oldData = precinctFeature;
-            let neighborsStrId = [];
-            for (let i in data.neighborsId) {
-                neighborsStrId.push(data.neighborsId[i].toString().trim());
-            }
-            let info = {
-                "demographicData": data.demographicData,
-                "fullName": data.fullName,
-                "id": data.id,
-                "isGhost": data.isGhost,
-                "neighborsId": neighborsStrId,
-                "parentId": data.parentDistrictId,
-                "precinctError": data.precinctErrors,
-                "votingData": data.votingData
-            }
-            let newProp = Object.assign(oldData.properties, info);
-            oldData.properties = newProp;
-            return oldData;
-        }).then((updatedPrecinct) => {
-            const prevSelected = this.state.selectedFeature;
-            if (selectingMultiple) {
-                //shift key was pressed, add for multi select
-                this.addPrecinctToGroup(updatedPrecinct);
-                console.log(this.state.selectedPrecinctGroup);
-            }
-            else {
-                //remove highlights
-                this.removeSelectedHighlight(prevSelected);
-                this.removeHighlightPrecinctNeighbors(prevSelected);
-                //remove highlights from group
-                this.clearPrecinctGroup();
-                //Add highlights
-                this.addSelectedHighlight(updatedPrecinct);
-                this.highlightPrecinctNeighbors(updatedPrecinct);
+        if (precinct_selection_to_edit) {
+
+            //add the selected precinct to precinct_selected_for_edit
+            this.setState({
+                precinct_selected_for_edit: precinctFeature.id
+            });
+            //precinct_selection_to_edit is true so allow multiple selection
+            this.addPrecinctToGroup(precinctFeature);
+            console.log("selectMultiple cus editmode");
+        }
+        else {
+            this.appData.fetchPrecinctInfo(precinctId).then((data) => {
+                let oldData = precinctFeature;
+                let neighborsStrId = [];
+                for (let i in data.neighborsId) {
+                    neighborsStrId.push(data.neighborsId[i].toString().trim());
+                }
+                let info = {
+                    "demographicData": data.demographicData,
+                    "fullName": data.fullName,
+                    "id": data.id,
+                    "isGhost": data.isGhost,
+                    "parentId": data.parentDistrictId,
+                    "precinctError": data.precinctErrors,
+                    "votingData": data.votingData
+                }
+                if (oldData.properties.neighborsId === undefined) {
+                    info = { "neighborsId": neighborsStrId }
+                }
+                let newProp = Object.assign(oldData.properties, info);
+                oldData.properties = newProp;
+                return oldData;
+            }).then((updatedPrecinct) => {
+                let precinct_selected_for_edit = this.state.precinct_selected_for_edit;
                 this.setState({
-                    selectedFeature: updatedPrecinct
+                    precinct_selected_for_edit: null
                 });
-            }
-        });
+
+                //TODO: only work for adding negihbors don't work for deleting negihbors
+                /**for dymanically add the deleted neighbor to remove that precinct's highlight
+                 *  only use in removeNeighborsHighlights
+                 */
+                let prevSelectedForDynmic = this.state.selectedFeature;
+                if (precinct_selected_for_edit) {
+                    let isPrecinctSelectedForEditExist = false;
+                    for (let i in prevSelectedForDynmic.properties.neighborsId) {
+                        if (prevSelectedForDynmic.properties.neighborsId[i].toString().trim() === precinct_selected_for_edit.toString().trim()) {
+                            isPrecinctSelectedForEditExist = true;
+                        }
+                    }
+                    if (!isPrecinctSelectedForEditExist) {
+                        if (prevSelectedForDynmic.properties.neighborsId) {
+                            prevSelectedForDynmic.properties.neighborsId.push(precinct_selected_for_edit.toString().trim());
+                        }
+                    }
+                }
+                const prevSelected = this.state.selectedFeature;
+                console.log("prev", prevSelected);
+                console.log("prevDyn", prevSelectedForDynmic);
+                console.log("updated", updatedPrecinct);
+                if (selectingMultiple) {
+                    //shift key was pressed, add for multi select
+                    this.addPrecinctToGroup(updatedPrecinct);
+                    console.log(this.state.selectedPrecinctGroup);
+                }
+                else {
+                    //remove highlights
+                    this.removeSelectedHighlight(prevSelected);
+                    this.removeHighlightPrecinctNeighbors(prevSelectedForDynmic);
+                    //remove highlights from group
+                    this.clearPrecinctGroup();
+                    this.addSelectedHighlight(updatedPrecinct);
+                    this.highlightPrecinctNeighbors(updatedPrecinct);
+                    //Add highlights
+                    this.setState({
+                        selectedFeature: updatedPrecinct
+                    });
+                }
+            });
+        }
+
     }
 
     /**
@@ -470,7 +511,7 @@ export default class App extends Component {
      */
     _onClick = (event) => {
         const { features } = event;
-
+        console.log(features)
         if (features) {
             const stateFeature = features.find((f) => f.layer.id === "stateFill");
             const countyFeature = features.find((f) => f.layer.id === "countyFill");
@@ -522,13 +563,13 @@ export default class App extends Component {
                 //call on precinct selected, passing shift key pressed to check if selecting multiple
                 this.onPrecinctSelected(precinctFeature, event.srcEvent.shiftKey);
                 //check if precinct_selection_to_edit is true
-                if (this.state.precinct_selection_to_edit) {
-                    //add the selected precinct to precinct_selected_for_edit
-                    this.setState({
-                        precinct_selected_for_edit: precinctFeature.id
-                    });
-                    //TODO: enable user to select multiple precicnts so this should also highlight all the selected precincts
-                }
+                // if (this.state.precinct_selection_to_edit) {
+                //     //add the selected precinct to precinct_selected_for_edit
+                //     this.setState({
+                //         precinct_selected_for_edit: precinctFeature.id
+                //     });
+                //     //TODO: enable user to select multiple precicnts so this should also highlight all the selected precincts
+                // }
                 // else {
                 //     this.onPrecinctSelected(precinctFeature);
                 // }
@@ -674,7 +715,7 @@ export default class App extends Component {
         }
     }
 
-    removeSelectedHighlight(feature) {
+    async removeSelectedHighlight(feature) {
         const map = this.mapRef.current.getMap();
         if (feature && feature.id && feature.source) {
             map.setFeatureState(
@@ -689,15 +730,24 @@ export default class App extends Component {
      * @param {*} precinctFeature the precinct whose neighbors to highlight
      */
     highlightPrecinctNeighbors(precinctFeature) {
-        //console.log(precinctFeature);
+        console.log(precinctFeature);
         const map = this.mapRef.current.getMap()
         const neighbors = precinctFeature.properties.neighborsId || false;
         const source = precinctFeature.source;
 
         if (neighbors && source) {
+            // for (let index = 0; index < neighbors.length; index++) {
+            //     let Nid = neighbors[index].toString().trim();
+            //     console.log(Nid, index);
+            //     map.setFeatureState(
+            //         { source: source, id: Nid },
+            //         { neighbor: true }
+            //     );
+            // }
+            console.log("hihglighNeiggh", neighbors);
             for (let index in neighbors) {
                 let Nid = neighbors[index].toString().trim();
-                //console.log(Nid);
+                console.log(Nid, index);
                 map.setFeatureState(
                     { source: source, id: Nid },
                     { neighbor: true }
@@ -710,12 +760,12 @@ export default class App extends Component {
      * removes neighbors styling, for when new precinct selected
      * @param {*} precinctFeature the precicnt to remove neighbors' highlighting
      */
-    removeHighlightPrecinctNeighbors(precinctFeature) {
+    async removeHighlightPrecinctNeighbors(precinctFeature) {
         console.log(precinctFeature);
         const map = this.mapRef.current.getMap()
         const neighbors = precinctFeature.properties.neighborsId || false;
         const source = precinctFeature.source;
-
+        console.log("removeNeighbors", neighbors)
         if (neighbors && source) {
             for (let index in neighbors) {
                 let Nid = neighbors[index].toString().trim();
@@ -980,13 +1030,29 @@ export default class App extends Component {
                 precinct_selection_to_edit: true
             });
         }
+        else if (status === "saveRequested") {
+            this.setState({
+                precinct_selection_to_edit: false
+            })
+            let precinctFeature = this.state.selectedFeature;
+            if (precinctFeature.properties.type === "Precinct") {
+                let selectingMultiple = false;
+                console.log("precinct_selection_to_edit : ", this.state.precinct_selection_to_edit);
+                console.log(precinctFeature);
+                this.onPrecinctSelected(precinctFeature, selectingMultiple, false);
+            }
+            else {
+                this.setState({
+                    precinct_selected_for_edit: null,
+                });
+            }
+        }
         else {
             this.setState({
                 precinct_selected_for_edit: null,
                 precinct_selection_to_edit: false
             })
         }
-        console.log("precinct_selection_to_edit : ", this.state.precinct_selection_to_edit);
     }
 
     /**
@@ -1134,6 +1200,8 @@ export default class App extends Component {
                             data={ERRORS}
                             onClick={this._onClickError}
                             shouldShowPins={shouldShowPins}
+                            appData={this.appData}
+                            mapRef={this.mapRef}
                         />
                         {this._renderErrorPopup()}
                     </MapGL>
