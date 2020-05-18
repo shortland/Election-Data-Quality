@@ -83,7 +83,8 @@ public class FileSaver {
      * @throws IOException
      */
     private void initialize() throws IOException {
-        FileUtils.cleanDirectory(new File(FileSaver.storePath));
+        // TODO:
+        // FileUtils.cleanDirectory(new File(FileSaver.storePath));
     }
 
     /**
