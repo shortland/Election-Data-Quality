@@ -25,15 +25,6 @@ class MapErrors extends Component {
         }
     }
 
-    // createErrorList() {
-    //     let allError = this.props.allErrors;
-    //     let errorList = [];
-    //     for (let i in allError) {
-    //         errorList.push(<ListGroup.Item onClick={() => this.props.errorListOnClick(allError[i])}> {allError[i].errorType + " " + allError[i].precinctId}</ListGroup.Item >);
-    //     }
-    //     return errorList;
-    // }
-
     changeErrorType(type) {
         this.setState({
             selectedErrorType: type
@@ -56,16 +47,28 @@ class MapErrors extends Component {
 
     createErrorListByType() {
         let selectedFeature = this.props.selectedFeature;
-        let allError;
+        let allError = [];
         if (selectedFeature) {
-            let stateId = selectedFeature.id.toString().slice(0, 2);
-            allError = this.getErrorInState(stateId);
+            if (selectedFeature.properties.type === "Precinct") {
+                //console.log(selectedFeature);
+                if (selectedFeature.properties.precinctError) {
+                    for (let i in selectedFeature.properties.precinctError) {
+                        console.log(i);
+                        allError.push(selectedFeature.properties.precinctError[i]);
+                    }
+                }
+                console.log(allError)
+            }
+            else {
+                let stateId = selectedFeature.id.toString().slice(0, 2);
+                allError = this.getErrorInState(stateId);
+            }
         }
         let errorList = [];
         let selectedErrorType = this.state.selectedErrorType;
         if (selectedErrorType === "All") {
             for (let i in allError) {
-                errorList.push(<ListGroup.Item onClick={() => this.props.errorListOnClick(allError[i])}> {allError[i].errorType + " " + allError[i].precinctId}</ListGroup.Item >);
+                errorList.push(<ListGroup.Item onClick={() => this.props.errorListOnClick(allError[i])}> {allError[i].precinctId ? allError[i].errorType + " " + allError[i].precinctId : allError[i].errorType + " \nResolve:" + allError[i].resolved}</ListGroup.Item >);
             }
         }
         else if (selectedErrorType === "NO_VOTER") {

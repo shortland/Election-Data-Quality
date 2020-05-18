@@ -966,7 +966,8 @@ export default class App extends Component {
             this.appData.fetchPrecinctShape(id).then((data) => {
                 let geo = data.features[0].geometry;
                 console.log(geo);
-                let oneArray = geo.coordinates[0][0][0];
+                let oneArray = geo.coordinates[0][0];
+                console.log(oneArray);
                 let f = map.queryRenderedFeatures(oneArray, { layers: "PrecinctFill" });
                 console.log(data);
                 console.log(f);
