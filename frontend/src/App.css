@@ -164,3 +164,7 @@
 .errorList {
     margin-bottom: 2px;
 }
+
+.mapError {
+    height: 100px;
+}

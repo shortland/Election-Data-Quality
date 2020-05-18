@@ -12,7 +12,7 @@ class MapErrors extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedErrorType: "GHOST",
+            selectedErrorType: "All",
             selectedFeature: null
         }
     }
@@ -113,8 +113,7 @@ class MapErrors extends Component {
     render() {
         return (
             <div>
-                Errors
-                <hr />
+                <br />
                 <DropdownButton title={this.state.selectedErrorType}>
                     <Dropdown.Item as="button" onClick={() => this.changeErrorType("All")}>All</Dropdown.Item>
                     <Dropdown.Item as="button" onClick={() => this.changeErrorType("NO_VOTER")} > No voters</Dropdown.Item>

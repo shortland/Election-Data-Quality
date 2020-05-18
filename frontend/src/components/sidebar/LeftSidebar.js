@@ -124,7 +124,7 @@ class LeftSidebar extends Component {
                             <CommentModal savedCommentData={this.get_comments_modal_data} />
                             <br />
                         </Collapsible> */}
-                        <Collapsible trigger="Map Errors">
+                        <Collapsible trigger="Map Errors" class="mapError">
                             <MapErrors
                                 selectedFeature={this.props.selected}
                                 allErrors={this.props.allErrors}
