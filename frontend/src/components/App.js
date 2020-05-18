@@ -385,12 +385,16 @@ export default class App extends Component {
         let precinctId = precinctFeature.properties.id;
         this.appData.fetchPrecinctInfo(precinctId).then((data) => {
             let oldData = precinctFeature;
+            let neighborsStrId = [];
+            for (let i in data.neighborsId) {
+                neighborsStrId.push(data.neighborsId[i].toString().trim());
+            }
             let info = {
                 "demographicData": data.demographicData,
                 "fullName": data.fullName,
                 "id": data.id,
                 "isGhost": data.isGhost,
-                "neighborsId": data.neighborsId,
+                "neighborsId": neighborsStrId,
                 "parentId": data.parentDistrictId,
                 "precinctError": data.precinctErrors,
                 "votingData": data.votingData
@@ -656,6 +660,7 @@ export default class App extends Component {
 
         if (neighbors && source) {
             for (let index in neighbors) {
+                console.log(neighbors[index]);
                 let Nid = neighbors[index].trim();
                 //console.log(Nid);
                 map.setFeatureState(
@@ -671,7 +676,7 @@ export default class App extends Component {
      * @param {*} precinctFeature the precicnt to remove neighbors' highlighting
      */
     removeHighlightPrecinctNeighbors(precinctFeature) {
-        //console.log(precinctFeature);
+        console.log(precinctFeature);
         const map = this.mapRef.current.getMap()
         const neighbors = precinctFeature.properties.neighborsId || false;
         const source = precinctFeature.source;
@@ -759,6 +764,11 @@ export default class App extends Component {
             this.setState({
                 precinct_selection_to_edit: false,
                 precinct_selected_for_edit: null
+            });
+        }
+        else {
+            this.setState({
+                precinct_selection_to_edit: true
             });
         }
     };
