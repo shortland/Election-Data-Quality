@@ -114,7 +114,6 @@ export default class App extends Component {
             selectedMode: EditorModes.READ_ONLY,
             // selectedFeatureId: null,
             hoveredFeature: null,
-            filter: null,
             shouldShowPins: false,
             features: {},
             selectedFeatureIndex: null,
@@ -133,13 +132,6 @@ export default class App extends Component {
         this._editorRef = null;
         this.showErrorPins = this.showErrorPins.bind(this);
         this.appData = new AppData();
-
-        this.filters = {
-            countyFilter: ["==", "NAME", ""],
-            precinctFilter: ["==", "GEOID10", ""],
-            stateFilter: ["==", "name", ""],
-            congressionalFilter: ["==", "NAMELSAD", ""],
-        };
 
         this.lastHovered = null; //keeps track of which feature to unhighlight
         this.mapRef = React.createRef();
@@ -447,9 +439,7 @@ export default class App extends Component {
                         }
                     );
                 }
-
                 this.onStateSelected(stateFeature);
-
             }
             else if (countyFeature) {
                 countyFeature.properties.type = "County";
@@ -467,6 +457,8 @@ export default class App extends Component {
                 this.setState({ selectedFeature: congressionalFeature });
             }
             else if (precinctFeature) {
+                precinctFeature.properties.type = "Precinct";
+                this.onPrecinctSelected(precinctFeature);
                 //check if precinct_selection_to_edit is true
                 if (this.state.precinct_selection_to_edit) {
                     //add the selected precinct to precinct_selected_for_edit
@@ -475,14 +467,13 @@ export default class App extends Component {
                     });
                     //TODO: enable user to select multiple precicnts so this should also highlight all the selected precincts
                 }
-                else {
-                    precinctFeature.properties.type = "Precinct";
-                    this.onPrecinctSelected(precinctFeature);
-                }
+                // else {
+                //     this.onPrecinctSelected(precinctFeature);
+                // }
             }
             else {
-                if (previouslySelected.properties.type === "Precinct") {
-                    this.removeHighlightPrecinctNeighbors(previouslySelected);
+                if (previouslySelected && previouslySelected.properties.type === "Precinct") {
+                    this.removeHighlightFromPrecinctNeighbors(previouslySelected);
                 }
                 //this.setState({ selectedFeature: null });
             }
@@ -525,23 +516,6 @@ export default class App extends Component {
         }
     }
 
-    getFeatureFilter = (feature) => {
-        //console.log(feature)
-        if (!feature) {
-            return null;
-        } else if (feature.isState) {
-            return ["==", "name", feature.properties.name];
-        } else if (feature.isCounty) {
-            return ["==", "name", feature.properties.name];
-        } else if (feature.isCongressional) {
-            return ["==", "NAMELSAD", feature.properties.NAMELSAD];
-        } else if (feature.isPrecinct) {
-            return ["==", "GEOID10", feature.properties.GEOID10];
-        } else {
-            return null;
-        }
-    };
-
     _onHover = (event) => {
         const map = this.mapRef.current.getMap();
 
@@ -559,8 +533,7 @@ export default class App extends Component {
                 );
             }
             this.setState({
-                hoveredFeature: null,
-                filter: null,
+                hoveredFeature: null
             });
             return;
         }
@@ -609,11 +582,8 @@ export default class App extends Component {
                 );
             }
 
-            //const filter = this.getFeatureFilter(hovered);
-
             this.setState({
-                hoveredFeature: hovered,
-                //filter: filter,
+                hoveredFeature: hovered
             });
         }
     };
@@ -660,7 +630,7 @@ export default class App extends Component {
 
         if (neighbors && source) {
             for (let index in neighbors) {
-                let Nid = neighbors[index].trim();
+                let Nid = neighbors[index].toString().trim();
                 //console.log(Nid);
                 map.setFeatureState(
                     { source: source, id: Nid },
@@ -682,7 +652,7 @@ export default class App extends Component {
 
         if (neighbors && source) {
             for (let index in neighbors) {
-                let Nid = neighbors[index].trim();
+                let Nid = neighbors[index].toString().trim();
                 //console.log(Nid);
                 map.setFeatureState(
                     { source: source, id: Nid },
@@ -879,17 +849,12 @@ export default class App extends Component {
      * Render state data
      */
     renderStateLayers() {
-        const { layers, stateData, stateFilter } = this.state;
+        const { layers, stateData } = this.state;
 
         return (
             <>
                 {layers.states && (
                     <Source type="geojson" data={stateData}>
-                        {/* <Layer
-                            {...stateLayerFillHighlight}
-                            filter={stateFilter}
-                            maxzoom={5}
-                        /> */}
                         <Layer {...stateLayerFill} maxzoom={5.5} />
                         <Layer {...stateLayerOutline} maxzoom={5.5} />
                     </Source>
@@ -908,11 +873,6 @@ export default class App extends Component {
             <>
                 {layers.congressional && (
                     <Source type="geojson" data={congressionalDistrictData}>
-                        {/* <Layer
-                           {...congressionalLayerFillHighlight}
-                            //filter={congressionalFilter}
-                            minzoom={5}
-                        /> */}
                         <Layer {...congressionalLayerOutline} minzoom={5} />
                         <Layer {...congressionalLayerFill} minzoom={5} />
                     </Source>
@@ -927,11 +887,6 @@ export default class App extends Component {
             <>
                 {layers.counties && (
                     <Source type="geojson" data={countyData}>
-                        {/* <Layer
-                            {...countyDataLayerFillableHighlight}
-                            filter={this.countyFilter}
-                            minzoom={5.5}
-                        /> */}
                         <Layer {...countyDataLayerOutline} minzoom={5.5} />
                         <Layer {...countyDataLayerFillable} minzoom={5.5} maxzoom={9} />
                     </Source>
@@ -967,11 +922,6 @@ export default class App extends Component {
             <>
                 {layers.precincts && (
                     <Source type="geojson" data={precinctData}>
-                        {/* <Layer
-                            {...precinctLayerFillHighlight}
-                            // filter={precinctFilter}
-                            minzoom={8}
-                        /> */}
                         <Layer {...precinctLayerOutline} minzoom={8} />
                         <Layer {...precinctLayerFill} minzoom={8} />
                     </Source>
