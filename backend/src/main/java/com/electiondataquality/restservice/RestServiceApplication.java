@@ -29,6 +29,8 @@ public class RestServiceApplication implements CommandLineRunner {
 
     public static EntityManagerFactory emFactoryPrecinct;
 
+    public static EntityManagerFactory emFactoryError;
+
     public static FileSaver dataStore;
 
     public static boolean caching;
@@ -83,6 +85,8 @@ public class RestServiceApplication implements CommandLineRunner {
         emFactoryCDistrict = Persistence.createEntityManagerFactory("CongressionalDistrictTable");
 
         emFactoryPrecinct = Persistence.createEntityManagerFactory("PrecinctTable");
+
+        emFactoryError = Persistence.createEntityManagerFactory("ErrorTable");
 
         /** App Live */
         RestServiceApplication.logger.info("Application has started");

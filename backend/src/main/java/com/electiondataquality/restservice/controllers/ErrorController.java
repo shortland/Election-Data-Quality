@@ -1,6 +1,7 @@
 package com.electiondataquality.restservice.controllers;
 
 import java.util.Set;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.electiondataquality.restservice.RestServiceApplication;
+import com.electiondataquality.jpa.managers.ErrorEntityManager;
 import com.electiondataquality.jpa.managers.PrecinctEntityManager;
 import com.electiondataquality.jpa.objects.PrecinctFeature;
 import com.electiondataquality.jpa.tables.ErrorTable;
@@ -18,6 +20,14 @@ import com.electiondataquality.types.responses.enums.API_STATUS;
 @RestController
 @CrossOrigin
 public class ErrorController {
+
+    @GetMapping("/getAllError")
+    public ApiResponse getAllError() {
+        ErrorEntityManager eem = new ErrorEntityManager(RestServiceApplication.emFactoryError);
+        List<ErrorTable> allErrors = eem.findAllErrors();
+        eem.cleanup();
+        return ResponseGen.create(API_STATUS.OK, allErrors);
+    }
 
     /**
      * Mark an error as corrected.

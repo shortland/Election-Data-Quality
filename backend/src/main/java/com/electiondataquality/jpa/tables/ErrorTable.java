@@ -17,6 +17,10 @@ import javax.persistence.Table;
 import com.electiondataquality.features.precinct.error.PrecinctError;
 import com.electiondataquality.features.precinct.error.enums.ERROR_TYPE;
 import com.electiondataquality.restservice.comments.Comment;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 @Table(name = "errors")
@@ -49,9 +53,10 @@ public class ErrorTable {
     @Column(name = "precinct_idn")
     private String precinctId;
 
-    @OneToMany
-    @JoinColumn(name = "error_idn")
-    private List<CommentTable> comments;
+    // @OneToMany
+    // @JoinColumn(name = "error_idn")
+    // @NotFound(action = NotFoundAction.IGNORE)
+    // private List<CommentTable> comments;
 
     public ErrorTable() {
     }
@@ -167,22 +172,23 @@ public class ErrorTable {
         this.precinctId = precinctId;
     }
 
-    public List<CommentTable> getComments() {
-        return this.comments;
-    }
+    // public List<CommentTable> getComments() {
+    // return this.comments;
+    // }
 
-    public void setComments(List<CommentTable> comments) {
-        this.comments = comments;
-    }
+    // public void setComments(List<CommentTable> comments) {
+    // this.comments = comments;
+    // }
 
     // for constructing PrecincError Object
+    @JsonIgnore
     public Set<Comment> getCommentForPrecinctError() {
         Set<Comment> precinctErrorComments = new HashSet<>();
-        for (CommentTable ct : this.comments) {
-            Comment comment = new Comment(ct);
-            comment.setParentPrecinctId(this.precinctId);
-            precinctErrorComments.add(comment);
-        }
+        // for (CommentTable ct : this.comments) {
+        // Comment comment = new Comment(ct);
+        // comment.setParentPrecinctId(this.precinctId);
+        // precinctErrorComments.add(comment);
+        // }
         return precinctErrorComments;
     }
 
