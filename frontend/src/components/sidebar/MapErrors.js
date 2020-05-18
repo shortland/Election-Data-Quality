@@ -12,7 +12,16 @@ class MapErrors extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedErrorType: "All"
+            selectedErrorType: "GHOST",
+            selectedFeature: null
+        }
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.selectedFeature !== prevState.selectedFeature) {
+            return ({
+                selectedFeature: nextProps.selectedFeature
+            });
         }
     }
 
@@ -31,8 +40,27 @@ class MapErrors extends Component {
         });
     }
 
-    createErrorListByType() {
+    getErrorInState(stateId) {
+        let ny = 36;
+        let wn = 55;
+        let utah = 49;
         let allError = this.props.allErrors;
+        let filteredErrors = [];
+        for (let i in allError) {
+            if (allError[i].precinctId.slice(0, 2) === stateId) {
+                filteredErrors.push(allError[i]);
+            }
+        }
+        return filteredErrors;
+    }
+
+    createErrorListByType() {
+        let selectedFeature = this.props.selectedFeature;
+        let allError;
+        if (selectedFeature) {
+            let stateId = selectedFeature.id.toString().slice(0, 2);
+            allError = this.getErrorInState(stateId);
+        }
         let errorList = [];
         let selectedErrorType = this.state.selectedErrorType;
         if (selectedErrorType === "All") {
