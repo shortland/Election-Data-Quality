@@ -27,8 +27,8 @@ export default class Pins extends PureComponent {
             }
             let map = this.props.mapRef;
             console.log(map);
-            let result = map.querySourceFeature(precinctId[2], { sourceLayer: "precinctFill" });
-            console.log(result);
+            //let result = map.querySourceFeature(precinctId[2], { sourceLayer: "precinctFill" });
+            //console.log(result);
         });
     }
 

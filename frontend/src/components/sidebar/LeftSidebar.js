@@ -63,8 +63,6 @@ class LeftSidebar extends Component {
         }
     }
 
-
-
     get_comments_modal_data = (comment_modal_data) => {
         if (comment_modal_data) {
             this.setState({ comment_data: comment_modal_data });

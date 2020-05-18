@@ -9,16 +9,17 @@ import Button from "react-bootstrap/Button";
 class MergeBtn extends Component {
     render() {
         const { enabled } = this.props;
+        const btnSize = "md";
         if (enabled) {
             return (
-                <Button variant="success" onClick={this.props.mergePrecincts}>
-                    Merge
+                <Button variant="success" size={btnSize} onClick={this.props.mergePrecincts}>
+                    Merge Precincts
                 </Button>
             )
         }
         else {
             return (
-                <Button variant="success" disabled>Merge</Button>
+                <Button variant="success" size={btnSize} disabled>Merge Precincts</Button>
             )
         }
     }

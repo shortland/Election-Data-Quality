@@ -83,9 +83,20 @@ code {
     z-index: 12;
 }
 
-.mergeBtn {
+.precinctBtns {
     position: fixed;
     top: 10px;
-    left: calc(300px + 130px + 180px);
+    /* left: calc(300px + 130px + 180px); */
+    left: calc(300px + 180px);
     z-index: 12;
+}
+
+.mergeBtn {
+    position: relative;
+    left: 0;
+}
+
+.addRemBtn {
+    position: relative;
+    left: 50px;
 }
