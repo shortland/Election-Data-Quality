@@ -134,7 +134,6 @@ class LeftSidebar extends Component {
                 if (selectedFeatureType === "Precinct") {
                     return (
                         <div >
-                            <h5></h5>
                             <Collapsible trigger="General Info" open={true}>
                                 {list}
                             </Collapsible>

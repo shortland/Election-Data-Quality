@@ -69,6 +69,7 @@ import StateSelector from "./navbar/StateSelector";
 import LeftSidebar from "./sidebar/LeftSidebar";
 import Toolbar from "./map/toolbar";
 import UserModeSelector from "./navbar/UserModeSelector";
+import MergeBtn from "./navbar/MergeBtn";
 
 /**
  * Static data files
@@ -111,6 +112,7 @@ export default class App extends Component {
             },
             popupInfo: null,
             selectedFeature: null,
+            selectedPrecinctGroup: [],
             selectedMode: EditorModes.READ_ONLY,
             // selectedFeatureId: null,
             hoveredFeature: null,
@@ -133,7 +135,6 @@ export default class App extends Component {
         this.showErrorPins = this.showErrorPins.bind(this);
         this.appData = new AppData();
 
-        this.lastHovered = null; //keeps track of which feature to unhighlight
         this.mapRef = React.createRef();
     }
 
@@ -365,7 +366,15 @@ export default class App extends Component {
     /**
      * when detected a precinct is being hovered on
      */
-    onPrecinctHover(precinctFeature) {
+    onPrecinctHover(precinctFeature, event) {
+        const shiftKey = event.srcEvent.shiftKey;
+        const { selectedFeature } = this.state;
+        if (shiftKey && selectedFeature.type === "Precinct") {
+            precinctFeature.multiSelecting = true;
+        }
+        else {
+            precinctFeature.multiSelecting = false;
+        }
     }
 
     /**
@@ -373,7 +382,7 @@ export default class App extends Component {
      * 
      * sets state.selectedFeature as the precinct passed
      */
-    onPrecinctSelected(precinctFeature) {
+    onPrecinctSelected(precinctFeature, selectingMultiple) {
         let precinctId = precinctFeature.properties.id;
         this.appData.fetchPrecinctInfo(precinctId).then((data) => {
             let oldData = precinctFeature;
@@ -396,19 +405,70 @@ export default class App extends Component {
             return oldData;
         }).then((updatedPrecinct) => {
             const prevSelected = this.state.selectedFeature;
-            this.removeHighlightPrecinctNeighbors(prevSelected);
-            this.highlightPrecinctNeighbors(updatedPrecinct);
-            this.setState({
-                selectedFeature: updatedPrecinct
-            });
+            if (selectingMultiple) {
+                //shift key was pressed, add for multi select
+                this.addPrecinctToGroup(updatedPrecinct);
+                console.log(this.state.selectedPrecinctGroup);
+            }
+            else {
+                //remove highlights
+                this.removeSelectedHighlight(prevSelected);
+                this.removeHighlightPrecinctNeighbors(prevSelected);
+                //remove highlights from group
+                this.clearPrecinctGroup();
+                //Add highlights
+                this.addSelectedHighlight(updatedPrecinct);
+                this.highlightPrecinctNeighbors(updatedPrecinct);
+                this.setState({
+                    selectedFeature: updatedPrecinct
+                });
+            }
         });
     }
 
-    _onClick = (event) => {
-        //map object
-        //const map = this.mapRef.current.getMap();
+    /**
+     * For multi-selection of precincts with shift+click
+     * Since selecting multiple, just keeps state.selectedFeature as the first selected
+     * @param {*} precinctFeature precinct to add to the group of selected
+     */
+    addPrecinctToGroup(precinctFeature) {
+        const group = this.state.selectedPrecinctGroup;
+        if (group.length === 0) {
+            const prevSelected = this.state.selectedFeature;
+            group.push(prevSelected); //push first selected
+            group.push(precinctFeature); //push the second selected
+        }
+        else if (group.length === 1) {
+            group.push(precinctFeature);
+        }
+        else {
+            toast.warn("Can only add 2 precincts to a group",
+                {
+                    position: toast.POSITION.BOTTOM_CENTER,
+                });
+            return;
+        }
+        console.log(group);
+        this.addSelectedHighlight(precinctFeature);
+        this.setState({ selectedPrecinctGroup: group });
+    }
 
-        // sets the selected feature onclcik, to have properties displayed by LeftSidebar
+    /**
+     * clears the group of selected precincts
+     */
+    clearPrecinctGroup() {
+        const group = this.state.selectedPrecinctGroup;
+        while (group.length != 0) {
+            this.removeSelectedHighlight(group.pop());
+        }
+        this.setState({ selectedPrecinctGroup: group });
+    }
+
+    /**
+     * will set state.selectedFeature to the feature clicked
+     * each feature type has it's own onSelected method which is called (state.selectedFeature is set in there)
+     */
+    _onClick = (event) => {
         const { features } = event;
 
         if (features) {
@@ -419,12 +479,13 @@ export default class App extends Component {
 
             const selectedFeature = stateFeature || countyFeature || congressionalFeature || precinctFeature;
             const previouslySelected = this.state.selectedFeature;
-            this.removeSelectedHighlight(previouslySelected);
-            this.addSelectedHighlight(selectedFeature);
+
+            //console.log(event);
+            //console.log(event.srcEvent.shiftKey);
 
             if (stateFeature) {
                 stateFeature.properties.type = "State";
-                console.log(stateFeature)
+                //console.log(stateFeature)
                 // if a clicks on a state that was already selected/clicked on
                 if (this.state.selectedFeature) {
                     if (stateFeature.properties.name === this.state.selectedFeature.properties.name) {
@@ -458,7 +519,8 @@ export default class App extends Component {
             }
             else if (precinctFeature) {
                 precinctFeature.properties.type = "Precinct";
-                this.onPrecinctSelected(precinctFeature);
+                //call on precinct selected, passing shift key pressed to check if selecting multiple
+                this.onPrecinctSelected(precinctFeature, event.srcEvent.shiftKey);
                 //check if precinct_selection_to_edit is true
                 if (this.state.precinct_selection_to_edit) {
                     //add the selected precinct to precinct_selected_for_edit
@@ -470,13 +532,17 @@ export default class App extends Component {
                 // else {
                 //     this.onPrecinctSelected(precinctFeature);
                 // }
+
+                //handle everything for precinct selected in above methods, then return
+                return;
             }
             else {
                 if (previouslySelected && previouslySelected.properties.type === "Precinct") {
-                    this.removeHighlightFromPrecinctNeighbors(previouslySelected);
+                    this.removeHighlightPrecinctNeighbors(previouslySelected);
                 }
-                //this.setState({ selectedFeature: null });
             }
+            this.removeSelectedHighlight(previouslySelected);
+            this.addSelectedHighlight(selectedFeature);
         }
     };
 
@@ -518,11 +584,12 @@ export default class App extends Component {
 
     _onHover = (event) => {
         const map = this.mapRef.current.getMap();
-
         const {
             features,
             srcEvent: { x, y },
         } = event;
+
+        //console.log(event.srcEvent.shiftKey);
 
         if (!event.type || !event.features || event.features.length === 0 || event.features[0].source === "composite") {
             const lastHovered = this.state.hoveredFeature;
@@ -570,7 +637,7 @@ export default class App extends Component {
                 hovered.isCongressional = true;
             } else if (precinctHovered) {
                 hovered.isPrecinct = true;
-                this.onPrecinctHover(precinctHovered)
+                this.onPrecinctHover(precinctHovered, event);
                 //this.highlightPrecinctNeighbors(precinctHovered);
             }
 
@@ -581,7 +648,6 @@ export default class App extends Component {
                     { hover: false }
                 );
             }
-
             this.setState({
                 hoveredFeature: hovered
             });
@@ -666,7 +732,7 @@ export default class App extends Component {
      * renders the on hover tooltip
      */
     _renderTooltip() {
-        const { hoveredFeature, x, y } = this.state;
+        const { hoveredFeature, x, y, selectedFeature } = this.state;
 
         if (!hoveredFeature) {
             return;
@@ -677,8 +743,8 @@ export default class App extends Component {
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h5>{stateHovered.properties.name}</h5>
                         <div>
-                            Congressional Districts:{" "}
-                            {stateHovered.properties.congressional_districts.length}
+                            Counties:{" "}
+                            {}
                         </div>
                         {/* <br /> */}
                         {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
@@ -705,7 +771,7 @@ export default class App extends Component {
                         <h5>{congressionalHovered.properties.name}</h5>
                         <div></div>
                         {/* <br /> */}
-                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                        <div style={{ "fontStyle": "italic" }}>click to load precincts for county</div>
                     </div>
                 )
             );
@@ -715,9 +781,17 @@ export default class App extends Component {
                 precinctHovered && (
                     <div className="state-tooltip" style={{ left: x, top: y }}>
                         <h6>Precinct id: {precinctHovered.properties.id}</h6>
-                        {/* <div>id: {precinctHovered.properties.id}</div> */}
-                        {/* <br /> */}
-                        {/* <div style={{ "fontStyle": "italic" }}>(click again to enlarge)</div> */}
+                        {(() => {
+                            if (precinctHovered.id === selectedFeature.id) {
+                                return <div style={{ "fontStyle": "italic" }}>this precicnt is currently selected</div>;
+                            }
+                            else if (precinctHovered.multiSelecting) {
+                                return <div style={{ "fontStyle": "italic" }}>add this to group?</div>;
+                            }
+                            else if (selectedFeature.properties.type === "Precinct") {
+                                return <div style={{ "fontStyle": "italic" }}>shift+click to add to selection</div>;
+                            }
+                        })()}
                     </div>
                 )
             );
@@ -873,8 +947,8 @@ export default class App extends Component {
             <>
                 {layers.congressional && (
                     <Source type="geojson" data={congressionalDistrictData}>
-                        <Layer {...congressionalLayerOutline} minzoom={5} />
                         <Layer {...congressionalLayerFill} minzoom={5} />
+                        <Layer {...congressionalLayerOutline} minzoom={5} />
                     </Source>
                 )}
             </>
@@ -882,13 +956,21 @@ export default class App extends Component {
     }
 
     renderCountyLayers() {
-        const { layers, countyData } = this.state;
+        const { layers, countyData, selectedFeature } = this.state;
         return (
             <>
                 {layers.counties && (
                     <Source type="geojson" data={countyData}>
                         <Layer {...countyDataLayerOutline} minzoom={5.5} />
-                        <Layer {...countyDataLayerFillable} minzoom={5.5} maxzoom={9} />
+                        <Layer {...countyDataLayerFillable} minzoom={5.5}
+                            maxzoom={(() => {
+                                if (selectedFeature && selectedFeature.properties.type === "Precinct") {
+                                    return 7;
+                                }
+                                else {
+                                    return 9;
+                                }
+                            })()} />
                     </Source>
                 )}
             </>
@@ -910,7 +992,6 @@ export default class App extends Component {
         console.log("precinct_selection_to_edit : ", this.state.precinct_selection_to_edit);
     }
 
-
     /**
      * Render precinct data
      */
@@ -922,8 +1003,8 @@ export default class App extends Component {
             <>
                 {layers.precincts && (
                     <Source type="geojson" data={precinctData}>
-                        <Layer {...precinctLayerOutline} minzoom={8} />
-                        <Layer {...precinctLayerFill} minzoom={8} />
+                        <Layer {...precinctLayerOutline} minzoom={7} />
+                        <Layer {...precinctLayerFill} minzoom={7} />
                     </Source>
                 )}
             </>
@@ -944,6 +1025,12 @@ export default class App extends Component {
                     <UserModeSelector
                         userModeSelect={(selectedMode) => this.userModeSelect(selectedMode)}
                         selectedFeature={this.state.selectedFeature}
+                    />
+                </div>
+                <div className="inlineDivs">
+                    <MergeBtn
+                        mergePrecincts={() => this.mergePrecincts()}
+                        enabled={this.state.selectedPrecinctGroup.length >= 2}
                     />
                 </div>
 
@@ -1021,9 +1108,9 @@ export default class App extends Component {
 
                         {this.renderStateLayers()}
 
-                        {this.renderCongressionalLayers()}
-
                         {this.renderCountyLayers()}
+
+                        {this.renderCongressionalLayers()}
 
                         {this.renderPrecinctLayers()}
 
@@ -1046,10 +1133,22 @@ export default class App extends Component {
         );
     }
 
+    mergePrecincts = () => {
+        const { selectedPrecinctGroup } = this.state;
+
+        if (selectedPrecinctGroup.length === 2) {
+            const precinctId1 = selectedPrecinctGroup.pop();
+            const precinctId2 = selectedPrecinctGroup.pop();
+            //TODO deal with merge
+            this.appData.mergePrecinct(precinctId1, precinctId2);
+        }
+    }
+
     /**
      * toggles whether a layer is displayed
      */
-    toggleLayer = (layer) => {
+    toggleLayer = (layer, e) => {
+        e.stopPropagation();
         const { layers } = this.state;
         switch (layer) {
             case "States":
@@ -1072,6 +1171,12 @@ export default class App extends Component {
         this.setState({ layers: layers });
     };
 
+    stopPropogation = (e) => {
+        //console.log(e);
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
+    }
+
     /**
      * renders layer selection checkboxes
      */
@@ -1081,6 +1186,7 @@ export default class App extends Component {
                 <Card
                     border="secondary"
                     style={{ width: "10rem", backgroundColor: "rgba(255,255,255,0.9)" }}
+                    onMouseOver={(e) => this.stopPropogation(e)}
                 >
                     <Card.Header>Layers</Card.Header>
                     <Card.Body>
@@ -1098,7 +1204,7 @@ export default class App extends Component {
                                         type={"checkbox"}
                                         defaultChecked={name != "Congressional Districts"
                                             && name != "National Parks" ? true : false}
-                                        onChange={this.toggleLayer.bind(this, name)}
+                                        onClick={(e) => this.toggleLayer(name, e)}
                                     />
                                 </div>
                             ))}

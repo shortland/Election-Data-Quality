@@ -6,8 +6,8 @@ export const congressionalLayerFill = {
         'fill-opacity': [
             'case',
             ['boolean', ['feature-state', 'hover'], false],
-            0.5,
-            0.25
+            0.6,
+            0.4
         ]
     },
 };
@@ -18,7 +18,9 @@ export const congressionalLayerOutline = {
     paint: {
         'line-color': '#FFFFFF',
         'line-width': 4,
-        'line-dasharray': [1, 0.5, 1],
+        //'line-dasharray': [2, 1, 2],
+        'line-opacity': 0.5,
+        //'line-gap-width': 0.5
     },
     layout: {
         'line-join': 'round'
