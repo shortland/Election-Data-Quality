@@ -913,10 +913,7 @@ export default class App extends Component {
             });
         });
 
-        console.log(this.mapRef.current.getMap())
-
-        const map = this.mapRef.current.getMap()
-        //this.map = this.mapRef.current.getMap()
+        this.appData.getAllErrors();
     }
 
     /**

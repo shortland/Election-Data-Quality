@@ -48,7 +48,7 @@ class AppData {
         }
 
         //console.log(data.content)
-        console.log(features);
+        //console.log(features);
         return {
             featureCollection: features,
         };
@@ -231,6 +231,13 @@ class AppData {
         }
 
         return response;
+    }
+
+    //--------- * ERRORS * ------------
+    async getAllErrors() {
+        const response = await this.asyncFetch(this.baseUrl + 'getAllError');
+
+        console.log(response);
     }
 
 }
