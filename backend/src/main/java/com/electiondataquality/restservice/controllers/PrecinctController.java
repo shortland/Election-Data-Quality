@@ -93,7 +93,7 @@ public class PrecinctController {
         /**
          * Return the datastore cache when valid
          */
-        if (RestServiceApplication.dataStore.isValid(method + "_" + countyId) && RestServiceApplication.caching) {
+        if (RestServiceApplication.dataStore.isValid(method + "_" + countyId)) {
             RestServiceApplication.logger.info("Using datastore cache");
 
             return ResponseGen.create(API_STATUS.OK, (new ObjectMapper())

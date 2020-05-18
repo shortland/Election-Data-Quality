@@ -37,7 +37,7 @@ public class CountyController {
         /**
          * Return the datastore cache when valid
          */
-        if (RestServiceApplication.dataStore.isValid(method + "_" + stateId) && RestServiceApplication.caching) {
+        if (RestServiceApplication.dataStore.isValid(method + "_" + stateId)) {
             RestServiceApplication.logger.info("Using datastore cache");
 
             return ResponseGen.create(API_STATUS.OK, (new ObjectMapper())
