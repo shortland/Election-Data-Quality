@@ -962,7 +962,7 @@ export default class App extends Component {
                         <Layer {...countyDataLayerFillable} minzoom={5.5}
                             maxzoom={(() => {
                                 if (selectedFeature && selectedFeature.properties.type === "Precinct") {
-                                    return 7;
+                                    return 7.5;
                                 }
                                 else {
                                     return 9;
@@ -995,7 +995,6 @@ export default class App extends Component {
     renderPrecinctLayers() {
         const { layers, precinctData } = this.state;
         //console.log(layers.precincts, precinctData)
-
         return (
             <>
                 {layers.precincts && (
